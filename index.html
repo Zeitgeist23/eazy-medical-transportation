@@ -10,72 +10,46 @@
 html,body{margin:0;padding:0;min-height:100%;background:#fff}
 body{overflow-x:hidden}
 .hero-page{position:relative;width:100%;margin:0 auto;background:#fff}
-#landing,.sharp-layer{display:block;width:100%;height:auto;border:0}
-.sharp-layer{position:absolute;inset:0;z-index:1;pointer-events:none;filter:url(#hero-sharpen)}
-.sharp-header{clip-path:inset(0 0 90% 0)}
-.sharp-left{clip-path:inset(10% 50% 39% 0)}
-.sharp-van-logo{clip-path:inset(19% 27% 58% 49%)}
-.sharp-info{clip-path:inset(60% 0 23% 0)}
-.sharp-services{clip-path:inset(77% 0 0 0)}
-.hotspot,.anchor{position:absolute;display:block;z-index:2;background:transparent;border:0;text-decoration:none}
-.hotspot:focus-visible{outline:3px solid rgba(0,145,190,.85);outline-offset:-3px;border-radius:8px}
-.logo-home{left:2.3%;top:1.2%;width:23.7%;height:8.2%}
-.nav-services{left:63.7%;top:2.4%;width:6.2%;height:5.2%}
-.nav-about{left:70.8%;top:2.4%;width:5.6%;height:5.2%}
-.nav-contact{left:77.4%;top:2.4%;width:6.0%;height:5.2%}
-.call-top{left:84.6%;top:2.0%;width:10.9%;height:6.0%}
-.request-main{left:3.2%;top:42.1%;width:14.1%;height:6.3%}
-.call-main{left:18.4%;top:42.1%;width:13.2%;height:6.3%}
-.schedule-main{left:32.6%;top:42.1%;width:16.0%;height:6.3%}
-.insurance-details{left:47.2%;top:65.0%;width:18.0%;height:7.3%}
-.call-bottom{left:72.5%;top:64.5%;width:19.0%;height:9.5%}
-.service-dialysis{left:3.1%;top:84.5%;width:17.4%;height:12.6%}
-.service-medical{left:21.7%;top:84.5%;width:17.3%;height:12.6%}
-.service-discharge{left:40.5%;top:84.5%;width:16.8%;height:12.6%}
-.service-wheelchair{left:58.7%;top:84.5%;width:17.3%;height:12.6%}
-.service-ambulatory{left:77.3%;top:84.5%;width:17.5%;height:12.6%}
+#landing{display:block;width:100%;height:auto;border:0}
+.hotspot,.anchor{position:absolute;display:block;z-index:3;background:transparent;border:0;text-decoration:none}
+.hotspot:focus-visible,.header-nav a:focus-visible{outline:3px solid rgba(0,145,190,.85);outline-offset:2px;border-radius:7px}
+.header-nav{position:absolute;z-index:4;left:38.5%;right:4.7%;top:0;height:12.25%;background:#fff;display:flex;align-items:center;justify-content:flex-end;gap:clamp(20px,3.45vw,58px);font-family:Arial,Helvetica,sans-serif;color:#1b1b1b;white-space:nowrap;border-bottom:1px solid #eef1f3}
+.header-nav a{position:relative;color:#1b1b1b;text-decoration:none;font-size:clamp(11px,.96vw,16px);font-weight:500;line-height:1;padding:12px 0;text-rendering:geometricPrecision;-webkit-font-smoothing:antialiased}
+.header-nav a.active{color:#0d6179}
+.header-nav a.active:after{content:"";position:absolute;left:0;right:0;bottom:3px;height:2px;background:#0f7892;border-radius:2px}
+.header-phone{display:inline-flex!important;align-items:center;gap:9px;padding:11px 23px!important;border:1px solid #d8dde1;border-radius:999px;color:#30343a!important;background:#fff;font-size:clamp(11px,.96vw,16px)!important}
+.header-phone .phone-icon{font-size:1.05em;color:#08728d;line-height:1}
+.logo-home{left:2.3%;top:1.2%;width:28%;height:9.5%}
+.request-main{left:6.7%;top:62.5%;width:12.9%;height:5.8%}
+.learn-main{left:20.9%;top:62.5%;width:12.2%;height:5.8%}
+.badges{left:6.2%;top:72.2%;width:39.4%;height:10.8%}
 .anchor{width:1px;height:1px;pointer-events:none}
-#about{left:0;top:62%}
-#services{left:0;top:77%}
-@media(max-width:600px){.hotspot:focus-visible{outline-width:2px}}
+#about{left:0;top:12.3%}
+#services{left:0;top:84%}
+@media(max-width:900px){.header-nav{left:36%;right:2.5%;gap:clamp(8px,2.3vw,24px)}.header-phone{padding:8px 12px!important;gap:6px}}
+@media(max-width:650px){.header-nav{left:34%;right:1.5%;gap:7px}.header-nav a{font-size:8px;padding:6px 0}.header-phone{padding:5px 8px!important;font-size:8px!important}.hotspot:focus-visible,.header-nav a:focus-visible{outline-width:2px}}
 </style>
 </head>
 <body>
-<svg aria-hidden="true" width="0" height="0" style="position:absolute;overflow:hidden">
-  <filter id="hero-sharpen" x="0" y="0" width="100%" height="100%" color-interpolation-filters="sRGB">
-    <feConvolveMatrix order="3" kernelMatrix="0 -0.08 0 -0.08 1.32 -0.08 0 -0.08 0" divisor="1" bias="0" targetX="1" targetY="1" edgeMode="duplicate" preserveAlpha="true"/>
-  </filter>
-</svg>
 <main class="hero-page">
   <img id="landing" src="eazy-hero.jpg" alt="Eazy Medical Transportation — reliable non-emergency medical transportation">
 
-  <img class="sharp-layer sharp-header" src="eazy-hero.jpg" alt="" aria-hidden="true">
-  <img class="sharp-layer sharp-left" src="eazy-hero.jpg" alt="" aria-hidden="true">
-  <img class="sharp-layer sharp-van-logo" src="eazy-hero.jpg" alt="" aria-hidden="true">
-  <img class="sharp-layer sharp-info" src="eazy-hero.jpg" alt="" aria-hidden="true">
-  <img class="sharp-layer sharp-services" src="eazy-hero.jpg" alt="" aria-hidden="true">
+  <nav class="header-nav" aria-label="Primary navigation">
+    <a class="active" href="/">Home</a>
+    <a href="#services">Services</a>
+    <a href="#about">About</a>
+    <a href="mailto:info@eazymedicaltransportation.com?subject=Request%20a%20Ride">Request a Ride</a>
+    <a href="mailto:info@eazymedicaltransportation.com?subject=Website%20Contact">Contact</a>
+    <a class="header-phone" href="tel:+18477750516"><span class="phone-icon">☎</span><span>(847) 775-0516</span></a>
+  </nav>
 
   <span id="about" class="anchor" aria-hidden="true"></span>
   <span id="services" class="anchor" aria-hidden="true"></span>
 
   <a class="hotspot logo-home" href="/" aria-label="Eazy Medical Transportation home"></a>
-  <a class="hotspot nav-services" href="#services" aria-label="View services"></a>
-  <a class="hotspot nav-about" href="#about" aria-label="About Eazy Medical Transportation"></a>
-  <a class="hotspot nav-contact" href="mailto:info@eazymedicaltransportation.com?subject=Website%20Contact" aria-label="Contact Eazy Medical Transportation"></a>
-  <a class="hotspot call-top" href="tel:+18477750516" aria-label="Call Eazy Medical Transportation at 847-775-0516"></a>
-
   <a class="hotspot request-main" href="mailto:info@eazymedicaltransportation.com?subject=Request%20a%20Ride" aria-label="Request a ride"></a>
-  <a class="hotspot call-main" href="tel:+18477750516" aria-label="Call 847-775-0516"></a>
-  <a class="hotspot schedule-main" href="mailto:info@eazymedicaltransportation.com?subject=Schedule%20Transportation" aria-label="Schedule transportation online"></a>
-
-  <a class="hotspot insurance-details" href="mailto:info@eazymedicaltransportation.com?subject=Medicaid%20and%20Insurance%20Question" aria-label="Ask about Medicaid and insurance plans"></a>
-  <a class="hotspot call-bottom" href="tel:+18477750516" aria-label="Call anytime at 847-775-0516"></a>
-
-  <a class="hotspot service-dialysis" href="mailto:info@eazymedicaltransportation.com?subject=Dialysis%20Transportation" aria-label="Ask about dialysis transportation"></a>
-  <a class="hotspot service-medical" href="mailto:info@eazymedicaltransportation.com?subject=Medical%20Appointment%20Transportation" aria-label="Ask about medical appointment transportation"></a>
-  <a class="hotspot service-discharge" href="mailto:info@eazymedicaltransportation.com?subject=Hospital%20Discharge%20Transportation" aria-label="Ask about hospital discharge transportation"></a>
-  <a class="hotspot service-wheelchair" href="mailto:info@eazymedicaltransportation.com?subject=Wheelchair-Accessible%20Transportation" aria-label="Ask about wheelchair-accessible transportation"></a>
-  <a class="hotspot service-ambulatory" href="mailto:info@eazymedicaltransportation.com?subject=Ambulatory%20Transportation" aria-label="Ask about ambulatory transportation"></a>
+  <a class="hotspot learn-main" href="#services" aria-label="Learn more about our services"></a>
+  <a class="hotspot badges" href="#about" aria-label="Learn about Eazy Medical Transportation safety and service standards"></a>
 </main>
 </body>
 </html>

@@ -1,0 +1,83 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <meta name="description" content="Eazy Medical Transportation provides dependable non-emergency medical transportation in Northern Illinois." />
+  <title>Eazy Medical Transportation</title>
+  <link rel="stylesheet" href="styles.css" />
+</head>
+<body>
+  <header class="site-header">
+    <a class="brand" href="#top" aria-label="Eazy Medical Transportation home">
+      <span class="brand-mark">E</span>
+      <span>Eazy Medical Transportation</span>
+    </a>
+    <nav aria-label="Primary navigation">
+      <a href="#services">Services</a>
+      <a href="#about">About</a>
+      <a href="#contact">Contact</a>
+    </nav>
+    <a class="button button-small" href="tel:+18475551234">Call Now</a>
+  </header>
+
+  <main id="top">
+    <section class="hero">
+      <div class="hero-copy">
+        <p class="eyebrow">Non-Emergency Medical Transportation</p>
+        <h1>Reliable transportation with care at every mile.</h1>
+        <p class="lead">Safe, comfortable transportation for medical appointments, dialysis, rehabilitation, hospital discharges, and other essential trips.</p>
+        <div class="hero-actions">
+          <a class="button" href="#contact">Request a Ride</a>
+          <a class="button button-secondary" href="tel:+18475551234">Speak With Dispatch</a>
+        </div>
+        <div class="trust-row">
+          <span>Professional drivers</span>
+          <span>Door-to-door assistance</span>
+          <span>Wheelchair-accessible service</span>
+        </div>
+      </div>
+      <div class="hero-image-wrap">
+        <img src="assets/eazy-medical-transportation-cover.png" alt="Eazy Medical Transportation vehicle and patient care scene" />
+      </div>
+    </section>
+
+    <section id="services" class="section">
+      <p class="eyebrow">Our Services</p>
+      <h2>Transportation designed around patient needs.</h2>
+      <div class="cards">
+        <article><h3>Medical Appointments</h3><p>Dependable rides to clinics, specialists, hospitals, and follow-up visits.</p></article>
+        <article><h3>Dialysis & Recurring Trips</h3><p>Consistent scheduled transportation for recurring treatment and therapy.</p></article>
+        <article><h3>Wheelchair Transportation</h3><p>Comfortable, accessible vehicles with attentive boarding assistance.</p></article>
+      </div>
+    </section>
+
+    <section id="about" class="section section-soft split">
+      <div>
+        <p class="eyebrow">Why Eazy</p>
+        <h2>Dependable service. Respectful care.</h2>
+      </div>
+      <p>We help patients, families, healthcare facilities, and care coordinators arrange transportation with confidence. Every trip is handled with punctuality, clear communication, and respect for the passenger.</p>
+    </section>
+
+    <section id="contact" class="section contact">
+      <div>
+        <p class="eyebrow">Schedule Transportation</p>
+        <h2>Tell us where you need to go.</h2>
+        <p>Use the form to request service. A dispatcher will confirm availability and trip details.</p>
+      </div>
+      <form onsubmit="event.preventDefault(); alert('Thank you. This starter form is ready to be connected to email or dispatch software.');">
+        <label>Full name<input required name="name" autocomplete="name" /></label>
+        <label>Phone number<input required name="phone" type="tel" autocomplete="tel" /></label>
+        <label>Trip details<textarea required name="details" rows="4" placeholder="Pickup, destination, date, time, and accessibility needs"></textarea></label>
+        <button class="button" type="submit">Request Transportation</button>
+      </form>
+    </section>
+  </main>
+
+  <footer>
+    <span>© 2026 Eazy Medical Transportation</span>
+    <span>Serving Northern Illinois</span>
+  </footer>
+</body>
+</html>

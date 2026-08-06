@@ -38,6 +38,15 @@ body{overflow-x:hidden}
 .trusted-mask{position:absolute;z-index:3;left:5.75%;top:50.9%;width:31.5%;height:10.7%;pointer-events:none;background:rgba(255,255,255,.86);-webkit-backdrop-filter:blur(7px);backdrop-filter:blur(7px);box-shadow:0 0 16px 12px rgba(255,255,255,.76)}
 .trusted-copy{position:absolute;z-index:4;left:6.25%;top:52.15%;width:29.5%;margin:0;padding:0;color:#474b4e;font-family:Arial,Helvetica,sans-serif;font-size:clamp(10px,1.03vw,17px);font-weight:400;line-height:1.55;letter-spacing:0;text-rendering:geometricPrecision;-webkit-font-smoothing:antialiased;pointer-events:none;background:transparent;box-shadow:none}
 
+/* Crisp replacement for only the two CTA buttons. */
+.cta-visual{position:absolute;z-index:4;top:62.5%;height:5.8%;display:flex;align-items:center;justify-content:center;font-family:Arial,Helvetica,sans-serif;font-size:clamp(9px,.92vw,15px);font-weight:600;letter-spacing:.02em;text-rendering:geometricPrecision;-webkit-font-smoothing:antialiased;pointer-events:none}
+.request-visual{left:6.7%;width:12.9%;gap:clamp(6px,.55vw,9px);color:#fff;background:#086e87;border:1px solid #08677f;border-radius:clamp(7px,.65vw,11px);box-shadow:0 2px 5px rgba(20,65,80,.10)}
+.request-visual .calendar-icon{width:clamp(13px,1.15vw,19px);height:clamp(13px,1.15vw,19px);display:block;flex:0 0 auto}
+.request-visual .calendar-icon *{vector-effect:non-scaling-stroke}
+.learn-visual{left:20.9%;width:12.2%;gap:clamp(14px,1.8vw,30px);color:#276b7d;background:#fff;border:1.5px solid #4d8797;border-radius:clamp(7px,.65vw,11px);box-shadow:0 1px 3px rgba(20,65,80,.06)}
+.learn-visual .learn-arrow{font-size:1.55em;line-height:1;font-weight:400;transform:translateY(-1px)}
+.request-main,.learn-main{z-index:6}
+
 /* Crisp replacement for only the four trust badges. */
 .badges-visual{position:absolute;z-index:4;left:6.2%;top:72.2%;width:39.4%;height:10.8%;display:flex;align-items:center;background:#fff;border:1px solid rgba(11,113,139,.06);border-radius:clamp(12px,1.35vw,22px);box-shadow:0 7px 18px rgba(20,55,70,.10);font-family:Arial,Helvetica,sans-serif;color:#222;overflow:hidden;pointer-events:none}
 .badge-item{height:66%;display:flex;align-items:center;gap:clamp(7px,.75vw,13px);padding:0 clamp(8px,.90vw,15px);min-width:0;position:relative}
@@ -68,6 +77,7 @@ body{overflow-x:hidden}
   .badge-item{padding:0 clamp(5px,.65vw,10px);gap:clamp(4px,.50vw,8px)}
   .badge-label{font-size:clamp(7px,.72vw,10px)}
   .badge-item:nth-child(4) .badge-label{font-size:clamp(7px,.69vw,9.5px)}
+  .cta-visual{font-size:clamp(7px,.88vw,11px)}
 }
 @media(max-width:650px){
   .site-header{padding-left:2%;padding-right:1.5%}
@@ -86,6 +96,10 @@ body{overflow-x:hidden}
   .badge-item{padding:0 2px;gap:2px}
   .badge-icon{width:16px;height:16px}
   .badge-label,.badge-item:nth-child(4) .badge-label{font-size:4.5px;line-height:1.2}
+  .cta-visual{font-size:5px;border-radius:4px}
+  .request-visual{gap:3px}
+  .request-visual .calendar-icon{width:8px;height:8px}
+  .learn-visual{gap:5px}
 }
 </style>
 </head>
@@ -117,6 +131,16 @@ body{overflow-x:hidden}
 
   <span class="trusted-mask" aria-hidden="true"></span>
   <p class="trusted-copy">Trusted rides to and from appointments, dialysis, therapy,<br>and more. We provide reliable, comfortable, and<br>compassionate care—because your health matters.</p>
+
+  <div class="cta-visual request-visual" aria-hidden="true">
+    <svg class="calendar-icon" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+      <rect x="3.5" y="5.5" width="17" height="15" rx="2" stroke="currentColor" stroke-width="1.7"/>
+      <path d="M7.5 3.5v4M16.5 3.5v4M3.5 9.5h17" stroke="currentColor" stroke-width="1.7" stroke-linecap="round"/>
+      <path d="M7.5 13h2M11 13h2M14.5 13h2M7.5 16.5h2M11 16.5h2M14.5 16.5h2" stroke="currentColor" stroke-width="1.4" stroke-linecap="round"/>
+    </svg>
+    <span>REQUEST A RIDE</span>
+  </div>
+  <div class="cta-visual learn-visual" aria-hidden="true"><span>LEARN MORE</span><span class="learn-arrow">→</span></div>
 
   <div class="badges-visual" aria-hidden="true">
     <div class="badge-item">

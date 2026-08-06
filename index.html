@@ -10,7 +10,13 @@
 html,body{margin:0;padding:0;min-height:100%;background:#fff}
 body{overflow-x:hidden}
 .hero-page{position:relative;width:100%;margin:0 auto;background:#fff}
-#landing{display:block;width:100%;height:auto;border:0}
+#landing,.sharp-layer{display:block;width:100%;height:auto;border:0}
+.sharp-layer{position:absolute;inset:0;z-index:1;pointer-events:none;filter:url(#hero-sharpen)}
+.sharp-header{clip-path:inset(0 0 90% 0)}
+.sharp-left{clip-path:inset(10% 50% 39% 0)}
+.sharp-van-logo{clip-path:inset(19% 27% 58% 49%)}
+.sharp-info{clip-path:inset(60% 0 23% 0)}
+.sharp-services{clip-path:inset(77% 0 0 0)}
 .hotspot,.anchor{position:absolute;display:block;z-index:2;background:transparent;border:0;text-decoration:none}
 .hotspot:focus-visible{outline:3px solid rgba(0,145,190,.85);outline-offset:-3px;border-radius:8px}
 .logo-home{left:2.3%;top:1.2%;width:23.7%;height:8.2%}
@@ -35,8 +41,19 @@ body{overflow-x:hidden}
 </style>
 </head>
 <body>
+<svg aria-hidden="true" width="0" height="0" style="position:absolute;overflow:hidden">
+  <filter id="hero-sharpen" x="0" y="0" width="100%" height="100%" color-interpolation-filters="sRGB">
+    <feConvolveMatrix order="3" kernelMatrix="0 -0.08 0 -0.08 1.32 -0.08 0 -0.08 0" divisor="1" bias="0" targetX="1" targetY="1" edgeMode="duplicate" preserveAlpha="true"/>
+  </filter>
+</svg>
 <main class="hero-page">
   <img id="landing" src="eazy-hero.jpg" alt="Eazy Medical Transportation — reliable non-emergency medical transportation">
+
+  <img class="sharp-layer sharp-header" src="eazy-hero.jpg" alt="" aria-hidden="true">
+  <img class="sharp-layer sharp-left" src="eazy-hero.jpg" alt="" aria-hidden="true">
+  <img class="sharp-layer sharp-van-logo" src="eazy-hero.jpg" alt="" aria-hidden="true">
+  <img class="sharp-layer sharp-info" src="eazy-hero.jpg" alt="" aria-hidden="true">
+  <img class="sharp-layer sharp-services" src="eazy-hero.jpg" alt="" aria-hidden="true">
 
   <span id="about" class="anchor" aria-hidden="true"></span>
   <span id="services" class="anchor" aria-hidden="true"></span>

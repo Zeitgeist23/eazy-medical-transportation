@@ -70,6 +70,11 @@ body{overflow-x:hidden}
 .tagline-mask{position:absolute;z-index:3;left:40.25%;top:88.55%;width:24.8%;height:6.25%;pointer-events:none;background:rgba(255,255,255,.90);-webkit-backdrop-filter:blur(5px);backdrop-filter:blur(5px);box-shadow:0 0 12px 9px rgba(255,255,255,.78)}
 .tagline-copy{position:absolute;z-index:4;left:40.75%;top:89.05%;width:23.8%;margin:0;color:#2b7084;font-family:Arial,Helvetica,sans-serif;text-transform:uppercase;font-size:clamp(7px,.72vw,12px);font-weight:600;line-height:1.75;letter-spacing:.18em;text-rendering:geometricPrecision;-webkit-font-smoothing:antialiased;pointer-events:none;white-space:nowrap}
 
+/* Crisp replacement for only the bottom shield icon. */
+.tagline-icon-mask{position:absolute;z-index:3;left:37.25%;top:88.35%;width:3.15%;height:6.45%;pointer-events:none;background:rgba(255,255,255,.94);-webkit-backdrop-filter:blur(5px);backdrop-filter:blur(5px);box-shadow:0 0 10px 8px rgba(255,255,255,.82)}
+.tagline-icon{position:absolute;z-index:4;left:37.80%;top:88.72%;width:2.18%;height:auto;color:#2b7084;display:block;pointer-events:none}
+.tagline-icon *{vector-effect:non-scaling-stroke}
+
 .request-main{left:6.7%;top:62.5%;width:12.9%;height:5.8%}
 .learn-main{left:20.9%;top:62.5%;width:12.2%;height:5.8%}
 .anchor{width:1px;height:1px;pointer-events:none}
@@ -186,6 +191,12 @@ body{overflow-x:hidden}
     </div>
   </div>
 
+  <span class="tagline-icon-mask" aria-hidden="true"></span>
+  <svg class="tagline-icon" viewBox="0 0 48 48" fill="none" xmlns="http://www.w3.org/2000/svg" aria-hidden="true">
+    <path d="M24 3.5 39.5 9.8v12.4c0 10.1-6.3 18-15.5 22.3C14.8 40.2 8.5 32.3 8.5 22.2V9.8L24 3.5Z" stroke="currentColor" stroke-width="2.2" stroke-linejoin="round"/>
+    <path d="M24 14.5v14M17 21.5h14" stroke="currentColor" stroke-width="2.8" stroke-linecap="round"/>
+    <path d="M16.2 31.8h4.6l2.1-3.3 2.8 6 2.1-3.5h4" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/>
+  </svg>
   <span class="tagline-mask" aria-hidden="true"></span>
   <p class="tagline-copy">YOUR HEALTH. OUR PRIORITY.<br>SAFE. COMPASSIONATE. RELIABLE.</p>
 

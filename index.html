@@ -38,6 +38,11 @@ body{overflow-x:hidden}
 .trusted-mask{position:absolute;z-index:3;left:5.75%;top:50.9%;width:31.5%;height:10.7%;pointer-events:none;background:rgba(255,255,255,.86);-webkit-backdrop-filter:blur(7px);backdrop-filter:blur(7px);box-shadow:0 0 16px 12px rgba(255,255,255,.76)}
 .trusted-copy{position:absolute;z-index:4;left:6.25%;top:52.15%;width:29.5%;margin:0;padding:0;color:#474b4e;font-family:Arial,Helvetica,sans-serif;font-size:clamp(10px,1.03vw,17px);font-weight:400;line-height:1.55;letter-spacing:0;text-rendering:geometricPrecision;-webkit-font-smoothing:antialiased;pointer-events:none;background:transparent;box-shadow:none}
 
+/* Hide only the original raster CTA buttons. */
+.cta-mask{position:absolute;z-index:3;top:61.85%;height:7.45%;pointer-events:none;background:rgba(255,255,255,.95);-webkit-backdrop-filter:blur(6px);backdrop-filter:blur(6px);box-shadow:0 0 14px 10px rgba(255,255,255,.82)}
+.request-mask{left:6.05%;width:14.15%}
+.learn-mask{left:20.25%;width:13.65%}
+
 /* Crisp replacement for only the two CTA buttons. */
 .cta-visual{position:absolute;z-index:4;top:62.5%;height:5.8%;display:flex;align-items:center;justify-content:center;font-family:Arial,Helvetica,sans-serif;font-size:clamp(9px,.92vw,15px);font-weight:600;letter-spacing:.02em;text-rendering:geometricPrecision;-webkit-font-smoothing:antialiased;pointer-events:none}
 .request-visual{left:6.7%;width:12.9%;gap:clamp(6px,.55vw,9px);color:#fff;background:#086e87;border:1px solid #08677f;border-radius:clamp(7px,.65vw,11px);box-shadow:0 2px 5px rgba(20,65,80,.10)}
@@ -132,6 +137,8 @@ body{overflow-x:hidden}
   <span class="trusted-mask" aria-hidden="true"></span>
   <p class="trusted-copy">Trusted rides to and from appointments, dialysis, therapy,<br>and more. We provide reliable, comfortable, and<br>compassionate care—because your health matters.</p>
 
+  <span class="cta-mask request-mask" aria-hidden="true"></span>
+  <span class="cta-mask learn-mask" aria-hidden="true"></span>
   <div class="cta-visual request-visual" aria-hidden="true">
     <svg class="calendar-icon" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
       <rect x="3.5" y="5.5" width="17" height="15" rx="2" stroke="currentColor" stroke-width="1.7"/>

@@ -3,14 +3,62 @@
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width,initial-scale=1">
+<meta name="description" content="Reliable non-emergency medical transportation with care at every mile.">
 <title>Eazy Medical Transportation</title>
 <style>
+*{box-sizing:border-box}
 html,body{margin:0;padding:0;min-height:100%;background:#fff}
 body{overflow-x:hidden}
-#landing{display:block;width:100%;height:auto}
+.hero-page{position:relative;width:100%;margin:0 auto;background:#fff}
+#landing{display:block;width:100%;height:auto;border:0}
+.hotspot,.anchor{position:absolute;display:block;z-index:2;background:transparent;border:0;text-decoration:none}
+.hotspot:focus-visible{outline:3px solid rgba(0,145,190,.85);outline-offset:-3px;border-radius:8px}
+.logo-home{left:2.3%;top:1.2%;width:23.7%;height:8.2%}
+.nav-services{left:63.7%;top:2.4%;width:6.2%;height:5.2%}
+.nav-about{left:70.8%;top:2.4%;width:5.6%;height:5.2%}
+.nav-contact{left:77.4%;top:2.4%;width:6.0%;height:5.2%}
+.call-top{left:84.6%;top:2.0%;width:10.9%;height:6.0%}
+.request-main{left:3.2%;top:42.1%;width:14.1%;height:6.3%}
+.call-main{left:18.4%;top:42.1%;width:13.2%;height:6.3%}
+.schedule-main{left:32.6%;top:42.1%;width:16.0%;height:6.3%}
+.insurance-details{left:47.2%;top:65.0%;width:18.0%;height:7.3%}
+.call-bottom{left:72.5%;top:64.5%;width:19.0%;height:9.5%}
+.service-dialysis{left:3.1%;top:84.5%;width:17.4%;height:12.6%}
+.service-medical{left:21.7%;top:84.5%;width:17.3%;height:12.6%}
+.service-discharge{left:40.5%;top:84.5%;width:16.8%;height:12.6%}
+.service-wheelchair{left:58.7%;top:84.5%;width:17.3%;height:12.6%}
+.service-ambulatory{left:77.3%;top:84.5%;width:17.5%;height:12.6%}
+.anchor{width:1px;height:1px;pointer-events:none}
+#about{left:0;top:62%}
+#services{left:0;top:77%}
+@media(max-width:600px){.hotspot:focus-visible{outline-width:2px}}
 </style>
 </head>
 <body>
-<img id="landing" src="eazy-hero.jpg" alt="Eazy Medical Transportation">
+<main class="hero-page">
+  <img id="landing" src="eazy-hero.jpg" alt="Eazy Medical Transportation — reliable non-emergency medical transportation">
+
+  <span id="about" class="anchor" aria-hidden="true"></span>
+  <span id="services" class="anchor" aria-hidden="true"></span>
+
+  <a class="hotspot logo-home" href="/" aria-label="Eazy Medical Transportation home"></a>
+  <a class="hotspot nav-services" href="#services" aria-label="View services"></a>
+  <a class="hotspot nav-about" href="#about" aria-label="About Eazy Medical Transportation"></a>
+  <a class="hotspot nav-contact" href="mailto:info@eazymedicaltransportation.com?subject=Website%20Contact" aria-label="Contact Eazy Medical Transportation"></a>
+  <a class="hotspot call-top" href="tel:+18477750516" aria-label="Call Eazy Medical Transportation at 847-775-0516"></a>
+
+  <a class="hotspot request-main" href="mailto:info@eazymedicaltransportation.com?subject=Request%20a%20Ride" aria-label="Request a ride"></a>
+  <a class="hotspot call-main" href="tel:+18477750516" aria-label="Call 847-775-0516"></a>
+  <a class="hotspot schedule-main" href="mailto:info@eazymedicaltransportation.com?subject=Schedule%20Transportation" aria-label="Schedule transportation online"></a>
+
+  <a class="hotspot insurance-details" href="mailto:info@eazymedicaltransportation.com?subject=Medicaid%20and%20Insurance%20Question" aria-label="Ask about Medicaid and insurance plans"></a>
+  <a class="hotspot call-bottom" href="tel:+18477750516" aria-label="Call anytime at 847-775-0516"></a>
+
+  <a class="hotspot service-dialysis" href="mailto:info@eazymedicaltransportation.com?subject=Dialysis%20Transportation" aria-label="Ask about dialysis transportation"></a>
+  <a class="hotspot service-medical" href="mailto:info@eazymedicaltransportation.com?subject=Medical%20Appointment%20Transportation" aria-label="Ask about medical appointment transportation"></a>
+  <a class="hotspot service-discharge" href="mailto:info@eazymedicaltransportation.com?subject=Hospital%20Discharge%20Transportation" aria-label="Ask about hospital discharge transportation"></a>
+  <a class="hotspot service-wheelchair" href="mailto:info@eazymedicaltransportation.com?subject=Wheelchair-Accessible%20Transportation" aria-label="Ask about wheelchair-accessible transportation"></a>
+  <a class="hotspot service-ambulatory" href="mailto:info@eazymedicaltransportation.com?subject=Ambulatory%20Transportation" aria-label="Ask about ambulatory transportation"></a>
+</main>
 </body>
 </html>

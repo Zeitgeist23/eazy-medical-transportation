@@ -1,29 +1,16 @@
 <!doctype html>
 <html lang="en">
 <head>
-  <meta charset="utf-8">
-  <meta name="viewport" content="width=device-width,initial-scale=1">
-  <title>Eazy Medical Transportation</title>
-  <style>
-    html,body{margin:0;padding:0;min-height:100%;background:#fff}
-    body{overflow-x:hidden}
-    #landing{display:block;width:100%;height:auto}
-    #status{min-height:100vh;display:grid;place-items:center;font:600 18px Arial,sans-serif;color:#0b6e8a}
-  </style>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Eazy Medical Transportation</title>
+<style>
+html,body{margin:0;padding:0;min-height:100%;background:#fff}
+body{overflow-x:hidden}
+#landing{display:block;width:100%;height:auto}
+</style>
 </head>
 <body>
-  <div id="status">Loading…</div>
-  <img id="landing" alt="" hidden>
-  <script>
-    fetch('/static-landing.jpg.b64?v=202608061830',{cache:'no-store'})
-      .then(response=>{if(!response.ok)throw new Error('image source '+response.status);return response.text()})
-      .then(base64=>{
-        const image=document.getElementById('landing');
-        image.onload=()=>{document.getElementById('status').remove();image.hidden=false};
-        image.onerror=()=>{document.getElementById('status').textContent='Image could not load.'};
-        image.src='data:image/jpeg;base64,'+base64.replace(/\s+/g,'');
-      })
-      .catch(()=>{document.getElementById('status').textContent='Image could not load.'});
-  </script>
+<img id="landing" src="eazy-hero.jpg" alt="Eazy Medical Transportation">
 </body>
 </html>

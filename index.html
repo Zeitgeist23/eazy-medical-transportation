@@ -3,81 +3,55 @@
 <head>
   <meta charset="utf-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1" />
-  <meta name="description" content="Eazy Medical Transportation provides dependable non-emergency medical transportation in Northern Illinois." />
+  <meta name="description" content="Reliable non-emergency medical transportation with care at every mile." />
   <title>Eazy Medical Transportation</title>
-  <link rel="stylesheet" href="styles.css" />
+  <style>
+    * { box-sizing: border-box; }
+    html, body { margin: 0; min-height: 100%; background: #fff; font-family: Arial, sans-serif; }
+    .approved-page { position: relative; width: 100%; max-width: 1402px; margin: 0 auto; background: #fff; }
+    #approved-design { display: block; width: 100%; height: auto; min-height: 60vh; object-fit: contain; }
+    .loading { min-height: 70vh; display: grid; place-items: center; color: #087fa8; font-weight: 700; }
+    .hotspot { position: absolute; z-index: 5; display: block; }
+    .nav-services { left: 64%; top: 2.6%; width: 8%; height: 5%; }
+    .nav-about { left: 72%; top: 2.6%; width: 7%; height: 5%; }
+    .nav-contact { left: 79%; top: 2.6%; width: 7%; height: 5%; }
+    .call-top { right: 2.8%; top: 2.1%; width: 11.5%; height: 6%; }
+    .request { left: 3.3%; top: 42%; width: 14%; height: 6%; }
+    .call-main { left: 18%; top: 42%; width: 15%; height: 6%; }
+    .schedule { left: 34%; top: 42%; width: 15%; height: 6%; }
+    @media (max-width: 700px) {
+      .approved-page { overflow-x: hidden; }
+      #approved-design { width: 100%; }
+    }
+  </style>
 </head>
 <body>
-  <header class="site-header">
-    <a class="brand" href="#top" aria-label="Eazy Medical Transportation home">
-      <span class="brand-mark">E</span>
-      <span>Eazy Medical Transportation</span>
-    </a>
-    <nav aria-label="Primary navigation">
-      <a href="#services">Services</a>
-      <a href="#about">About</a>
-      <a href="#contact">Contact</a>
-    </nav>
-    <a class="button button-small" href="tel:+18475551234">Call Now</a>
-  </header>
-
-  <main id="top">
-    <section class="hero">
-      <div class="hero-copy">
-        <p class="eyebrow">Non-Emergency Medical Transportation</p>
-        <h1>Reliable transportation with care at every mile.</h1>
-        <p class="lead">Safe, comfortable transportation for medical appointments, dialysis, rehabilitation, hospital discharges, and other essential trips.</p>
-        <div class="hero-actions">
-          <a class="button" href="#contact">Request a Ride</a>
-          <a class="button button-secondary" href="tel:+18475551234">Speak With Dispatch</a>
-        </div>
-        <div class="trust-row">
-          <span>Professional drivers</span>
-          <span>Door-to-door assistance</span>
-          <span>Wheelchair-accessible service</span>
-        </div>
-      </div>
-      <div class="hero-image-wrap">
-        <img src="assets/eazy-hero.svg" alt="Accessible Eazy Medical Transportation van with a care attendant assisting a wheelchair passenger" />
-      </div>
-    </section>
-
-    <section id="services" class="section">
-      <p class="eyebrow">Our Services</p>
-      <h2>Transportation designed around patient needs.</h2>
-      <div class="cards">
-        <article><h3>Medical Appointments</h3><p>Dependable rides to clinics, specialists, hospitals, and follow-up visits.</p></article>
-        <article><h3>Dialysis & Recurring Trips</h3><p>Consistent scheduled transportation for recurring treatment and therapy.</p></article>
-        <article><h3>Wheelchair Transportation</h3><p>Comfortable, accessible vehicles with attentive boarding assistance.</p></article>
-      </div>
-    </section>
-
-    <section id="about" class="section section-soft split">
-      <div>
-        <p class="eyebrow">Why Eazy</p>
-        <h2>Dependable service. Respectful care.</h2>
-      </div>
-      <p>We help patients, families, healthcare facilities, and care coordinators arrange transportation with confidence. Every trip is handled with punctuality, clear communication, and respect for the passenger.</p>
-    </section>
-
-    <section id="contact" class="section contact">
-      <div>
-        <p class="eyebrow">Schedule Transportation</p>
-        <h2>Tell us where you need to go.</h2>
-        <p>Use the form to request service. A dispatcher will confirm availability and trip details.</p>
-      </div>
-      <form onsubmit="event.preventDefault(); alert('Thank you. This starter form is ready to be connected to email or dispatch software.');">
-        <label>Full name<input required name="name" autocomplete="name" /></label>
-        <label>Phone number<input required name="phone" type="tel" autocomplete="tel" /></label>
-        <label>Trip details<textarea required name="details" rows="4" placeholder="Pickup, destination, date, time, and accessibility needs"></textarea></label>
-        <button class="button" type="submit">Request Transportation</button>
-      </form>
-    </section>
+  <main class="approved-page">
+    <div id="loading" class="loading">Loading Eazy Medical Transportation…</div>
+    <img id="approved-design" alt="Eazy Medical Transportation homepage" hidden />
+    <a class="hotspot nav-services" href="#services" aria-label="Services"></a>
+    <a class="hotspot nav-about" href="#about" aria-label="About"></a>
+    <a class="hotspot nav-contact" href="mailto:info@eazymedicaltransportation.com" aria-label="Contact"></a>
+    <a class="hotspot call-top" href="tel:+18477750516" aria-label="Call now"></a>
+    <a class="hotspot request" href="mailto:info@eazymedicaltransportation.com?subject=Ride%20Request" aria-label="Request a ride"></a>
+    <a class="hotspot call-main" href="tel:+18477750516" aria-label="Call now"></a>
+    <a class="hotspot schedule" href="mailto:info@eazymedicaltransportation.com?subject=Schedule%20Transportation" aria-label="Schedule online"></a>
+    <span id="services"></span><span id="about"></span>
   </main>
-
-  <footer>
-    <span>© 2026 Eazy Medical Transportation</span>
-    <span>Serving Northern Illinois</span>
-  </footer>
+  <script>
+    Promise.all([
+      fetch('assets/hero-parts/part1.txt').then(r => { if (!r.ok) throw new Error('part1'); return r.text(); }),
+      fetch('assets/hero-parts/part2.txt').then(r => { if (!r.ok) throw new Error('part2'); return r.text(); })
+    ]).then(parts => {
+      const image = document.getElementById('approved-design');
+      image.src = 'data:image/jpeg;base64,' + parts.join('').replace(/\s/g, '');
+      image.onload = () => {
+        document.getElementById('loading').remove();
+        image.hidden = false;
+      };
+    }).catch(() => {
+      document.getElementById('loading').textContent = 'Please refresh the page.';
+    });
+  </script>
 </body>
 </html>

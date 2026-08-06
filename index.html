@@ -66,6 +66,10 @@ body{overflow-x:hidden}
 .badge-item:nth-child(4) .badge-label{font-size:clamp(8px,.72vw,12px)}
 .badges{left:6.2%;top:72.2%;width:39.4%;height:10.8%;z-index:6}
 
+/* Crisp replacement for only the bottom two-line tagline text. */
+.tagline-mask{position:absolute;z-index:3;left:40.25%;top:88.55%;width:24.8%;height:6.25%;pointer-events:none;background:rgba(255,255,255,.90);-webkit-backdrop-filter:blur(5px);backdrop-filter:blur(5px);box-shadow:0 0 12px 9px rgba(255,255,255,.78)}
+.tagline-copy{position:absolute;z-index:4;left:40.75%;top:89.05%;width:23.8%;margin:0;color:#2b7084;font-family:Arial,Helvetica,sans-serif;text-transform:uppercase;font-size:clamp(7px,.72vw,12px);font-weight:600;line-height:1.75;letter-spacing:.18em;text-rendering:geometricPrecision;-webkit-font-smoothing:antialiased;pointer-events:none;white-space:nowrap}
+
 .request-main{left:6.7%;top:62.5%;width:12.9%;height:5.8%}
 .learn-main{left:20.9%;top:62.5%;width:12.2%;height:5.8%}
 .anchor{width:1px;height:1px;pointer-events:none}
@@ -105,6 +109,7 @@ body{overflow-x:hidden}
   .request-visual{gap:3px}
   .request-visual .calendar-icon{width:8px;height:8px}
   .learn-visual{gap:5px}
+  .tagline-copy{font-size:4.2px;letter-spacing:.12em;line-height:1.65}
 }
 </style>
 </head>
@@ -180,6 +185,9 @@ body{overflow-x:hidden}
       <span class="badge-label">Compassionate<br>Care</span>
     </div>
   </div>
+
+  <span class="tagline-mask" aria-hidden="true"></span>
+  <p class="tagline-copy">YOUR HEALTH. OUR PRIORITY.<br>SAFE. COMPASSIONATE. RELIABLE.</p>
 
   <span id="about" class="anchor" aria-hidden="true"></span>
   <span id="services" class="anchor" aria-hidden="true"></span>

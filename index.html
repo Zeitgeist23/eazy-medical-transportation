@@ -6,10 +6,24 @@
   <title>Eazy Medical Transportation</title>
   <meta name="description" content="Reliable non-emergency medical transportation with care at every mile.">
   <style>
-    *{box-sizing:border-box}html,body{margin:0;background:#fff;font-family:Arial,Helvetica,sans-serif}.approved-wrap{position:relative;width:100%;max-width:1402px;margin:0 auto;overflow:hidden;background:#fff}.approved-wrap img{display:block;width:100%;height:auto}.loading{min-height:70vh;display:grid;place-items:center;color:#078fb9;font-weight:800}.number-cover{position:absolute;z-index:4;display:flex;align-items:center;justify-content:center;font-weight:800;color:#087fa8;line-height:1;background:#fff}.number-main{left:20.4%;top:45.3%;width:11.2%;height:2.6%;font-size:clamp(8px,1.05vw,15px)}.number-bottom{left:80.5%;top:72.0%;width:12.8%;height:2.9%;background:#edf9fd;font-size:clamp(8px,1.15vw,16px)}.hotspot{position:absolute;z-index:5;display:block}.call-top{right:2.8%;top:2.2%;width:11.3%;height:5.7%}.request{left:3.3%;top:42.3%;width:14%;height:6.1%}.call-main{left:18.2%;top:42.3%;width:14.5%;height:6.1%}.schedule{left:34%;top:42.3%;width:15%;height:6.1%}@media(max-width:700px){.number-main,.number-bottom{font-weight:700}}
+    *{box-sizing:border-box}
+    html,body{margin:0;min-height:100%;background:#fff;font-family:Arial,Helvetica,sans-serif}
+    .approved-wrap{position:relative;width:100%;max-width:1402px;margin:0 auto;overflow:hidden;background:#fff;min-height:100vh}
+    .approved-wrap img{display:block;width:100%;height:auto}
+    .loading{min-height:100vh;display:grid;place-items:center;color:#078fb9;font-weight:800;font-size:18px}
+    .number-cover{position:absolute;z-index:4;display:flex;align-items:center;justify-content:center;font-weight:800;color:#087fa8;line-height:1;background:#fff}
+    .number-main{left:20.4%;top:45.3%;width:11.2%;height:2.6%;font-size:clamp(8px,1.05vw,15px)}
+    .number-bottom{left:80.5%;top:72.0%;width:12.8%;height:2.9%;background:#edf9fd;font-size:clamp(8px,1.15vw,16px)}
+    .hotspot{position:absolute;z-index:5;display:block}
+    .call-top{right:2.8%;top:2.2%;width:11.3%;height:5.7%}
+    .request{left:3.3%;top:42.3%;width:14%;height:6.1%}
+    .call-main{left:18.2%;top:42.3%;width:14.5%;height:6.1%}
+    .schedule{left:34%;top:42.3%;width:15%;height:6.1%}
+    @media(max-width:700px){.number-main,.number-bottom{font-weight:700}}
   </style>
 </head>
 <body>
+  <!-- production redeploy 2026-08-06 -->
   <main class="approved-wrap">
     <div id="loading" class="loading">Loading Eazy Medical Transportation…</div>
     <img id="approved-design" alt="Eazy Medical Transportation homepage" hidden>
@@ -22,13 +36,14 @@
   </main>
   <script>
     Promise.all([
-      fetch('assets/hero-parts/part1.txt').then(r=>{if(!r.ok)throw new Error('part1');return r.text()}),
-      fetch('assets/hero-parts/part2.txt').then(r=>{if(!r.ok)throw new Error('part2');return r.text()})
+      fetch('/assets/hero-parts/part1.txt?v=20260806').then(r=>{if(!r.ok)throw new Error('part1');return r.text()}),
+      fetch('/assets/hero-parts/part2.txt?v=20260806').then(r=>{if(!r.ok)throw new Error('part2');return r.text()})
     ]).then(parts=>{
       const image=document.getElementById('approved-design');
       image.src='data:image/jpeg;base64,'+parts.join('').replace(/\s/g,'');
       image.onload=()=>{document.getElementById('loading').remove();image.hidden=false};
-    }).catch(()=>{document.getElementById('loading').textContent='Please refresh the page.'});
+      image.onerror=()=>{document.getElementById('loading').textContent='Image failed to load. Please refresh.'};
+    }).catch(()=>{document.getElementById('loading').textContent='Image failed to load. Please refresh.'});
   </script>
 </body>
 </html>

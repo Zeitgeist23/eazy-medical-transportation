@@ -34,6 +34,9 @@ body{overflow-x:hidden}
 .header-phone{display:inline-flex!important;align-items:center;gap:11px;padding:13px 26px!important;border:1px solid #d8dde1;border-radius:999px;color:#30343a!important;background:#fff;font-size:clamp(13px,1.10vw,19px)!important}
 .header-phone .phone-icon{font-size:1.08em;color:#08728d;line-height:1}
 
+/* Crisp replacement for only the existing three-line Trusted rides paragraph. */
+.trusted-copy{position:absolute;z-index:4;left:6.25%;top:52.15%;width:29.5%;margin:0;padding:0;color:#474b4e;font-family:Arial,Helvetica,sans-serif;font-size:clamp(10px,1.03vw,17px);font-weight:400;line-height:1.55;letter-spacing:0;text-rendering:geometricPrecision;-webkit-font-smoothing:antialiased;pointer-events:none;background:rgba(255,255,255,.90);box-shadow:0 0 12px 10px rgba(255,255,255,.82)}
+
 .request-main{left:6.7%;top:62.5%;width:12.9%;height:5.8%}
 .learn-main{left:20.9%;top:62.5%;width:12.2%;height:5.8%}
 .badges{left:6.2%;top:72.2%;width:39.4%;height:10.8%}
@@ -62,6 +65,7 @@ body{overflow-x:hidden}
   .header-nav a{font-size:8px;padding:6px 0}
   .header-phone{padding:5px 8px!important;font-size:8px!important}
   .hotspot:focus-visible,.site-header a:focus-visible{outline-width:2px}
+  .trusted-copy{font-size:clamp(5px,1.02vw,8px);line-height:1.5}
 }
 </style>
 </head>
@@ -90,6 +94,8 @@ body{overflow-x:hidden}
       <a class="header-phone" href="tel:+18477750516"><span class="phone-icon">☎</span><span>(847) 775-0516</span></a>
     </nav>
   </header>
+
+  <p class="trusted-copy">Trusted rides to and from appointments, dialysis, therapy,<br>and more. We provide reliable, comfortable, and<br>compassionate care—because your health matters.</p>
 
   <span id="about" class="anchor" aria-hidden="true"></span>
   <span id="services" class="anchor" aria-hidden="true"></span>

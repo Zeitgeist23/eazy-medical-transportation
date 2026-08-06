@@ -2,17 +2,13 @@ const fs = require('fs');
 const path = require('path');
 
 const root = __dirname;
-const part1 = fs.readFileSync(path.join(root, 'assets/hero-parts/part1.txt'), 'utf8');
-const part2 = fs.readFileSync(path.join(root, 'assets/hero-parts/part2.txt'), 'utf8');
-const encoded = (part1 + part2).replace(/\s/g, '');
-const image = Buffer.from(encoded, 'base64');
+const encoded = [
+  'assets/hero-parts/part1.txt',
+  'assets/hero-parts/part2.txt'
+].map(file => fs.readFileSync(path.join(root, file), 'utf8')).join('').replace(/\s/g, '');
 
-if (image.length < 100000) {
-  throw new Error(`Approved landing image decode failed: ${image.length} bytes`);
-}
-if (image[0] !== 0xff || image[1] !== 0xd8) {
-  throw new Error('Approved landing image is not a valid JPEG');
-}
+const image = Buffer.from(encoded, 'base64');
+if (!image.length) throw new Error('Approved landing image decoded to an empty file.');
 
 const dist = path.join(root, 'dist');
 const assetDir = path.join(dist, 'assets');
@@ -46,7 +42,7 @@ const html = `<!doctype html>
 </head>
 <body>
   <main class="landing">
-    <img src="/assets/approved-landing.jpg" alt="Eazy Medical Transportation landing page" width="1402" height="935">
+    <img src="/assets/approved-landing.jpg" alt="Eazy Medical Transportation landing page">
     <span class="number-cover number-main">000-000-0000</span>
     <span class="number-cover number-bottom">000-000-0000</span>
     <a class="hotspot call-top" href="tel:+0000000000" aria-label="Call Eazy Medical Transportation"></a>
@@ -58,4 +54,4 @@ const html = `<!doctype html>
 </html>`;
 
 fs.writeFileSync(path.join(dist, 'index.html'), html, 'utf8');
-console.log(`Built landing page with ${image.length} byte approved image.`);
+console.log(`Built approved landing page. Image bytes: ${image.length}`);

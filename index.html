@@ -40,11 +40,16 @@ body{overflow-x:hidden}
 
 /* Crisp replacement for only the four trust badges. */
 .badges-visual{position:absolute;z-index:4;left:6.2%;top:72.2%;width:39.4%;height:10.8%;display:flex;align-items:center;background:#fff;border:1px solid rgba(11,113,139,.06);border-radius:clamp(12px,1.35vw,22px);box-shadow:0 7px 18px rgba(20,55,70,.10);font-family:Arial,Helvetica,sans-serif;color:#222;overflow:hidden;pointer-events:none}
-.badge-item{height:66%;display:flex;align-items:center;gap:clamp(7px,.75vw,13px);padding:0 clamp(10px,1.05vw,17px);flex:1 1 0;min-width:0;position:relative}
+.badge-item{height:66%;display:flex;align-items:center;gap:clamp(7px,.75vw,13px);padding:0 clamp(8px,.90vw,15px);min-width:0;position:relative}
+.badge-item:nth-child(1){flex:.92 1 0}
+.badge-item:nth-child(2){flex:1.22 1 0}
+.badge-item:nth-child(3){flex:.90 1 0}
+.badge-item:nth-child(4){flex:1.18 1 0;padding-right:clamp(4px,.45vw,8px)}
 .badge-item+.badge-item:before{content:"";position:absolute;left:0;top:11%;bottom:11%;width:1px;background:#d9dfe2}
 .badge-icon{width:clamp(29px,2.75vw,46px);height:clamp(29px,2.75vw,46px);flex:0 0 auto;color:#0b718b;display:block}
 .badge-icon *{vector-effect:non-scaling-stroke}
 .badge-label{font-size:clamp(8px,.76vw,13px);font-weight:500;line-height:1.35;color:#252525;text-rendering:geometricPrecision;-webkit-font-smoothing:antialiased;white-space:normal}
+.badge-item:nth-child(4) .badge-label{font-size:clamp(8px,.72vw,12px)}
 .badges{left:6.2%;top:72.2%;width:39.4%;height:10.8%;z-index:6}
 
 .request-main{left:6.7%;top:62.5%;width:12.9%;height:5.8%}
@@ -60,8 +65,9 @@ body{overflow-x:hidden}
   .header-nav{gap:clamp(16px,2.8vw,34px)}
   .header-nav a{font-size:clamp(11px,1.15vw,15px)}
   .header-phone{padding:10px 16px!important;gap:7px;font-size:clamp(11px,1.15vw,15px)!important}
-  .badge-item{padding:0 clamp(6px,.75vw,11px);gap:clamp(4px,.55vw,8px)}
-  .badge-label{font-size:clamp(7px,.75vw,10px)}
+  .badge-item{padding:0 clamp(5px,.65vw,10px);gap:clamp(4px,.50vw,8px)}
+  .badge-label{font-size:clamp(7px,.72vw,10px)}
+  .badge-item:nth-child(4) .badge-label{font-size:clamp(7px,.69vw,9.5px)}
 }
 @media(max-width:650px){
   .site-header{padding-left:2%;padding-right:1.5%}
@@ -77,9 +83,9 @@ body{overflow-x:hidden}
   .header-phone{padding:5px 8px!important;font-size:8px!important}
   .hotspot:focus-visible,.site-header a:focus-visible{outline-width:2px}
   .trusted-copy{font-size:clamp(5px,1.02vw,8px);line-height:1.5}
-  .badge-item{padding:0 3px;gap:2px}
+  .badge-item{padding:0 2px;gap:2px}
   .badge-icon{width:16px;height:16px}
-  .badge-label{font-size:4.7px;line-height:1.2}
+  .badge-label,.badge-item:nth-child(4) .badge-label{font-size:4.5px;line-height:1.2}
 }
 </style>
 </head>

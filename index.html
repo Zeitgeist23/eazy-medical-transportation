@@ -12,41 +12,88 @@ body{overflow-x:hidden}
 .hero-page{position:relative;width:100%;margin:0 auto;background:#fff}
 #landing{display:block;width:100%;height:auto;border:0}
 .hotspot,.anchor{position:absolute;display:block;z-index:3;background:transparent;border:0;text-decoration:none}
-.hotspot:focus-visible,.header-nav a:focus-visible{outline:3px solid rgba(0,145,190,.85);outline-offset:2px;border-radius:7px}
-.header-nav{position:absolute;z-index:4;left:33.8%;right:3.4%;top:0;height:12.25%;background:#fff;display:flex;align-items:center;justify-content:flex-end;gap:clamp(26px,4.05vw,70px);font-family:Arial,Helvetica,sans-serif;color:#1b1b1b;white-space:nowrap;border-bottom:1px solid #eef1f3}
+.hotspot:focus-visible,.site-header a:focus-visible{outline:3px solid rgba(0,145,190,.85);outline-offset:2px;border-radius:7px}
+
+/* One continuous crisp HTML header replaces the blurry raster header area. */
+.site-header{position:absolute;z-index:5;left:0;right:0;top:0;height:12.25%;background:#fff;border-bottom:1px solid #eef1f3;display:flex;align-items:center;padding:0 3.4% 0 4.6%;font-family:Arial,Helvetica,sans-serif;white-space:nowrap}
+.brand{height:100%;width:30%;display:flex;align-items:center;gap:clamp(10px,1.1vw,19px);text-decoration:none;color:#075a73;flex:0 0 auto}
+.brand-mark{position:relative;display:block;width:clamp(48px,5.2vw,82px);height:clamp(48px,5.2vw,82px);flex:0 0 auto}
+.brand-ring{position:absolute;inset:5%;border:3px solid #0a718c;border-right-color:transparent;border-radius:50%;transform:rotate(-18deg)}
+.brand-ring:before,.brand-ring:after{content:"";position:absolute;border-bottom:3px solid #74adbb;border-radius:50%;transform:rotate(-10deg)}
+.brand-ring:before{left:-3%;right:18%;bottom:-9%;height:32%}
+.brand-ring:after{left:11%;right:2%;bottom:-18%;height:38%}
+.brand-cross{position:absolute;left:50%;top:47%;transform:translate(-50%,-50%);color:#08728d;font-family:Arial,Helvetica,sans-serif;font-size:clamp(33px,3.65vw,58px);font-weight:900;line-height:.8}
+.brand-copy{display:flex;flex-direction:column;justify-content:center;min-width:0;transform:translateY(-1px)}
+.brand-name{font-family:Georgia,'Times New Roman',serif;font-size:clamp(25px,2.45vw,40px);font-weight:400;line-height:.9;letter-spacing:.045em;color:#075a73}
+.brand-sub{margin-top:7px;font-size:clamp(8px,.78vw,13px);font-weight:600;line-height:1;letter-spacing:.23em;color:#075a73}
+
+.header-nav{margin-left:auto;height:100%;display:flex;align-items:center;justify-content:flex-end;gap:clamp(26px,4.05vw,70px);color:#1b1b1b}
 .header-nav a{position:relative;color:#1b1b1b;text-decoration:none;font-size:clamp(13px,1.10vw,19px);font-weight:500;line-height:1;padding:14px 0;text-rendering:geometricPrecision;-webkit-font-smoothing:antialiased}
 .header-nav a.active{color:#0d6179}
 .header-nav a.active:after{content:"";position:absolute;left:0;right:0;bottom:2px;height:2px;background:#0f7892;border-radius:2px}
 .header-phone{display:inline-flex!important;align-items:center;gap:11px;padding:13px 26px!important;border:1px solid #d8dde1;border-radius:999px;color:#30343a!important;background:#fff;font-size:clamp(13px,1.10vw,19px)!important}
 .header-phone .phone-icon{font-size:1.08em;color:#08728d;line-height:1}
-.logo-home{left:2.3%;top:1.2%;width:28%;height:9.5%}
+
 .request-main{left:6.7%;top:62.5%;width:12.9%;height:5.8%}
 .learn-main{left:20.9%;top:62.5%;width:12.2%;height:5.8%}
 .badges{left:6.2%;top:72.2%;width:39.4%;height:10.8%}
 .anchor{width:1px;height:1px;pointer-events:none}
 #about{left:0;top:12.3%}
 #services{left:0;top:84%}
-@media(max-width:1100px){.header-nav{left:32.5%;right:2.5%;gap:clamp(16px,2.8vw,34px)}.header-nav a{font-size:clamp(11px,1.15vw,15px)}.header-phone{padding:10px 16px!important;gap:7px;font-size:clamp(11px,1.15vw,15px)!important}}
-@media(max-width:650px){.header-nav{left:31%;right:1.5%;gap:7px}.header-nav a{font-size:8px;padding:6px 0}.header-phone{padding:5px 8px!important;font-size:8px!important}.hotspot:focus-visible,.header-nav a:focus-visible{outline-width:2px}}
+
+@media(max-width:1100px){
+  .site-header{padding-left:3.2%;padding-right:2.5%}
+  .brand{width:31%;gap:9px}
+  .brand-sub{letter-spacing:.15em}
+  .header-nav{gap:clamp(16px,2.8vw,34px)}
+  .header-nav a{font-size:clamp(11px,1.15vw,15px)}
+  .header-phone{padding:10px 16px!important;gap:7px;font-size:clamp(11px,1.15vw,15px)!important}
+}
+@media(max-width:650px){
+  .site-header{padding-left:2%;padding-right:1.5%}
+  .brand{width:31%;gap:4px}
+  .brand-mark{width:30px;height:30px}
+  .brand-ring{border-width:2px}
+  .brand-ring:before,.brand-ring:after{border-bottom-width:2px}
+  .brand-cross{font-size:21px}
+  .brand-name{font-size:14px}
+  .brand-sub{font-size:4.5px;margin-top:3px;letter-spacing:.1em}
+  .header-nav{gap:7px}
+  .header-nav a{font-size:8px;padding:6px 0}
+  .header-phone{padding:5px 8px!important;font-size:8px!important}
+  .hotspot:focus-visible,.site-header a:focus-visible{outline-width:2px}
+}
 </style>
 </head>
 <body>
 <main class="hero-page">
   <img id="landing" src="eazy-hero.jpg" alt="Eazy Medical Transportation — reliable non-emergency medical transportation">
 
-  <nav class="header-nav" aria-label="Primary navigation">
-    <a class="active" href="/">Home</a>
-    <a href="#services">Services</a>
-    <a href="#about">About</a>
-    <a href="mailto:info@eazymedicaltransportation.com?subject=Request%20a%20Ride">Request a Ride</a>
-    <a href="mailto:info@eazymedicaltransportation.com?subject=Website%20Contact">Contact</a>
-    <a class="header-phone" href="tel:+18477750516"><span class="phone-icon">☎</span><span>(847) 775-0516</span></a>
-  </nav>
+  <header class="site-header">
+    <a class="brand" href="/" aria-label="Eazy Medical Transportation home">
+      <span class="brand-mark" aria-hidden="true">
+        <span class="brand-ring"></span>
+        <span class="brand-cross">+</span>
+      </span>
+      <span class="brand-copy">
+        <span class="brand-name">EAZY</span>
+        <span class="brand-sub">MEDICAL TRANSPORTATION</span>
+      </span>
+    </a>
+
+    <nav class="header-nav" aria-label="Primary navigation">
+      <a class="active" href="/">Home</a>
+      <a href="#services">Services</a>
+      <a href="#about">About</a>
+      <a href="mailto:info@eazymedicaltransportation.com?subject=Request%20a%20Ride">Request a Ride</a>
+      <a href="mailto:info@eazymedicaltransportation.com?subject=Website%20Contact">Contact</a>
+      <a class="header-phone" href="tel:+18477750516"><span class="phone-icon">☎</span><span>(847) 775-0516</span></a>
+    </nav>
+  </header>
 
   <span id="about" class="anchor" aria-hidden="true"></span>
   <span id="services" class="anchor" aria-hidden="true"></span>
 
-  <a class="hotspot logo-home" href="/" aria-label="Eazy Medical Transportation home"></a>
   <a class="hotspot request-main" href="mailto:info@eazymedicaltransportation.com?subject=Request%20a%20Ride" aria-label="Request a ride"></a>
   <a class="hotspot learn-main" href="#services" aria-label="Learn more about our services"></a>
   <a class="hotspot badges" href="#about" aria-label="Learn about Eazy Medical Transportation safety and service standards"></a>

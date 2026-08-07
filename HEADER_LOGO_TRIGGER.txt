@@ -1,1 +1,0 @@
-Temporary trigger for exact uploaded logo bake; remove before merge.

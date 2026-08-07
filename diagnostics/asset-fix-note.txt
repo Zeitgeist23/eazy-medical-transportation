@@ -1,0 +1,1 @@
+Preparing exact PNG asset reconstruction from the approved 1448x1086 directory landing image. Source SHA-256: dc2da85d89f24e5b583982261c0513c24cc0104ea372054a926421db9f5fd35a

@@ -17,58 +17,56 @@ jobs:
           ref: ${{ github.head_ref }}
       - name: Install Pillow
         run: python -m pip install --quiet pillow
-      - name: Fetch verified hero patch blob
-        env:
-          GH_TOKEN: ${{ github.token }}
-        run: |
-          gh api repos/${{ github.repository }}/git/blobs/1869f5d384d6bdde592f513dbf8ab6843718b986 --jq .content | tr -d '\n' | base64 -d > hero-bake-patch.webp
-          file hero-bake-patch.webp
-          test -s hero-bake-patch.webp
-      - name: Bake hero scene into existing PNG and remove overlay
+      - name: Bake current replacement scene into underlying PNG
         shell: python
         run: |
           from PIL import Image, ImageFilter, ImageDraw
           from pathlib import Path
 
           png = Path('directory-landing-approved.png')
+          overlay = Path('hero-scene-overlay.webp')
+          html = Path('index.html')
+          if not png.exists() or not overlay.exists():
+              raise SystemExit('Required landing PNG or replacement scene is missing')
+
           im = Image.open(png).convert('RGB')
           original = im.copy()
-          patch = Image.open('hero-bake-patch.webp').convert('RGB')
+          scene = Image.open(overlay).convert('RGB')
+          print('landing size:', im.size)
+          print('scene source size:', scene.size)
           if im.size != (1448,1086):
               raise SystemExit(f'Unexpected landing image size: {im.size}')
-          if patch.size != (658,305):
-              raise SystemExit(f'Unexpected patch size: {patch.size}')
 
-          # Replace the original hero-scene pixels themselves. No HTML overlay.
+          # Resize the already-approved replacement scene to the exact original hero artwork area.
+          target_size = (658,305)
+          scene = scene.resize(target_size, Image.Resampling.LANCZOS)
           box = (790,85,1448,390)
           under = im.crop(box)
-          mask = Image.new('L', patch.size, 255)
+
+          # Feather the left seam so the new scene becomes part of the original artwork.
+          mask = Image.new('L', target_size, 255)
           d = ImageDraw.Draw(mask)
-          feather = 135
+          feather = 150
           for x in range(feather):
-              d.line((x,0,x,patch.height), fill=int(255*x/feather))
-          mask = mask.filter(ImageFilter.GaussianBlur(5))
-          baked = Image.composite(patch, under, mask)
+              d.line((x,0,x,target_size[1]), fill=int(255*x/feather))
+          mask = mask.filter(ImageFilter.GaussianBlur(7))
+          baked = Image.composite(scene, under, mask)
           im.paste(baked, box)
 
-          # Restore every page area that is not part of the right-side hero artwork.
+          # Restore every area that is not the right-side hero artwork.
           im.paste(original.crop((0,0,1448,86)), (0,0))
           im.paste(original.crop((0,85,790,390)), (0,85))
           im.paste(original.crop((95,260,915,382)), (95,260))
           im.paste(original.crop((0,390,1448,1086)), (0,390))
           im.save(png, optimize=True)
 
-          # Remove the separate overlay from HTML.
-          html = Path('index.html')
+          # Remove the old second-image overlay architecture completely.
           s = html.read_text()
           s = s.replace('#hero-scene-overlay{position:absolute;left:60.08%;top:7.73%;width:39.92%;height:28.18%;object-fit:fill;z-index:2;pointer-events:none}\n','')
           s = s.replace('    <img id="hero-scene-overlay" src="hero-scene-overlay.webp" alt="">\n','')
           html.write_text(s)
-
-          overlay = Path('hero-scene-overlay.webp')
-          if overlay.exists(): overlay.unlink()
-          Path('hero-bake-patch.webp').unlink()
-      - name: Verify overlay is gone
+          overlay.unlink()
+      - name: Verify true replacement
         run: |
           ! grep -q 'hero-scene-overlay' index.html
           test ! -e hero-scene-overlay.webp

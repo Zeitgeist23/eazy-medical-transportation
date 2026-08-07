@@ -1,90 +1,48 @@
 <!doctype html>
 <html lang="en">
 <head>
-<meta charset="utf-8">
-<meta name="viewport" content="width=device-width,initial-scale=1">
-<meta name="description" content="Reliable non-emergency medical transportation with care at every mile.">
-<title>Eazy Medical Transportation</title>
-<style>
-*{box-sizing:border-box}
-html,body{margin:0;padding:0;min-height:100%;background:#fff}
-body{overflow-x:hidden}
-.hero-page{position:relative;width:100%;margin:0 auto;background:#fff}
-#landing{display:block;width:100%;height:auto;border:0}
-.hotspot,.anchor{position:absolute;display:block;z-index:3;background:transparent;border:0;text-decoration:none}
-.hotspot:focus-visible,.site-header a:focus-visible{outline:3px solid rgba(0,145,190,.85);outline-offset:2px;border-radius:7px}
-.site-header{position:absolute;z-index:5;left:0;right:0;top:0;height:12.25%;background:#fff;border-bottom:1px solid #eef1f3;display:flex;align-items:center;padding:0 2.2% 0 3%;font-family:Arial,Helvetica,sans-serif;white-space:nowrap;overflow:hidden}
-.brand{height:100%;width:30%;display:flex;align-items:center;text-decoration:none;flex:0 0 auto;overflow:hidden}
-.brand-logo{display:block;width:clamp(210px,22vw,345px);height:auto;max-height:86%;overflow:visible}
-.brand-logo .logo-main{fill:#075a73}.brand-logo .logo-accent{stroke:#0b718b}.brand-logo .logo-light{stroke:#73aebd}.brand-logo .logo-name{fill:#075a73;font-family:Georgia,'Times New Roman',serif;font-size:46px;font-weight:400;letter-spacing:1px}.brand-logo .logo-sub{fill:#075a73;font-family:Arial,Helvetica,sans-serif;font-size:10.5px;font-weight:700;letter-spacing:3.1px}
-.header-nav{margin-left:auto;height:100%;display:flex;align-items:center;justify-content:flex-end;gap:clamp(16px,2.2vw,36px);color:#1b1b1b;min-width:0}
-.header-nav a{position:relative;color:#1b1b1b;text-decoration:none;font-size:clamp(12px,1.02vw,17px);font-weight:500;line-height:1;padding:14px 0;text-rendering:geometricPrecision;-webkit-font-smoothing:antialiased;flex:0 0 auto}
-.header-nav a.active{color:#0d6179}
-.header-nav a.active:after{content:"";position:absolute;left:0;right:0;bottom:2px;height:2px;background:#0f7892;border-radius:2px}
-.header-phone{display:inline-flex!important;align-items:center;gap:9px;padding:11px 18px!important;border:1px solid #d8dde1;border-radius:999px;color:#30343a!important;background:#fff;font-size:clamp(12px,1.02vw,17px)!important}
-.header-phone .phone-icon{font-size:1.08em;color:#08728d;line-height:1}
-.trusted-mask{position:absolute;z-index:3;left:5.75%;top:50.9%;width:31.5%;height:10.7%;pointer-events:none;background:rgba(255,255,255,.86);-webkit-backdrop-filter:blur(7px);backdrop-filter:blur(7px);box-shadow:0 0 16px 12px rgba(255,255,255,.76)}
-.trusted-copy{position:absolute;z-index:4;left:6.25%;top:52.15%;width:29.5%;margin:0;padding:0;color:#474b4e;font-family:Arial,Helvetica,sans-serif;font-size:clamp(10px,1.03vw,17px);font-weight:400;line-height:1.55;letter-spacing:0;text-rendering:geometricPrecision;-webkit-font-smoothing:antialiased;pointer-events:none;background:transparent;box-shadow:none}
-.cta-mask{position:absolute;z-index:3;top:61.85%;height:7.45%;pointer-events:none;background:rgba(255,255,255,.95);-webkit-backdrop-filter:blur(6px);backdrop-filter:blur(6px);box-shadow:0 0 14px 10px rgba(255,255,255,.82)}
-.request-mask{left:6.05%;width:14.15%}.learn-mask{left:20.25%;width:13.65%}
-.cta-visual{position:absolute;z-index:4;top:62.5%;height:5.8%;display:flex;align-items:center;justify-content:center;font-family:Arial,Helvetica,sans-serif;font-size:clamp(9px,.92vw,15px);font-weight:600;letter-spacing:.02em;text-rendering:geometricPrecision;-webkit-font-smoothing:antialiased;pointer-events:none}
-.request-visual{left:6.7%;width:12.9%;gap:clamp(6px,.55vw,9px);color:#fff;background:#086e87;border:1px solid #08677f;border-radius:clamp(7px,.65vw,11px);box-shadow:0 2px 5px rgba(20,65,80,.10)}
-.request-visual .calendar-icon{width:clamp(13px,1.15vw,19px);height:clamp(13px,1.15vw,19px);display:block;flex:0 0 auto}.request-visual .calendar-icon *{vector-effect:non-scaling-stroke}
-.learn-visual{left:20.9%;width:12.2%;gap:clamp(14px,1.8vw,30px);color:#276b7d;background:#fff;border:1.5px solid #4d8797;border-radius:clamp(7px,.65vw,11px);box-shadow:0 1px 3px rgba(20,65,80,.06)}
-.learn-visual .learn-arrow{font-size:1.55em;line-height:1;font-weight:400;transform:translateY(-1px)}
-.request-main,.learn-main{z-index:6}
-.badges-visual{position:absolute;z-index:4;left:6.2%;top:72.2%;width:39.4%;height:10.8%;display:flex;align-items:center;background:#fff;border:1px solid rgba(11,113,139,.06);border-radius:clamp(12px,1.35vw,22px);box-shadow:0 7px 18px rgba(20,55,70,.10);font-family:Arial,Helvetica,sans-serif;color:#222;overflow:hidden;pointer-events:none}
-.badge-item{height:66%;display:flex;align-items:center;gap:clamp(7px,.75vw,13px);padding:0 clamp(8px,.90vw,15px);min-width:0;position:relative}
-.badge-item:nth-child(1){flex:.92 1 0}.badge-item:nth-child(2){flex:1.22 1 0}.badge-item:nth-child(3){flex:.90 1 0}.badge-item:nth-child(4){flex:1.18 1 0;padding-right:clamp(4px,.45vw,8px)}
-.badge-item+.badge-item:before{content:"";position:absolute;left:0;top:11%;bottom:11%;width:1px;background:#d9dfe2}
-.badge-icon{width:clamp(29px,2.75vw,46px);height:clamp(29px,2.75vw,46px);flex:0 0 auto;color:#0b718b;display:block}.badge-icon *{vector-effect:non-scaling-stroke}
-.badge-label{font-size:clamp(8px,.76vw,13px);font-weight:500;line-height:1.35;color:#252525;text-rendering:geometricPrecision;-webkit-font-smoothing:antialiased;white-space:normal}.badge-item:nth-child(4) .badge-label{font-size:clamp(8px,.72vw,12px)}
-.badges{left:6.2%;top:72.2%;width:39.4%;height:10.8%;z-index:6}
-.tagline-mask{position:absolute;z-index:3;left:40.25%;top:88.55%;width:24.8%;height:6.25%;pointer-events:none;background:rgba(255,255,255,.90);-webkit-backdrop-filter:blur(5px);backdrop-filter:blur(5px);box-shadow:0 0 12px 9px rgba(255,255,255,.78)}
-.tagline-copy{position:absolute;z-index:4;left:40.75%;top:89.05%;width:23.8%;margin:0;color:#2b7084;font-family:Arial,Helvetica,sans-serif;text-transform:uppercase;font-size:clamp(7px,.72vw,12px);font-weight:600;line-height:1.75;letter-spacing:.18em;text-rendering:geometricPrecision;-webkit-font-smoothing:antialiased;pointer-events:none;white-space:nowrap}
-.tagline-icon-mask{position:absolute;z-index:3;left:37.25%;top:88.35%;width:3.15%;height:6.45%;pointer-events:none;background:rgba(255,255,255,.94);-webkit-backdrop-filter:blur(5px);backdrop-filter:blur(5px);box-shadow:0 0 10px 8px rgba(255,255,255,.82)}
-.tagline-icon{position:absolute;z-index:4;left:37.80%;top:88.72%;width:2.18%;height:auto;color:#2b7084;display:block;pointer-events:none}.tagline-icon *{vector-effect:non-scaling-stroke}
-.request-main{left:6.7%;top:62.5%;width:12.9%;height:5.8%}.learn-main{left:20.9%;top:62.5%;width:12.2%;height:5.8%}.anchor{width:1px;height:1px;pointer-events:none}#about{left:0;top:12.3%}#services{left:0;top:84%}
-@media(max-width:1100px){.site-header{padding-left:2%;padding-right:1.6%}.brand{width:29%}.brand-logo{width:clamp(165px,24vw,260px)}.header-nav{gap:clamp(9px,1.5vw,18px)}.header-nav a{font-size:clamp(10px,1.1vw,14px)}.header-phone{padding:9px 12px!important;gap:6px;font-size:clamp(10px,1.1vw,14px)!important}.badge-item{padding:0 clamp(5px,.65vw,10px);gap:clamp(4px,.50vw,8px)}.badge-label{font-size:clamp(7px,.72vw,10px)}.badge-item:nth-child(4) .badge-label{font-size:clamp(7px,.69vw,9.5px)}.cta-visual{font-size:clamp(7px,.88vw,11px)}}
-@media(max-width:650px){.site-header{padding-left:1.5%;padding-right:1%}.brand{width:28%}.brand-logo{width:105px}.header-nav{gap:5px}.header-nav a{font-size:7px;padding:5px 0}.header-phone{padding:4px 6px!important;font-size:7px!important}.hotspot:focus-visible,.site-header a:focus-visible{outline-width:2px}.trusted-copy{font-size:clamp(5px,1.02vw,8px);line-height:1.5}.badge-item{padding:0 2px;gap:2px}.badge-icon{width:16px;height:16px}.badge-label,.badge-item:nth-child(4) .badge-label{font-size:4.5px;line-height:1.2}.cta-visual{font-size:5px;border-radius:4px}.request-visual{gap:3px}.request-visual .calendar-icon{width:8px;height:8px}.learn-visual{gap:5px}.tagline-copy{font-size:4.2px;letter-spacing:.12em;line-height:1.65}}
-</style>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width,initial-scale=1">
+  <meta name="description" content="Independent directory for non-emergency medical transportation providers.">
+  <title>Independent Medical Transportation Directory</title>
+  <style>
+    *{box-sizing:border-box}
+    html,body{margin:0;padding:0;min-height:100%;background:#fff}
+    body{overflow-x:hidden}
+    .directory-shell{width:100%;margin:0 auto;background:#fff}
+    #directory-image{display:block;width:100%;height:auto;border:0}
+    .loading{font-family:Arial,Helvetica,sans-serif;color:#0b5c72;text-align:center;padding:32px}
+  </style>
 </head>
 <body>
-<main class="hero-page">
-<img id="landing" src="eazy-hero.jpg" alt="Eazy Medical Transportation — reliable non-emergency medical transportation">
-<header class="site-header">
-<a class="brand" href="/" aria-label="Eazy Medical Transportation home">
-<img class="brand-logo" src="eazy-header-logo.svg" alt="Eazy Medical Transportation logo">
-</a>
-<nav class="header-nav" aria-label="Primary navigation">
-<a class="active" href="/">Home</a>
-<a href="#services">Services</a>
-<a href="#about">About</a>
-<a href="mailto:info@eazymedicaltransportation.com?subject=Request%20a%20Ride">Request a Ride</a>
-<a href="mailto:info@eazymedicaltransportation.com?subject=Website%20Contact">Contact</a>
-<a class="header-phone" href="tel:+10000000000"><span class="phone-icon">☎</span><span>(000) 000-0000</span></a>
-</nav>
-</header>
-<span class="trusted-mask" aria-hidden="true"></span>
-<p class="trusted-copy">Trusted rides to and from appointments, dialysis, therapy,<br>and more. We provide reliable, comfortable, and<br>compassionate care—because your health matters.</p>
-<span class="cta-mask request-mask" aria-hidden="true"></span>
-<span class="cta-mask learn-mask" aria-hidden="true"></span>
-<div class="cta-visual request-visual" aria-hidden="true">
-<svg class="calendar-icon" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg"><rect x="3.5" y="5.5" width="17" height="15" rx="2" stroke="currentColor" stroke-width="1.7"/><path d="M7.5 3.5v4M16.5 3.5v4M3.5 9.5h17" stroke="currentColor" stroke-width="1.7" stroke-linecap="round"/><path d="M7.5 13h2M11 13h2M14.5 13h2M7.5 16.5h2M11 16.5h2M14.5 16.5h2" stroke="currentColor" stroke-width="1.4" stroke-linecap="round"/></svg><span>REQUEST A RIDE</span>
-</div>
-<div class="cta-visual learn-visual" aria-hidden="true"><span>LEARN MORE</span><span class="learn-arrow">→</span></div>
-<div class="badges-visual" aria-hidden="true">
-<div class="badge-item"><svg class="badge-icon" viewBox="0 0 48 48" fill="none" xmlns="http://www.w3.org/2000/svg"><path d="M24 3.5 40 10v12.2c0 10.3-6.6 18.4-16 22.3C14.6 40.6 8 32.5 8 22.2V10l16-6.5Z" stroke="currentColor" stroke-width="2.2"/><path d="M24 15v15M16.5 22.5h15" stroke="currentColor" stroke-width="3" stroke-linecap="round"/></svg><span class="badge-label">HIPAA<br>Compliant</span></div>
-<div class="badge-item"><svg class="badge-icon" viewBox="0 0 48 48" fill="none" xmlns="http://www.w3.org/2000/svg"><circle cx="24" cy="24" r="20" stroke="currentColor" stroke-width="2.2"/><circle cx="24" cy="18" r="6" stroke="currentColor" stroke-width="2.2"/><path d="M13.5 36c1.7-6 5.2-9 10.5-9s8.8 3 10.5 9" stroke="currentColor" stroke-width="2.2" stroke-linecap="round"/></svg><span class="badge-label">Trained &amp;<br>Certified Drivers</span></div>
-<div class="badge-item"><svg class="badge-icon" viewBox="0 0 48 48" fill="none" xmlns="http://www.w3.org/2000/svg"><path d="M24 3.5 40 10v12.2c0 10.3-6.6 18.4-16 22.3C14.6 40.6 8 32.5 8 22.2V10l16-6.5Z" stroke="currentColor" stroke-width="2.2"/><path d="m16.5 23.5 5 5 10-11" stroke="currentColor" stroke-width="2.8" stroke-linecap="round" stroke-linejoin="round"/></svg><span class="badge-label">Safety<br>Focused</span></div>
-<div class="badge-item"><svg class="badge-icon" viewBox="0 0 48 48" fill="none" xmlns="http://www.w3.org/2000/svg"><path d="M24 43c-9.5-5.9-16-12.3-16-21.1 0-5.7 4.1-10 9.4-10 3 0 5.3 1.4 6.6 3.7 1.3-2.3 3.6-3.7 6.6-3.7 5.3 0 9.4 4.3 9.4 10C40 30.7 33.5 37.1 24 43Z" stroke="currentColor" stroke-width="2.2" stroke-linejoin="round"/><path d="M18.5 23.5 24 29l5.5-5.5" stroke="currentColor" stroke-width="2.1" stroke-linecap="round" stroke-linejoin="round"/></svg><span class="badge-label">Compassionate<br>Care</span></div>
-</div>
-<span class="tagline-icon-mask" aria-hidden="true"></span>
-<svg class="tagline-icon" viewBox="0 0 48 48" fill="none" xmlns="http://www.w3.org/2000/svg" aria-hidden="true"><path d="M24 3.5 39.5 9.8v12.4c0 10.1-6.3 18-15.5 22.3C14.8 40.2 8.5 32.3 8.5 22.2V9.8L24 3.5Z" stroke="currentColor" stroke-width="2.2" stroke-linejoin="round"/><path d="M24 14.5v14M17 21.5h14" stroke="currentColor" stroke-width="2.8" stroke-linecap="round"/><path d="M16.2 31.8h4.6l2.1-3.3 2.8 6 2.1-3.5h4" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/></svg>
-<span class="tagline-mask" aria-hidden="true"></span>
-<p class="tagline-copy">YOUR HEALTH. OUR PRIORITY.<br>SAFE. COMPASSIONATE. RELIABLE.</p>
-<span id="about" class="anchor" aria-hidden="true"></span><span id="services" class="anchor" aria-hidden="true"></span>
-<a class="hotspot request-main" href="mailto:info@eazymedicaltransportation.com?subject=Request%20a%20Ride" aria-label="Request a ride"></a><a class="hotspot learn-main" href="#services" aria-label="Learn more about our services"></a><a class="hotspot badges" href="#about" aria-label="Learn about Eazy Medical Transportation safety and service standards"></a>
-</main>
+  <main class="directory-shell">
+    <div id="loading" class="loading">Loading directory…</div>
+    <img id="directory-image" alt="Independent Medical Transportation Directory" hidden>
+  </main>
+  <script>
+    const parts = [
+      'directory-assets/final-00.txt',
+      'directory-assets/final-01.txt',
+      'directory-assets/final-02.txt',
+      'directory-assets/final-03.txt',
+      'directory-assets/final-04.txt',
+      'directory-assets/final-05.txt'
+    ];
+
+    Promise.all(parts.map((path) => fetch(path, { cache: 'force-cache' }).then((response) => {
+      if (!response.ok) throw new Error(`Could not load ${path}`);
+      return response.text();
+    })))
+      .then((chunks) => {
+        const image = document.getElementById('directory-image');
+        image.src = 'data:image/png;base64,' + chunks.join('');
+        image.hidden = false;
+        document.getElementById('loading').remove();
+      })
+      .catch((error) => {
+        console.error(error);
+        document.getElementById('loading').textContent = 'Directory image could not be loaded.';
+      });
+  </script>
 </body>
 </html>

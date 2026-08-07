@@ -1,1 +1,0 @@
-Temporary trigger file for non-generative menu text sharpening; remove before merge.

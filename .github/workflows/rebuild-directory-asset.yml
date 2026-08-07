@@ -17,30 +17,31 @@ jobs:
         with:
           ref: ${{ github.head_ref }}
 
-      - name: Reconstruct WebP from stored base64url chunks
+      - name: Validate and rebuild stored WebP candidate
         shell: python
         run: |
           from pathlib import Path
           import base64
 
-          files = [Path(f"directory-assets/final-{i:02d}.txt") for i in range(6)]
-          for path in files:
-              if not path.exists():
-                  raise SystemExit(f"Missing asset chunk: {path}")
+          def decode_urlsafe(text):
+              encoded = text.strip().replace("\n", "").replace("\r", "").replace("-", "+").replace("_", "/")
+              encoded += "=" * ((4 - len(encoded) % 4) % 4)
+              return base64.b64decode(encoded, validate=True)
 
-          parts = [path.read_text().strip().replace("\n", "").replace("\r", "") for path in files]
-          encoded = "".join(parts).replace("-", "+").replace("_", "/")
-          encoded += "=" * ((4 - len(encoded) % 4) % 4)
-          data = base64.b64decode(encoded, validate=True)
+          # The six final-* files proved incomplete. Test the separate RIFF candidate.
+          source = Path("directory-assets/chunk-00.txt")
+          if not source.exists():
+              raise SystemExit("Missing directory-assets/chunk-00.txt")
 
+          data = decode_urlsafe(source.read_text())
           if data[:4] != b"RIFF" or data[8:12] != b"WEBP":
-              raise SystemExit("Reconstructed data is not a valid WebP container")
+              raise SystemExit("chunk-00 is not a WebP container")
 
           declared = int.from_bytes(data[4:8], "little") + 8
-          print("Decoded bytes:", len(data))
-          print("RIFF declared bytes:", declared)
+          print("chunk-00 decoded bytes:", len(data))
+          print("chunk-00 RIFF declared bytes:", declared)
           if declared != len(data):
-              raise SystemExit(f"Invalid WebP byte length: actual={len(data)} declared={declared}")
+              raise SystemExit(f"chunk-00 is incomplete: actual={len(data)} declared={declared}")
 
           Path("directory-landing.webp").write_bytes(data)
 

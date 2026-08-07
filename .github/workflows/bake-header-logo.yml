@@ -1,0 +1,62 @@
+name: Bake header logo
+
+on:
+  pull_request:
+    branches: [main]
+
+permissions:
+  contents: write
+
+jobs:
+  bake:
+    if: github.actor != 'github-actions[bot]'
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          ref: ${{ github.head_ref }}
+      - name: Install Pillow
+        run: python -m pip install --quiet pillow
+      - name: Build header logo from exact uploaded artwork
+        shell: python
+        run: |
+          from PIL import Image
+          from pathlib import Path
+          import base64
+
+          # Exact non-generative header logo derived from the user's uploaded PNG.
+          payload = '''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'''
+          logo_bytes = base64.b64decode(payload)
+          Path('header-logo-source.png').write_bytes(logo_bytes)
+
+          landing = Path('directory-landing-approved.png')
+          im = Image.open(landing).convert('RGBA')
+          logo = Image.open('header-logo-source.png').convert('RGBA')
+
+          # Preserve the current page exactly except the existing top-left brand text area.
+          # Coordinates are proportional to the 1448x1086 approved artwork.
+          if im.size != (1448,1086):
+              raise SystemExit(f'Unexpected landing image size: {im.size}')
+
+          # Clear only the baked EazyMedicalTransportation.com text area to white.
+          clear_box = (52, 45, 385, 92)
+          white = Image.new('RGBA', (clear_box[2]-clear_box[0], clear_box[3]-clear_box[1]), (255,255,255,255))
+          im.paste(white, (clear_box[0], clear_box[1]))
+
+          # Fit exact logo artwork in the same header band, no generative edits.
+          target_h = 44
+          scale = target_h / logo.height
+          target_w = round(logo.width * scale)
+          logo = logo.resize((target_w, target_h), Image.Resampling.LANCZOS)
+          x, y = 58, 46
+          im.alpha_composite(logo, (x, y))
+          im.convert('RGB').save(landing, optimize=True)
+          Path('header-logo-source.png').unlink()
+      - name: Commit landing PNG only
+        run: |
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git add directory-landing-approved.png
+          git diff --cached --quiet && exit 0
+          git commit -m "Place Eazy logo in upper-left header"
+          git push origin HEAD:${{ github.head_ref }}

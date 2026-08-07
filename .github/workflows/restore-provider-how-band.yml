@@ -1,0 +1,28 @@
+name: Restore provider/how band
+
+on:
+  pull_request:
+    branches: [main]
+
+permissions:
+  contents: write
+
+jobs:
+  restore:
+    if: github.actor != 'github-actions[bot]'
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          ref: ${{ github.head_ref }}
+          fetch-depth: 0
+      - name: Restore approved PNG from pre-sharpen archive
+        run: |
+          git fetch origin archive/pre-provider-how-sharpen-20260807
+          git checkout origin/archive/pre-provider-how-sharpen-20260807 -- directory-landing-approved.png
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git add directory-landing-approved.png
+          git diff --cached --quiet && exit 0
+          git commit -m "Restore provider and directory instructions before over-sharpening"
+          git push origin HEAD:${{ github.head_ref }}

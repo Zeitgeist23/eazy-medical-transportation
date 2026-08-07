@@ -29,15 +29,22 @@
       'directory-assets/final-05.txt'
     ];
 
-    Promise.all(parts.map((path) => fetch(path, { cache: 'force-cache' }).then((response) => {
+    Promise.all(parts.map((path) => fetch(path, { cache: 'no-store' }).then((response) => {
       if (!response.ok) throw new Error(`Could not load ${path}`);
       return response.text();
     })))
       .then((chunks) => {
+        let data = chunks.join('').trim().replace(/\s+/g, '').replace(/-/g, '+').replace(/_/g, '/');
+        while (data.length % 4) data += '=';
         const image = document.getElementById('directory-image');
-        image.src = 'data:image/png;base64,' + chunks.join('');
-        image.hidden = false;
-        document.getElementById('loading').remove();
+        image.addEventListener('load', () => {
+          image.hidden = false;
+          document.getElementById('loading')?.remove();
+        }, { once: true });
+        image.addEventListener('error', () => {
+          document.getElementById('loading').textContent = 'Directory image could not be loaded.';
+        }, { once: true });
+        image.src = 'data:image/webp;base64,' + data;
       })
       .catch((error) => {
         console.error(error);

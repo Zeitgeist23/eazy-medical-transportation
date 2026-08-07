@@ -30,7 +30,7 @@ body{overflow-x:hidden;font-family:Arial,Helvetica,sans-serif}
 .results{display:grid;gap:12px}
 .result{border:1px solid #d8e8ed;border-radius:12px;padding:14px 16px}
 .result h3{margin:0 0 5px;color:#123f68;font-size:17px}.result p{margin:4px 0;font-size:14px;line-height:1.4}.tags{display:flex;gap:7px;flex-wrap:wrap;margin-top:9px}.tag{background:#e4f5f7;color:#0b7180;border-radius:999px;padding:5px 9px;font-size:12px}
-.notice{background:#f0f8fa;border-left:4px solid #0b8294;padding:11px 13px;margin-bottom:14px;font-size:13px;line-height:1.45}
+.notice{background:#f0f8fa;border-left:4px solid #0b8294;padding:11px 13px;margin-bottom:14px;font-size:13px;line-height:1.45}.notice a{color:#086f81;font-weight:800}
 @media(max-width:700px){.modal-head h2{font-size:18px}.modal-body{padding:15px}.result h3{font-size:15px}}
 </style>
 </head>
@@ -83,17 +83,19 @@ const providers=[
 {name:'Metro Dialysis Rides',city:'Naperville, IL',services:['Dialysis','Wheelchair']},
 {name:'Heartland Medical Transit',city:'Aurora, IL',services:['Ambulatory','Stretcher']}
 ];
+const demoZipMap={'60201':'evanston','60601':'chicago','60085':'waukegan','60173':'schaumburg','60540':'naperville','60505':'aurora'};
 function fieldState(el){el.classList.toggle('has-value',!!el.value)}
 function scrollRatio(r){const s=document.getElementById('stage');window.scrollTo({top:s.offsetTop+s.offsetHeight*r,behavior:'smooth'})}
 function openModal(title,html){document.getElementById('modalTitle').textContent=title;document.getElementById('modalBody').innerHTML=html;document.getElementById('modal').classList.add('open')}
 function closeModal(){document.getElementById('modal').classList.remove('open')}
 function cards(items){if(!items.length)return '<div class="notice">No matching providers are shown in this demonstration directory. Try a broader search.</div>';return '<div class="notice">Provider information should be verified independently before arranging transportation.</div><div class="results">'+items.map(p=>'<article class="result"><h3>'+p.name+'</h3><p>'+p.city+'</p><div class="tags">'+p.services.map(s=>'<span class="tag">'+s+'</span>').join('')+'</div></article>').join('')+'</div>'}
-function runSearch(){const loc=document.getElementById('location').value.trim().toLowerCase();const service=document.getElementById('service').value;const access=document.getElementById('accessibility').value;let items=providers.filter(p=>(!loc||(p.city+' '+p.name).toLowerCase().includes(loc))&&(!service||p.services.includes(service))&&(!access||p.services.includes(access)));openModal('Provider Search Results',cards(items))}
+function runSearch(){const raw=document.getElementById('location').value.trim().toLowerCase();const loc=demoZipMap[raw]||raw;const service=document.getElementById('service').value;const access=document.getElementById('accessibility').value;let items=providers.filter(p=>(!loc||(p.city+' '+p.name).toLowerCase().includes(loc))&&(!service||p.services.includes(service))&&(!access||p.services.includes(access)));let html=cards(items);if(service==='Dialysis')html='<div class="notice"><strong>Dialysis-focused search:</strong> For recurring treatment transportation, you can also use <a href="https://www.ride2dialysis.com/">Ride2Dialysis.com</a>, the dialysis-focused companion to this directory.</div>'+html;openModal('Provider Search Results',html)}
 function showAll(){openModal('Featured Providers',cards(providers))}
 function showWheelchair(){openModal('Wheelchair Transportation Providers',cards(providers.filter(p=>p.services.includes('Wheelchair'))))}
 function showState(){openModal('Browse Providers by State','<div class="notice">The providers currently displayed on this directory page are in Illinois.</div>'+cards(providers))}
-function showProvider(i){const p=providers[i];openModal(p.name,'<div class="notice">This directory is independent. Verify provider availability, services, insurance acceptance, credentials, and contact information directly.</div><div class="result"><h3>'+p.name+'</h3><p><strong>Location:</strong> '+p.city+'</p><p><strong>Services shown:</strong> '+p.services.join(', ')+'</p></div>')}
+function showProvider(i){const p=providers[i];let extra=p.services.includes('Dialysis')?'<div class="notice">Looking specifically for recurring dialysis transportation? Visit <a href="https://www.ride2dialysis.com/">Ride2Dialysis.com</a>.</div>':'';openModal(p.name,extra+'<div class="notice">This directory is independent. Verify provider availability, services, insurance acceptance, credentials, and contact information directly.</div><div class="result"><h3>'+p.name+'</h3><p><strong>Location:</strong> '+p.city+'</p><p><strong>Services shown:</strong> '+p.services.join(', ')+'</p></div>')}
 document.addEventListener('keydown',e=>{if(e.key==='Escape')closeModal()})
+(function hydrateFromQuery(){const q=new URLSearchParams(window.location.search);const location=q.get('location')||'';const service=q.get('service')||'';const accessibility=q.get('accessibility')||'';if(location){const el=document.getElementById('location');el.value=location;fieldState(el)}if(service&&[...document.getElementById('service').options].some(o=>o.value===service)){const el=document.getElementById('service');el.value=service;fieldState(el)}if(accessibility&&[...document.getElementById('accessibility').options].some(o=>o.value===accessibility)){const el=document.getElementById('accessibility');el.value=accessibility;fieldState(el)}if(location||service||accessibility)setTimeout(runSearch,150)})();
 </script>
 </body>
 </html>

@@ -1,0 +1,1 @@
+Directory image decode fix: URL-safe Base64 WebP chunks are normalized to standard Base64 and rendered with the correct image/webp MIME type.

@@ -1,0 +1,41 @@
+name: Fix hero overlay binary
+
+on:
+  pull_request:
+    branches: [main]
+
+permissions:
+  contents: write
+
+jobs:
+  repair:
+    if: github.actor != 'github-actions[bot]'
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          ref: ${{ github.head_ref }}
+      - name: Decode valid WebP overlay
+        shell: python
+        run: |
+          from pathlib import Path
+          import base64, hashlib
+          payload = Path('hero-overlay-q40.b64').read_text().strip()
+          data = base64.b64decode(payload, validate=True)
+          if data[:4] != b'RIFF' or data[8:12] != b'WEBP':
+              raise SystemExit('Decoded overlay is not a WebP file')
+          print('bytes', len(data))
+          print('sha256', hashlib.sha256(data).hexdigest())
+          Path('hero-scene-overlay.webp').write_bytes(data)
+      - name: Verify browser asset
+        run: |
+          file hero-scene-overlay.webp
+          test -s hero-scene-overlay.webp
+      - name: Commit repaired overlay
+        run: |
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git add hero-scene-overlay.webp
+          git diff --cached --quiet && exit 0
+          git commit -m "Repair hero overlay WebP binary"
+          git push origin HEAD:${{ github.head_ref }}

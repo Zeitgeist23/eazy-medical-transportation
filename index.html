@@ -15,7 +15,8 @@ body{overflow-x:hidden}
 .hotspot:focus-visible,.site-header a:focus-visible{outline:3px solid rgba(0,145,190,.85);outline-offset:2px;border-radius:7px}
 .site-header{position:absolute;z-index:5;left:0;right:0;top:0;height:12.25%;background:#fff;border-bottom:1px solid #eef1f3;display:flex;align-items:center;padding:0 2.2% 0 3%;font-family:Arial,Helvetica,sans-serif;white-space:nowrap;overflow:hidden}
 .brand{height:100%;width:30%;display:flex;align-items:center;text-decoration:none;flex:0 0 auto;overflow:hidden}
-.brand-logo{display:block;width:clamp(210px,22vw,345px);height:auto;max-height:86%;overflow:hidden}
+.brand-logo{display:block;width:clamp(210px,22vw,345px);height:auto;max-height:86%;overflow:visible}
+.brand-logo .logo-main{fill:#075a73}.brand-logo .logo-accent{stroke:#0b718b}.brand-logo .logo-light{stroke:#73aebd}.brand-logo .logo-name{fill:#075a73;font-family:Georgia,'Times New Roman',serif;font-size:46px;font-weight:400;letter-spacing:1px}.brand-logo .logo-sub{fill:#075a73;font-family:Arial,Helvetica,sans-serif;font-size:10.5px;font-weight:700;letter-spacing:3.1px}
 .header-nav{margin-left:auto;height:100%;display:flex;align-items:center;justify-content:flex-end;gap:clamp(16px,2.2vw,36px);color:#1b1b1b;min-width:0}
 .header-nav a{position:relative;color:#1b1b1b;text-decoration:none;font-size:clamp(12px,1.02vw,17px);font-weight:500;line-height:1;padding:14px 0;text-rendering:geometricPrecision;-webkit-font-smoothing:antialiased;flex:0 0 auto}
 .header-nav a.active{color:#0d6179}
@@ -53,8 +54,13 @@ body{overflow-x:hidden}
   <img id="landing" src="eazy-hero.jpg" alt="Eazy Medical Transportation — reliable non-emergency medical transportation">
   <header class="site-header">
     <a class="brand" href="/" aria-label="Eazy Medical Transportation home">
-      <svg class="brand-logo" viewBox="1300 350 240 120" preserveAspectRatio="xMidYMid meet" role="img" aria-label="Eazy Medical Transportation logo">
-        <image href="eazy-hero.jpg" width="1672" height="941"/>
+      <svg class="brand-logo" viewBox="0 0 420 110" role="img" aria-label="Eazy Medical Transportation logo" xmlns="http://www.w3.org/2000/svg">
+        <path d="M93 22 C70 5,34 9,19 34 C5 58,14 87,39 98 C58 106,79 100,93 86" fill="none" class="logo-accent" stroke-width="4" stroke-linecap="round"/>
+        <path d="M48 39 H64 V55 H80 V71 H64 V87 H48 V71 H32 V55 H48 Z" class="logo-main"/>
+        <path d="M30 96 C52 105,77 101,95 87" fill="none" class="logo-light" stroke-width="3" stroke-linecap="round"/>
+        <path d="M39 104 C62 110,87 104,103 91" fill="none" class="logo-light" stroke-width="2.3" stroke-linecap="round"/>
+        <text x="125" y="57" class="logo-name">EAZY</text>
+        <text x="126" y="78" class="logo-sub">MEDICAL TRANSPORTATION</text>
       </svg>
     </a>
     <nav class="header-nav" aria-label="Primary navigation">

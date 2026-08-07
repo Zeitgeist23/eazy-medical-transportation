@@ -9,15 +9,14 @@
     *{box-sizing:border-box}
     html,body{margin:0;padding:0;min-height:100%;background:#fff}
     body{overflow-x:hidden}
-    .directory-shell{width:100%;margin:0 auto;background:#fff}
-    #directory-image{display:block;width:100%;height:auto;border:0}
-    .loading{font-family:Arial,Helvetica,sans-serif;color:#0b5c72;text-align:center;padding:32px}
+    .directory-shell{width:100%;margin:0;background:#fff;font-size:0;line-height:0}
+    .directory-slice{display:block;width:100%;height:auto;margin:0;padding:0;border:0}
+    .loading{font:16px/1.5 Arial,Helvetica,sans-serif;color:#0b5c72;text-align:center;padding:32px;line-height:1.5}
   </style>
 </head>
 <body>
-  <main class="directory-shell">
+  <main id="directory" class="directory-shell">
     <div id="loading" class="loading">Loading directory…</div>
-    <img id="directory-image" alt="Independent Medical Transportation Directory" hidden>
   </main>
   <script>
     const parts = [
@@ -29,26 +28,37 @@
       'directory-assets/final-05.txt'
     ];
 
-    Promise.all(parts.map((path) => fetch(path, { cache: 'no-store' }).then((response) => {
-      if (!response.ok) throw new Error(`Could not load ${path}`);
-      return response.text();
-    })))
+    function normalizeBase64(value) {
+      let data = value.trim().replace(/\s+/g, '').replace(/-/g, '+').replace(/_/g, '/');
+      while (data.length % 4) data += '=';
+      return data;
+    }
+
+    Promise.all(parts.map((path) =>
+      fetch(path, { cache: 'no-store' }).then((response) => {
+        if (!response.ok) throw new Error(`Could not load ${path}`);
+        return response.text();
+      })
+    ))
       .then((chunks) => {
-        let data = chunks.join('').trim().replace(/\s+/g, '').replace(/-/g, '+').replace(/_/g, '/');
-        while (data.length % 4) data += '=';
-        const image = document.getElementById('directory-image');
-        image.addEventListener('load', () => {
-          image.hidden = false;
+        const directory = document.getElementById('directory');
+        const images = chunks.map((chunk, index) => new Promise((resolve, reject) => {
+          const image = new Image();
+          image.className = 'directory-slice';
+          image.alt = index === 0 ? 'Independent Medical Transportation Directory' : '';
+          image.onload = () => resolve(image);
+          image.onerror = () => reject(new Error(`Directory slice ${index + 1} could not be decoded`));
+          image.src = 'data:image/webp;base64,' + normalizeBase64(chunk);
+        }));
+        return Promise.all(images).then((loaded) => {
           document.getElementById('loading')?.remove();
-        }, { once: true });
-        image.addEventListener('error', () => {
-          document.getElementById('loading').textContent = 'Directory image could not be loaded.';
-        }, { once: true });
-        image.src = 'data:image/webp;base64,' + data;
+          loaded.forEach((image) => directory.appendChild(image));
+        });
       })
       .catch((error) => {
         console.error(error);
-        document.getElementById('loading').textContent = 'Directory image could not be loaded.';
+        const loading = document.getElementById('loading');
+        if (loading) loading.textContent = 'Directory image could not be loaded.';
       });
   </script>
 </body>

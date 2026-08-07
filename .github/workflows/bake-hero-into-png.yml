@@ -21,7 +21,7 @@ jobs:
         env:
           GH_TOKEN: ${{ github.token }}
         run: |
-          gh api repos/${{ github.repository }}/git/blobs/30a72875c8bf6c96f844c76e7eac80b98274ae8e --jq .content | tr -d '\n' | base64 -d > hero-bake-patch.webp
+          gh api repos/${{ github.repository }}/git/blobs/1869f5d384d6bdde592f513dbf8ab6843718b986 --jq .content | tr -d '\n' | base64 -d > hero-bake-patch.webp
           file hero-bake-patch.webp
           test -s hero-bake-patch.webp
       - name: Bake hero scene into existing PNG and remove overlay
@@ -32,13 +32,14 @@ jobs:
 
           png = Path('directory-landing-approved.png')
           im = Image.open(png).convert('RGB')
+          original = im.copy()
           patch = Image.open('hero-bake-patch.webp').convert('RGB')
           if im.size != (1448,1086):
               raise SystemExit(f'Unexpected landing image size: {im.size}')
           if patch.size != (658,305):
               raise SystemExit(f'Unexpected patch size: {patch.size}')
 
-          # Replace the original hero scene pixels themselves. No HTML overlay.
+          # Replace the original hero-scene pixels themselves. No HTML overlay.
           box = (790,85,1448,390)
           under = im.crop(box)
           mask = Image.new('L', patch.size, 255)
@@ -50,8 +51,7 @@ jobs:
           baked = Image.composite(patch, under, mask)
           im.paste(baked, box)
 
-          # Restore page assets that overlap the hero so they remain exactly unchanged.
-          original = Image.open(png).convert('RGB')
+          # Restore every page area that is not part of the right-side hero artwork.
           im.paste(original.crop((0,0,1448,86)), (0,0))
           im.paste(original.crop((0,85,790,390)), (0,85))
           im.paste(original.crop((95,260,915,382)), (95,260))

@@ -1,0 +1,57 @@
+name: Rebuild directory asset
+
+on:
+  push:
+    branches:
+      - fix/rebuild-directory-binary-action-20260807
+
+permissions:
+  contents: write
+
+jobs:
+  rebuild:
+    if: github.actor != 'github-actions[bot]'
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Reconstruct WebP from stored base64url chunks
+        shell: python
+        run: |
+          from pathlib import Path
+          import base64
+
+          files = [Path(f"directory-assets/final-{i:02d}.txt") for i in range(6)]
+          for path in files:
+              if not path.exists():
+                  raise SystemExit(f"Missing asset chunk: {path}")
+
+          parts = [path.read_text().strip().replace("\n", "").replace("\r", "") for path in files]
+          encoded = "".join(parts).replace("-", "+").replace("_", "/")
+          encoded += "=" * ((4 - len(encoded) % 4) % 4)
+          data = base64.b64decode(encoded, validate=True)
+
+          if data[:4] != b"RIFF" or data[8:12] != b"WEBP":
+              raise SystemExit("Reconstructed data is not a valid WebP container")
+
+          declared = int.from_bytes(data[4:8], "little") + 8
+          print("Decoded bytes:", len(data))
+          print("RIFF declared bytes:", declared)
+          if declared != len(data):
+              raise SystemExit(f"Invalid WebP byte length: actual={len(data)} declared={declared}")
+
+          Path("directory-landing.webp").write_bytes(data)
+
+      - name: Verify binary asset
+        run: |
+          file directory-landing.webp
+          test -s directory-landing.webp
+
+      - name: Commit reconstructed binary asset
+        run: |
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git add directory-landing.webp
+          git diff --cached --quiet && exit 0
+          git commit -m "Build directory landing binary asset"
+          git push

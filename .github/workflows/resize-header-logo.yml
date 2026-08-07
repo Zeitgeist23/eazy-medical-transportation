@@ -1,0 +1,67 @@
+name: Resize header logo 10 percent
+
+on:
+  pull_request:
+    branches: [main]
+
+permissions:
+  contents: write
+
+jobs:
+  resize:
+    if: github.actor != 'github-actions[bot]'
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          ref: ${{ github.head_ref }}
+          fetch-depth: 0
+      - name: Install Pillow
+        run: python -m pip install --quiet pillow
+      - name: Rebuild landing artwork with logo 10 percent larger
+        shell: python
+        run: |
+          from PIL import Image
+          from pathlib import Path
+          import base64, re, subprocess
+
+          old_workflow = subprocess.check_output([
+              'git','show','19f245d2c93dc8ecfe440f02f171a39f31261c36:.github/workflows/bake-header-logo.yml'
+          ], text=True)
+          match = re.search(r"payload = '''([^']+)'''", old_workflow, re.S)
+          if not match:
+              raise RuntimeError('Could not recover exact approved logo source')
+          logo_bytes = base64.b64decode(match.group(1))
+          Path('/tmp/header-logo-source.png').write_bytes(logo_bytes)
+
+          base_bytes = subprocess.check_output([
+              'git','show','e704ed8e581f042ebbdbd15a785bac82037b62fc:directory-landing-approved.png'
+          ])
+          Path('/tmp/directory-prelogo.png').write_bytes(base_bytes)
+
+          im = Image.open('/tmp/directory-prelogo.png').convert('RGBA')
+          logo = Image.open('/tmp/header-logo-source.png').convert('RGBA')
+
+          old_h = 44
+          old_w = round(logo.width * old_h / logo.height)
+          new_h = round(old_h * 1.10)
+          new_w = round(logo.width * new_h / logo.height)
+          logo = logo.resize((new_w, new_h), Image.Resampling.LANCZOS)
+
+          # Keep the logo centered in the same header position while enlarging it.
+          old_x, old_y = 58, 46
+          center_x = old_x + old_w / 2
+          center_y = old_y + old_h / 2
+          x = round(center_x - new_w / 2)
+          y = round(center_y - new_h / 2)
+
+          im.alpha_composite(logo, (x, y))
+          im.convert('RGB').save('directory-landing-approved.png', optimize=True)
+      - name: Commit landing PNG only
+        run: |
+          git config user.name github-actions[bot]
+          git config user.email 41898282+github-actions[bot]@users.noreply.github.com
+          git add directory-landing-approved.png
+          git diff --cached --quiet && exit 0
+          git commit -m "Increase header logo by 10 percent"
+          git push origin HEAD:${{ github.head_ref }}

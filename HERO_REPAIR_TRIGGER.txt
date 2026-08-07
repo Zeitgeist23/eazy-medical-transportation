@@ -1,1 +1,0 @@
-temporary trigger for hero overlay binary repair; remove before merge

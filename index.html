@@ -9,66 +9,13 @@
     *{box-sizing:border-box}
     html,body{margin:0;padding:0;min-height:100%;background:#fff}
     body{overflow-x:hidden}
-    .directory-shell{width:100%;margin:0;background:#fff}
-    #directory-image{display:block;width:100%;height:auto;margin:0;border:0}
-    .loading{font:16px/1.5 Arial,Helvetica,sans-serif;color:#0b5c72;text-align:center;padding:32px}
+    main{width:100%;margin:0;background:#fff}
+    img{display:block;width:100%;height:auto;margin:0;border:0}
   </style>
 </head>
 <body>
-  <main class="directory-shell">
-    <div id="loading" class="loading">Loading directory…</div>
-    <img id="directory-image" alt="Independent Medical Transportation Directory" hidden>
+  <main>
+    <img src="/directory-landing-approved.png" alt="Independent Medical Transportation Directory">
   </main>
-  <script>
-    const parts = [
-      'directory-assets/final-00.txt',
-      'directory-assets/final-01.txt',
-      'directory-assets/final-02.txt',
-      'directory-assets/final-03.txt',
-      'directory-assets/final-04.txt',
-      'directory-assets/final-05.txt'
-    ];
-
-    function decodeBase64Url(value) {
-      let data = value.trim().replace(/\s+/g, '').replace(/-/g, '+').replace(/_/g, '/');
-      while (data.length % 4) data += '=';
-      const binary = atob(data);
-      const bytes = new Uint8Array(binary.length);
-      for (let i = 0; i < binary.length; i += 1) bytes[i] = binary.charCodeAt(i);
-      return bytes;
-    }
-
-    Promise.all(parts.map((path) =>
-      fetch(path, { cache: 'no-store' }).then((response) => {
-        if (!response.ok) throw new Error(`Could not load ${path}`);
-        return response.text();
-      })
-    ))
-      .then((chunks) => {
-        const pieces = chunks.map(decodeBase64Url);
-        const blob = new Blob(pieces, { type: 'image/webp' });
-        const objectUrl = URL.createObjectURL(blob);
-        const image = document.getElementById('directory-image');
-
-        image.addEventListener('load', () => {
-          image.hidden = false;
-          document.getElementById('loading')?.remove();
-          URL.revokeObjectURL(objectUrl);
-        }, { once: true });
-
-        image.addEventListener('error', () => {
-          URL.revokeObjectURL(objectUrl);
-          const loading = document.getElementById('loading');
-          if (loading) loading.textContent = 'Directory image could not be loaded.';
-        }, { once: true });
-
-        image.src = objectUrl;
-      })
-      .catch((error) => {
-        console.error(error);
-        const loading = document.getElementById('loading');
-        if (loading) loading.textContent = 'Directory image could not be loaded.';
-      });
-  </script>
 </body>
 </html>

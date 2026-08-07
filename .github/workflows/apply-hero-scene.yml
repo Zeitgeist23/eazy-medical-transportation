@@ -1,0 +1,48 @@
+name: Apply hero scene swap
+
+on:
+  pull_request:
+    branches: [main]
+
+permissions:
+  contents: write
+
+jobs:
+  apply:
+    if: github.actor != 'github-actions[bot]'
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          ref: ${{ github.head_ref }}
+      - name: Fetch approved non-generative hero overlay blob
+        env:
+          GH_TOKEN: ${{ github.token }}
+        run: |
+          gh api repos/${{ github.repository }}/git/blobs/178691183f6ccd661f5e7048704a9b4646ea9c35 --jq .content | tr -d '\n' | base64 -d > hero-scene-overlay.webp
+          test -s hero-scene-overlay.webp
+          file hero-scene-overlay.webp
+      - name: Layer scene over existing hero only
+        shell: python
+        run: |
+          from pathlib import Path
+          p=Path('index.html')
+          s=p.read_text()
+          marker='<img id="hero-scene-overlay" src="hero-scene-overlay.webp" alt="">'
+          if marker not in s:
+              css='#hero-scene-overlay{position:absolute;left:60.08%;top:7.73%;width:39.92%;height:28.18%;object-fit:fill;z-index:2;pointer-events:none}\n'
+              anchor='#directory-image{display:block;width:100%;height:auto;margin:0;border:0}\n'
+              if anchor not in s: raise SystemExit('directory image CSS anchor not found')
+              s=s.replace(anchor,anchor+css,1)
+              img='    <img id="directory-image" src="directory-landing-approved.png" alt="Independent Medical Transportation Directory">\n'
+              if img not in s: raise SystemExit('directory image HTML anchor not found')
+              s=s.replace(img,img+'    '+marker+'\n',1)
+              p.write_text(s)
+      - name: Commit hero scene only
+        run: |
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git add index.html hero-scene-overlay.webp
+          git diff --cached --quiet && exit 0
+          git commit -m "Swap hero van and hospital scene only"
+          git push origin HEAD:${{ github.head_ref }}

@@ -1,4 +1,4 @@
-name: Inspect clean header
+name: Build clean single-logo header
 
 on:
   pull_request:
@@ -8,7 +8,7 @@ permissions:
   contents: write
 
 jobs:
-  inspect:
+  fix:
     if: github.actor != 'github-actions[bot]'
     runs-on: ubuntu-latest
     steps:
@@ -18,26 +18,60 @@ jobs:
           fetch-depth: 0
       - name: Install Pillow
         run: python -m pip install --quiet pillow
-      - name: Export tiny logo source
+      - name: Rebuild header cleanly
         shell: python
         run: |
-          from PIL import Image
+          from PIL import Image, ImageDraw
           from pathlib import Path
           import subprocess, base64, io, re
 
+          # Start from the clean page artwork before any logo overlay was added.
+          raw = subprocess.check_output(['git','show','e704ed8e581f042ebbdbd15a785bac82037b62fc:directory-landing-approved.png'])
+          im = Image.open(io.BytesIO(raw)).convert('RGBA')
+
+          # Remove the old baked-in EazyMedicalTransportation.com wordmark.
+          # Keep clear of the top teal banner and the lower divider line.
+          draw = ImageDraw.Draw(im)
+          draw.rectangle((48, 42, 385, 94), fill=(255,255,255,255))
+
+          # Recover the exact approved compact EAZY logo source.
           wf = subprocess.check_output(['git','show','19f245d2c93dc8ecfe440f02f171a39f31261c36:.github/workflows/bake-header-logo.yml'], text=True)
           m = re.search(r"payload = '''([^']+)'''", wf, re.S)
-          logo = Image.open(io.BytesIO(base64.b64decode(m.group(1)))).convert('RGB')
-          thumb = logo.resize((130,52), Image.Resampling.LANCZOS)
-          out = io.BytesIO(); thumb.save(out, format='JPEG', quality=22, optimize=True)
+          if not m:
+              raise RuntimeError('Could not recover exact approved logo source')
+          logo = Image.open(io.BytesIO(base64.b64decode(m.group(1)))).convert('RGBA')
+
+          # 10% larger than the original 44px header-logo height.
+          old_h = 44
+          old_w = round(logo.width * old_h / logo.height)
+          new_h = round(old_h * 1.10)
+          new_w = round(logo.width * new_h / logo.height)
+          logo = logo.resize((new_w, new_h), Image.Resampling.LANCZOS)
+
+          # Preserve the same visual center as the original placement.
+          old_x, old_y = 58, 46
+          center_x = old_x + old_w / 2
+          center_y = old_y + old_h / 2
+          x = round(center_x - new_w / 2)
+          y = round(center_y - new_h / 2)
+          im.alpha_composite(logo, (x, y))
+
+          # Write the corrected production artwork.
+          im.convert('RGB').save('directory-landing-approved.png', optimize=True)
+
+          # Also export a tiny preview so the header can be checked before merging.
+          preview = im.convert('RGB').crop((0,0,min(700,im.width),min(150,im.height)))
+          ph = round(preview.height * 350 / preview.width)
+          preview = preview.resize((350,ph), Image.Resampling.LANCZOS)
+          out = io.BytesIO(); preview.save(out, format='JPEG', quality=35, optimize=True)
           Path('header-inspect.txt').write_text(
-              f'LOGO_SIZE={logo.width}x{logo.height}\nTHUMB_SIZE={thumb.width}x{thumb.height}\nDATA='+base64.b64encode(out.getvalue()).decode()
+              f'PAGE_SIZE={im.width}x{im.height}\nLOGO_PLACEMENT={x},{y},{new_w},{new_h}\nPREVIEW_SIZE={preview.width}x{preview.height}\nDATA='+base64.b64encode(out.getvalue()).decode()
           )
-      - name: Commit inspection text
+      - name: Commit corrected artwork and preview
         run: |
           git config user.name github-actions[bot]
           git config user.email 41898282+github-actions[bot]@users.noreply.github.com
-          git add header-inspect.txt
+          git add directory-landing-approved.png header-inspect.txt
           git diff --cached --quiet && exit 0
-          git commit -m "Export tiny logo source thumbnail"
+          git commit -m "Fix overlapping header logo"
           git push origin HEAD:${{ github.head_ref }}

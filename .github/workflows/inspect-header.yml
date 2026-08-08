@@ -18,12 +18,12 @@ jobs:
           fetch-depth: 0
       - name: Install Pillow
         run: python -m pip install --quiet pillow
-      - name: Export tiny clean-header thumbnail
+      - name: Export tiny header and logo thumbnails
         shell: python
         run: |
           from PIL import Image
           from pathlib import Path
-          import subprocess, base64, io
+          import subprocess, base64, io, re
 
           raw = subprocess.check_output(['git','show','e704ed8e581f042ebbdbd15a785bac82037b62fc:directory-landing-approved.png'])
           im = Image.open(io.BytesIO(raw)).convert('RGB')
@@ -31,14 +31,22 @@ jobs:
           crop = im.crop((0,0,min(700,w),min(150,h)))
           nh = round(crop.height * 300 / crop.width)
           crop = crop.resize((300,nh), Image.Resampling.LANCZOS)
-          out = io.BytesIO()
-          crop.save(out, format='JPEG', quality=28, optimize=True)
-          Path('header-inspect.txt').write_text(f'ORIGINAL_SIZE={w}x{h}\nCROP_SIZE={crop.width}x{crop.height}\nDATA='+base64.b64encode(out.getvalue()).decode())
+          out = io.BytesIO(); crop.save(out, format='JPEG', quality=28, optimize=True)
+
+          wf = subprocess.check_output(['git','show','19f245d2c93dc8ecfe440f02f171a39f31261c36:.github/workflows/bake-header-logo.yml'], text=True)
+          m = re.search(r"payload = '''([^']+)'''", wf, re.S)
+          logo = Image.open(io.BytesIO(base64.b64decode(m.group(1)))).convert('RGB')
+          lout = io.BytesIO(); logo.save(lout, format='JPEG', quality=40, optimize=True)
+
+          Path('header-inspect.txt').write_text(
+              f'ORIGINAL_SIZE={w}x{h}\nCROP_SIZE={crop.width}x{crop.height}\nHEADER_DATA='+base64.b64encode(out.getvalue()).decode()+
+              f'\nLOGO_SIZE={logo.width}x{logo.height}\nLOGO_DATA='+base64.b64encode(lout.getvalue()).decode()
+          )
       - name: Commit inspection text
         run: |
           git config user.name github-actions[bot]
           git config user.email 41898282+github-actions[bot]@users.noreply.github.com
           git add header-inspect.txt
           git diff --cached --quiet && exit 0
-          git commit -m "Export tiny clean header inspection crop"
+          git commit -m "Export header and logo inspection thumbnails"
           git push origin HEAD:${{ github.head_ref }}

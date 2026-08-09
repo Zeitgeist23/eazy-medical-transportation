@@ -1,0 +1,94 @@
+name: Fix Ride2Dialysis Provider Images
+
+on:
+  push:
+    paths:
+      - '.github/workflows/fix-ride2dialysis-provider-images.yml'
+  workflow_dispatch:
+
+permissions:
+  contents: write
+
+jobs:
+  fix-provider-images:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.12'
+
+      - name: Install Pillow
+        run: python -m pip install --quiet pillow
+
+      - name: Create uncropped provider images and update homepage
+        run: |
+          python - <<'PY'
+          from pathlib import Path
+          from PIL import Image, ImageFilter
+          import base64, io
+
+          site = Path('ride2dialysis')
+          html_path = site / 'index.html'
+
+          parts = [(site / f'approved-image.0{i}').read_text() for i in range(9)]
+          raw = base64.b64decode(''.join(parts))
+          image = Image.open(io.BytesIO(raw)).convert('RGB')
+
+          # Coordinates measured from the approved 1055 x 1491 design.
+          base_w, base_h = 1055, 1491
+          boxes = [
+              (56, 795, 274, 908),
+              (300, 795, 516, 908),
+              (539, 795, 754, 908),
+              (778, 795, 993, 908),
+          ]
+          sx, sy = image.width / base_w, image.height / base_h
+
+          for number, box in enumerate(boxes, 1):
+              scaled = tuple(round(value * (sx if index % 2 == 0 else sy)) for index, value in enumerate(box))
+              crop = image.crop(scaled)
+              target_width = 872
+              target_height = round(target_width * crop.height / crop.width)
+              crop = crop.resize((target_width, target_height), Image.Resampling.LANCZOS)
+              crop = crop.filter(ImageFilter.UnsharpMask(radius=1.1, percent=125, threshold=3))
+              crop.save(site / f'provider-{number}.webp', 'WEBP', quality=92, method=6)
+
+          html = html_path.read_text()
+
+          old_css = ".vehicle-photo{height:150px;background-repeat:no-repeat;background-size:505% auto;background-color:#edf6f8}.p1{background-position:7% 55%}.p2{background-position:35% 55%}.p3{background-position:62% 55%}.p4{background-position:90% 55%}"
+          new_css = ".vehicle-photo{display:block;width:100%;height:auto;object-fit:contain;object-position:center;background:#edf6f8}"
+          if old_css not in html:
+              raise SystemExit('Expected provider-image CSS was not found')
+          html = html.replace(old_css, new_css, 1)
+
+          replacements = {
+              '<div class="vehicle-photo p1"></div>': '<img class="vehicle-photo" src="provider-1.webp?v=1" alt="White wheelchair-accessible medical transportation van">',
+              '<div class="vehicle-photo p2"></div>': '<img class="vehicle-photo" src="provider-2.webp?v=1" alt="CareRide dialysis transportation van">',
+              '<div class="vehicle-photo p3"></div>': '<img class="vehicle-photo" src="provider-3.webp?v=1" alt="Black medical transportation van">',
+              '<div class="vehicle-photo p4"></div>': '<img class="vehicle-photo" src="provider-4.webp?v=1" alt="Wheelchair-lift transportation van">',
+          }
+          for old, new in replacements.items():
+              if old not in html:
+                  raise SystemExit(f'Expected provider markup was not found: {old}')
+              html = html.replace(old, new, 1)
+
+          old_js = "document.getElementById('heroPhoto').style.backgroundImage=`url(\"${art}\")`;document.querySelectorAll('.vehicle-photo').forEach(el=>el.style.backgroundImage=`url(\"${art}\")`)"
+          new_js = "document.getElementById('heroPhoto').style.backgroundImage=`url(\"${art}\")`"
+          if old_js not in html:
+              raise SystemExit('Expected provider background JavaScript was not found')
+          html = html.replace(old_js, new_js, 1)
+
+          html_path.write_text(html)
+          PY
+
+      - name: Commit corrected mobile provider images
+        run: |
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git add ride2dialysis/index.html ride2dialysis/provider-*.webp
+          git commit -m "Fix cropped provider van images on mobile"
+          git push

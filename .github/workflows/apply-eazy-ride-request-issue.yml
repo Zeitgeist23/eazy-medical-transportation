@@ -2,7 +2,7 @@ name: Apply Eazy ride request issue
 
 on:
   issues:
-    types: [opened]
+    types: [opened, reopened]
 
 permissions:
   contents: write

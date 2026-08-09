@@ -99,6 +99,5 @@ async function ensureStateFromSearch(){const f=getSearchValues(),entry=inferStat
 async function runMobileSearch(e){e.preventDefault();try{await ensureStateFromSearch()}catch(_){}const list=getFilteredProviders();openModal(`Matching ${currentStateName} Providers (${list.length})`,renderProviderList(list.slice(0,250)))}async function runSearch(){try{await ensureStateFromSearch()}catch(_){}const list=getFilteredProviders();openModal(`Matching ${currentStateName} Providers (${list.length})`,renderProviderList(list.slice(0,250)))}
 document.getElementById('modal').addEventListener('click',e=>{if(e.target.id==='modal')closeModal()});document.addEventListener('keydown',e=>{if(e.key==='Escape')closeModal()});populateStateMenus();loadProviders('IL');
 </script>
-<script src="safe-ui-fixes.js?v=1"></script>
 </body>
 </html>

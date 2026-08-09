@@ -11,7 +11,7 @@
   function openModal(title,html){const w=document.getElementById('modal'),t=document.getElementById('modalTitle'),b=document.getElementById('modalBody');if(!w||!t||!b)return;t.textContent=title;b.innerHTML=html;w.classList.add('open')}
   function closeModal(){const w=document.getElementById('modal');if(w)w.classList.remove('open')}
   function scrollRatio(r){const root=document.getElementById('desktopDirectory');if(!root)return;window.scrollTo({top:Math.max(0,Math.round(root.offsetTop+root.offsetHeight*r)),behavior:'smooth'})}
-  async function getStateData(abbr){const r=await fetch(`data/providers/${abbr}.json?v=controls6`,{cache:'no-store'});if(!r.ok)throw new Error('State database unavailable');return r.json()}
+  async function getStateData(abbr){const r=await fetch(`data/providers/${abbr}.json?v=controls5`,{cache:'no-store'});if(!r.ok)throw new Error('State database unavailable');return r.json()}
   function providerList(list,note=''){if(!list.length)return `${note?`<div class="claim-callout">${esc(note)}</div>`:''}<div class="claim-callout">No matching providers are currently indexed for this selection.</div>`;return `${note?`<div class="claim-callout">${esc(note)}</div>`:''}<div class="results">${list.slice(0,250).map(p=>`<div class="result"><h3>${esc(p.name)}</h3><p>${esc(p.address1||'')}${p.address1?'<br>':''}${esc(p.city)}, ${esc(p.state)} ${esc(String(p.zip||'').slice(0,5))}${p.phone?`<br>${esc(p.phone)}`:''}</p><div class="tags" style="margin-top:8px">${(p.categories||p.tags||['NEMT']).slice(0,4).map(x=>`<span class="tag">${esc(x)}</span>`).join('')}</div>${p.phone?`<div class="result-actions"><a class="btn-secondary" href="tel:${esc(p.phone)}">Call Provider</a></div>`:''}</div>`).join('')}</div>`}
   function categorySet(data,name){if(!name)return null;return new Set((data.categories?.[name]||[]).map(String))}
   function hasCategory(p,set,name){if(!name)return true;if(set&&set.has(String(p.npi)))return true;return [...(p.categories||[]),...(p.tags||[])].some(x=>String(x).toLowerCase().includes(String(name).toLowerCase()))}
@@ -21,62 +21,6 @@
   function selected(desktop,mobile){return document.getElementById(mobile)?.value||document.getElementById(desktop)?.value||''}
   function stripStateTerms(q,abbr){let s=String(q||''),name=stateName(abbr);s=s.replace(new RegExp(`\\b${abbr}\\b`,'ig'),' ').replace(new RegExp(name.replace(/[.*+?^${}()|[\]\\]/g,'\\$&'),'ig'),' ');return s.replace(/[,]+/g,' ').replace(/\s+/g,' ').trim()}
   async function runSearch(){const q=selected('location','mLocation').trim(),service=selected('service','mService').trim(),access=selected('accessibility','mAccessibility').trim(),zip=zip5(q),abbr=stateFromText(q)||stateFromZip(zip)||window.__eazyMenuState||'IL',name=stateName(abbr);openModal('Find Providers','<div class="claim-callout">Searching provider database…</div>');try{const data=await getStateData(abbr);let list=data.providers||[],note='';if(zip){const exact=list.filter(p=>String(p.zip||'').slice(0,5)===zip);if(exact.length)list=exact;else{const prefix=zip.slice(0,3),near=list.filter(p=>String(p.zip||'').startsWith(prefix));if(near.length){list=near;note=`No providers are indexed in ZIP ${zip}; showing providers in nearby ${prefix}xx ZIP codes.`}else note=`No providers are indexed in ZIP ${zip} or nearby ${prefix}xx ZIP codes; showing ${name} providers.`}}else if(q){const terms=stripStateTerms(q,abbr).toLowerCase().split(/\s+/).filter(Boolean);if(terms.length){const local=list.filter(p=>{const hay=[p.name,p.city,p.zip,p.address1].join(' ').toLowerCase();return terms.every(t=>hay.includes(t))});if(local.length)list=local;else note=`No exact location matches were found for “${q}”; showing ${name} providers.`}}const sset=categorySet(data,service),aset=categorySet(data,access);if(service)list=list.filter(p=>hasCategory(p,sset,service));if(access)list=list.filter(p=>hasCategory(p,aset,access));currentState=abbr;window.__eazyMenuState=abbr;openModal(`${zip?`Providers for ${zip}`:`${name} Providers`} (${list.length})`,providerList(list,note))}catch(e){console.error('Independent provider search failed',e);openModal('Find Providers','<div class="claim-callout">The provider database could not be loaded. Please try again.</div>')}}
-
-  function installCrispProviderCards(){
-    const root=document.getElementById('desktopDirectory');
-    if(!root||root.querySelector('.crisp-provider-layer'))return;
-    const cleanImage='https://raw.githubusercontent.com/Zeitgeist23/eazy-medical-transportation/9a50aa4f7ad5c5aa320b62bad69a23823f7feaf0/directory-landing-approved.png';
-    const img=root.querySelector(':scope > img');
-    if(img)img.src=cleanImage;
-    const style=document.createElement('style');
-    style.textContent=`
-      .crisp-provider-layer{position:absolute;inset:0;z-index:6;pointer-events:none;font-family:Arial,Helvetica,sans-serif;-webkit-font-smoothing:antialiased;text-rendering:geometricPrecision}
-      .crisp-provider-layer .cp-mask{position:absolute;top:48.65%;width:12.15%;height:13.75%;background:#fff;box-sizing:border-box}
-      .crisp-provider-layer .cp-name,.crisp-provider-layer .cp-city,.crisp-provider-layer .cp-tags,.crisp-provider-layer .cp-view{position:absolute;box-sizing:border-box;text-align:center;z-index:1}
-      .crisp-provider-layer .cp-name{top:49.35%;width:12.15%;min-height:3.25%;display:flex;align-items:center;justify-content:center;background:#fff;color:#111827;font-weight:700;font-size:clamp(9px,.72vw,14px);line-height:1.08;padding:0 .22%}
-      .crisp-provider-layer .cp-city{top:53.18%;width:12.15%;height:1.72%;display:flex;align-items:center;justify-content:center;background:#fff;color:#174b83;font-weight:600;font-size:clamp(8px,.60vw,12px);line-height:1}
-      .crisp-provider-layer .cp-tags{top:55.48%;width:12.15%;height:2.18%;display:flex;align-items:center;justify-content:center;gap:.55%;background:#fff}
-      .crisp-provider-layer .cp-tags span{display:inline-flex;align-items:center;justify-content:center;height:1.52vw;max-height:23px;min-height:15px;padding:0 .52vw;border:1px solid #b7dfe7;border-radius:999px;background:#eaf7f9;color:#174b83;font-weight:700;font-size:clamp(7px,.56vw,11px);line-height:1;white-space:nowrap}
-      .crisp-provider-layer .cp-view{top:59.35%;height:2.8%;display:flex;align-items:center;justify-content:center;background:#fff;border:1.5px solid #13889a;border-radius:4px;color:#0b5269;font-weight:700;font-size:clamp(8px,.66vw,13px);line-height:1}
-      @media(max-width:760px){.crisp-provider-layer{display:none}.hero-art{background-image:url('${cleanImage}')!important}}
-    `;
-    document.head.appendChild(style);
-    const cards=[
-      {left:'5.35%',buttonLeft:'6.3%',buttonWidth:'10.3%',name:'North Shore Medical Transport',city:'Evanston, IL',tags:['Wheelchair','Ambulatory']},
-      {left:'19.35%',buttonLeft:'20.2%',buttonWidth:'10.5%',name:'Chicago Senior Ride Services',city:'Chicago, IL',tags:['Ambulatory','Companion']},
-      {left:'33.72%',buttonLeft:'34.6%',buttonWidth:'10.4%',name:'Lake County Wheelchair Transit',city:'Waukegan, IL',tags:['Wheelchair','Stretcher']},
-      {left:'47.82%',buttonLeft:'48.7%',buttonWidth:'10.5%',name:'Suburban Patient Transport',city:'Schaumburg, IL',tags:['Ambulatory','Wheelchair']},
-      {left:'61.22%',buttonLeft:'62.1%',buttonWidth:'10.5%',name:'Metro Dialysis Rides',city:'Naperville, IL',tags:['Dialysis','Wheelchair']},
-      {left:'75.22%',buttonLeft:'76.1%',buttonWidth:'10.5%',name:'Heartland Medical Transit',city:'Aurora, IL',tags:['Ambulatory','Stretcher']}
-    ];
-    const layer=document.createElement('div');
-    layer.className='crisp-provider-layer';
-    layer.setAttribute('aria-hidden','true');
-    layer.innerHTML=cards.map(c=>`<div class="cp-mask" style="left:${c.left}"></div><div class="cp-name" style="left:${c.left}">${esc(c.name)}</div><div class="cp-city" style="left:${c.left}">⌾ ${esc(c.city)}</div><div class="cp-tags" style="left:${c.left}">${c.tags.map(t=>`<span>${esc(t)}</span>`).join('')}</div><div class="cp-view" style="left:${c.buttonLeft};width:${c.buttonWidth}">View Provider</div>`).join('');
-    root.appendChild(layer);
-  }
-
-  function installCrispSearchText(){
-    const root=document.getElementById('desktopDirectory');
-    if(!root||root.querySelector('.crisp-directory-note'))return;
-    const style=document.createElement('style');
-    style.textContent=`
-      #location{background:#fff!important;color:#4d6474!important;-webkit-text-fill-color:#4d6474!important;font-weight:500!important;font-size:clamp(9px,.78vw,14px)!important;-webkit-font-smoothing:antialiased;text-rendering:geometricPrecision}
-      #location::placeholder{color:#4d6474!important;opacity:1!important}
-      #service,#accessibility{color:#4d6474!important;-webkit-text-fill-color:#4d6474!important;font-weight:500!important;font-size:clamp(9px,.76vw,14px)!important;background:linear-gradient(90deg,#fff 0%,#fff 84%,rgba(255,255,255,0) 84%,rgba(255,255,255,0) 100%)!important;-webkit-font-smoothing:antialiased;text-rendering:geometricPrecision}
-      .crisp-directory-note{position:absolute;left:27.5%;top:34.15%;width:55%;height:2.55%;z-index:6;display:flex;align-items:center;justify-content:center;text-align:center;background:#fff;color:#40596b;font:600 clamp(8px,.72vw,13px)/1 Arial,Helvetica,sans-serif;pointer-events:none;-webkit-font-smoothing:antialiased;text-rendering:geometricPrecision}
-      @media(max-width:760px){.crisp-directory-note{display:none}}
-    `;
-    document.head.appendChild(style);
-    const service=document.getElementById('service'),access=document.getElementById('accessibility');
-    if(service&&service.options.length)service.options[0].textContent='e.g., Dialysis, Doctor Visit';
-    if(access&&access.options.length)access.options[0].textContent='e.g., Wheelchair, Stretcher';
-    const note=document.createElement('div');
-    note.className='crisp-directory-note';
-    note.textContent='This directory lists independent providers. We do not provide transportation services.';
-    root.appendChild(note);
-  }
-
   const actions={'Eazy Medical Transportation home':()=>scrollRatio(0),'Home':()=>scrollRatio(0),'Browse Providers':()=>scrollRatio(.37),'Browse by State':el=>showStateDropdown(el),'Wheelchair Vans':()=>wheelchair(),'About':()=>scrollRatio(.835),'Footer Home':()=>scrollRatio(0),'Footer Browse Providers':()=>scrollRatio(.37),'Footer By State':el=>showStateDropdown(el),'Footer Wheelchair Vans':()=>wheelchair(),'EazyMedicalTransportation.com home':()=>scrollRatio(0),'Close':()=>closeModal()};
   document.addEventListener('click',e=>{const el=e.target.closest('[aria-label]');if(!el)return;const label=el.getAttribute('aria-label');if(label==='Find Providers'){e.preventDefault();e.stopImmediatePropagation();runSearch();return}const fn=actions[label];if(!fn)return;e.preventDefault();e.stopImmediatePropagation();fn(el)},true);
   document.addEventListener('click',e=>{if(e.target?.id==='modal'){e.preventDefault();e.stopImmediatePropagation();closeModal();return}if(dropdown&&!dropdown.contains(e.target)&&!e.target.closest('[aria-label="Browse by State"],[aria-label="Footer By State"]'))closeDropdown()},true);
@@ -84,6 +28,4 @@
   document.addEventListener('submit',e=>{if(e.target?.id==='mSearch'){e.preventDefault();e.stopImmediatePropagation();runSearch()}},true);
   window.__eazyIndependentSearch=runSearch;
   window.__eazyIndependentCloseModal=closeModal;
-  installCrispSearchText();
-  installCrispProviderCards();
 })();

@@ -1,0 +1,784 @@
+{
+  "generatedAt": "2026-08-09T16:51:22.806582Z",
+  "source": "CMS NPPES Data Dissemination",
+  "sourceUrl": "https://download.cms.gov/nppes/NPPES_Data_Dissemination_July_2026_V2.zip",
+  "taxonomy": "343900000X",
+  "categories": [
+    "All",
+    "Wheelchair",
+    "Ambulatory",
+    "Dialysis",
+    "Doctor Visit",
+    "Stretcher",
+    "Companion"
+  ],
+  "states": [
+    {
+      "abbr": "AL",
+      "name": "Alabama",
+      "providerCount": 286,
+      "categoryCounts": {
+        "All": 286,
+        "Wheelchair": 1,
+        "Ambulatory": 0,
+        "Dialysis": 0,
+        "Doctor Visit": 0,
+        "Stretcher": 0,
+        "Companion": 1
+      },
+      "file": "data/providers/AL.json"
+    },
+    {
+      "abbr": "AK",
+      "name": "Alaska",
+      "providerCount": 60,
+      "categoryCounts": {
+        "All": 60,
+        "Wheelchair": 0,
+        "Ambulatory": 0,
+        "Dialysis": 0,
+        "Doctor Visit": 0,
+        "Stretcher": 0,
+        "Companion": 0
+      },
+      "file": "data/providers/AK.json"
+    },
+    {
+      "abbr": "AZ",
+      "name": "Arizona",
+      "providerCount": 1435,
+      "categoryCounts": {
+        "All": 1435,
+        "Wheelchair": 1,
+        "Ambulatory": 1,
+        "Dialysis": 1,
+        "Doctor Visit": 0,
+        "Stretcher": 0,
+        "Companion": 3
+      },
+      "file": "data/providers/AZ.json"
+    },
+    {
+      "abbr": "AR",
+      "name": "Arkansas",
+      "providerCount": 257,
+      "categoryCounts": {
+        "All": 257,
+        "Wheelchair": 0,
+        "Ambulatory": 1,
+        "Dialysis": 0,
+        "Doctor Visit": 0,
+        "Stretcher": 0,
+        "Companion": 0
+      },
+      "file": "data/providers/AR.json"
+    },
+    {
+      "abbr": "CA",
+      "name": "California",
+      "providerCount": 4754,
+      "categoryCounts": {
+        "All": 4754,
+        "Wheelchair": 5,
+        "Ambulatory": 1,
+        "Dialysis": 1,
+        "Doctor Visit": 1,
+        "Stretcher": 0,
+        "Companion": 4
+      },
+      "file": "data/providers/CA.json"
+    },
+    {
+      "abbr": "CO",
+      "name": "Colorado",
+      "providerCount": 963,
+      "categoryCounts": {
+        "All": 963,
+        "Wheelchair": 1,
+        "Ambulatory": 0,
+        "Dialysis": 0,
+        "Doctor Visit": 0,
+        "Stretcher": 0,
+        "Companion": 0
+      },
+      "file": "data/providers/CO.json"
+    },
+    {
+      "abbr": "CT",
+      "name": "Connecticut",
+      "providerCount": 159,
+      "categoryCounts": {
+        "All": 159,
+        "Wheelchair": 5,
+        "Ambulatory": 0,
+        "Dialysis": 0,
+        "Doctor Visit": 0,
+        "Stretcher": 0,
+        "Companion": 2
+      },
+      "file": "data/providers/CT.json"
+    },
+    {
+      "abbr": "DE",
+      "name": "Delaware",
+      "providerCount": 75,
+      "categoryCounts": {
+        "All": 75,
+        "Wheelchair": 0,
+        "Ambulatory": 0,
+        "Dialysis": 0,
+        "Doctor Visit": 0,
+        "Stretcher": 0,
+        "Companion": 0
+      },
+      "file": "data/providers/DE.json"
+    },
+    {
+      "abbr": "DC",
+      "name": "District of Columbia",
+      "providerCount": 85,
+      "categoryCounts": {
+        "All": 85,
+        "Wheelchair": 0,
+        "Ambulatory": 0,
+        "Dialysis": 0,
+        "Doctor Visit": 0,
+        "Stretcher": 0,
+        "Companion": 0
+      },
+      "file": "data/providers/DC.json"
+    },
+    {
+      "abbr": "FL",
+      "name": "Florida",
+      "providerCount": 2866,
+      "categoryCounts": {
+        "All": 2866,
+        "Wheelchair": 20,
+        "Ambulatory": 0,
+        "Dialysis": 0,
+        "Doctor Visit": 0,
+        "Stretcher": 2,
+        "Companion": 13
+      },
+      "file": "data/providers/FL.json"
+    },
+    {
+      "abbr": "GA",
+      "name": "Georgia",
+      "providerCount": 1699,
+      "categoryCounts": {
+        "All": 1699,
+        "Wheelchair": 2,
+        "Ambulatory": 0,
+        "Dialysis": 0,
+        "Doctor Visit": 0,
+        "Stretcher": 0,
+        "Companion": 1
+      },
+      "file": "data/providers/GA.json"
+    },
+    {
+      "abbr": "HI",
+      "name": "Hawaii",
+      "providerCount": 115,
+      "categoryCounts": {
+        "All": 115,
+        "Wheelchair": 1,
+        "Ambulatory": 0,
+        "Dialysis": 0,
+        "Doctor Visit": 0,
+        "Stretcher": 0,
+        "Companion": 0
+      },
+      "file": "data/providers/HI.json"
+    },
+    {
+      "abbr": "ID",
+      "name": "Idaho",
+      "providerCount": 135,
+      "categoryCounts": {
+        "All": 135,
+        "Wheelchair": 0,
+        "Ambulatory": 0,
+        "Dialysis": 0,
+        "Doctor Visit": 0,
+        "Stretcher": 0,
+        "Companion": 0
+      },
+      "file": "data/providers/ID.json"
+    },
+    {
+      "abbr": "IL",
+      "name": "Illinois",
+      "providerCount": 1332,
+      "categoryCounts": {
+        "All": 1332,
+        "Wheelchair": 1,
+        "Ambulatory": 0,
+        "Dialysis": 0,
+        "Doctor Visit": 0,
+        "Stretcher": 0,
+        "Companion": 0
+      },
+      "file": "data/providers/IL.json"
+    },
+    {
+      "abbr": "IN",
+      "name": "Indiana",
+      "providerCount": 853,
+      "categoryCounts": {
+        "All": 853,
+        "Wheelchair": 2,
+        "Ambulatory": 1,
+        "Dialysis": 0,
+        "Doctor Visit": 0,
+        "Stretcher": 0,
+        "Companion": 0
+      },
+      "file": "data/providers/IN.json"
+    },
+    {
+      "abbr": "IA",
+      "name": "Iowa",
+      "providerCount": 265,
+      "categoryCounts": {
+        "All": 265,
+        "Wheelchair": 0,
+        "Ambulatory": 0,
+        "Dialysis": 0,
+        "Doctor Visit": 0,
+        "Stretcher": 0,
+        "Companion": 1
+      },
+      "file": "data/providers/IA.json"
+    },
+    {
+      "abbr": "KS",
+      "name": "Kansas",
+      "providerCount": 212,
+      "categoryCounts": {
+        "All": 212,
+        "Wheelchair": 0,
+        "Ambulatory": 0,
+        "Dialysis": 0,
+        "Doctor Visit": 0,
+        "Stretcher": 0,
+        "Companion": 0
+      },
+      "file": "data/providers/KS.json"
+    },
+    {
+      "abbr": "KY",
+      "name": "Kentucky",
+      "providerCount": 192,
+      "categoryCounts": {
+        "All": 192,
+        "Wheelchair": 0,
+        "Ambulatory": 0,
+        "Dialysis": 0,
+        "Doctor Visit": 0,
+        "Stretcher": 0,
+        "Companion": 1
+      },
+      "file": "data/providers/KY.json"
+    },
+    {
+      "abbr": "LA",
+      "name": "Louisiana",
+      "providerCount": 2458,
+      "categoryCounts": {
+        "All": 2458,
+        "Wheelchair": 1,
+        "Ambulatory": 0,
+        "Dialysis": 0,
+        "Doctor Visit": 0,
+        "Stretcher": 0,
+        "Companion": 1
+      },
+      "file": "data/providers/LA.json"
+    },
+    {
+      "abbr": "ME",
+      "name": "Maine",
+      "providerCount": 49,
+      "categoryCounts": {
+        "All": 49,
+        "Wheelchair": 0,
+        "Ambulatory": 0,
+        "Dialysis": 0,
+        "Doctor Visit": 0,
+        "Stretcher": 0,
+        "Companion": 0
+      },
+      "file": "data/providers/ME.json"
+    },
+    {
+      "abbr": "MD",
+      "name": "Maryland",
+      "providerCount": 510,
+      "categoryCounts": {
+        "All": 510,
+        "Wheelchair": 1,
+        "Ambulatory": 0,
+        "Dialysis": 0,
+        "Doctor Visit": 0,
+        "Stretcher": 0,
+        "Companion": 0
+      },
+      "file": "data/providers/MD.json"
+    },
+    {
+      "abbr": "MA",
+      "name": "Massachusetts",
+      "providerCount": 535,
+      "categoryCounts": {
+        "All": 535,
+        "Wheelchair": 3,
+        "Ambulatory": 0,
+        "Dialysis": 0,
+        "Doctor Visit": 0,
+        "Stretcher": 0,
+        "Companion": 2
+      },
+      "file": "data/providers/MA.json"
+    },
+    {
+      "abbr": "MI",
+      "name": "Michigan",
+      "providerCount": 1215,
+      "categoryCounts": {
+        "All": 1215,
+        "Wheelchair": 0,
+        "Ambulatory": 1,
+        "Dialysis": 0,
+        "Doctor Visit": 0,
+        "Stretcher": 0,
+        "Companion": 1
+      },
+      "file": "data/providers/MI.json"
+    },
+    {
+      "abbr": "MN",
+      "name": "Minnesota",
+      "providerCount": 1221,
+      "categoryCounts": {
+        "All": 1221,
+        "Wheelchair": 0,
+        "Ambulatory": 0,
+        "Dialysis": 0,
+        "Doctor Visit": 0,
+        "Stretcher": 2,
+        "Companion": 0
+      },
+      "file": "data/providers/MN.json"
+    },
+    {
+      "abbr": "MS",
+      "name": "Mississippi",
+      "providerCount": 505,
+      "categoryCounts": {
+        "All": 505,
+        "Wheelchair": 0,
+        "Ambulatory": 0,
+        "Dialysis": 0,
+        "Doctor Visit": 0,
+        "Stretcher": 0,
+        "Companion": 1
+      },
+      "file": "data/providers/MS.json"
+    },
+    {
+      "abbr": "MO",
+      "name": "Missouri",
+      "providerCount": 467,
+      "categoryCounts": {
+        "All": 467,
+        "Wheelchair": 0,
+        "Ambulatory": 0,
+        "Dialysis": 0,
+        "Doctor Visit": 0,
+        "Stretcher": 0,
+        "Companion": 1
+      },
+      "file": "data/providers/MO.json"
+    },
+    {
+      "abbr": "MT",
+      "name": "Montana",
+      "providerCount": 41,
+      "categoryCounts": {
+        "All": 41,
+        "Wheelchair": 1,
+        "Ambulatory": 0,
+        "Dialysis": 0,
+        "Doctor Visit": 0,
+        "Stretcher": 0,
+        "Companion": 0
+      },
+      "file": "data/providers/MT.json"
+    },
+    {
+      "abbr": "NE",
+      "name": "Nebraska",
+      "providerCount": 139,
+      "categoryCounts": {
+        "All": 139,
+        "Wheelchair": 1,
+        "Ambulatory": 0,
+        "Dialysis": 0,
+        "Doctor Visit": 0,
+        "Stretcher": 0,
+        "Companion": 0
+      },
+      "file": "data/providers/NE.json"
+    },
+    {
+      "abbr": "NV",
+      "name": "Nevada",
+      "providerCount": 173,
+      "categoryCounts": {
+        "All": 173,
+        "Wheelchair": 0,
+        "Ambulatory": 0,
+        "Dialysis": 0,
+        "Doctor Visit": 0,
+        "Stretcher": 0,
+        "Companion": 0
+      },
+      "file": "data/providers/NV.json"
+    },
+    {
+      "abbr": "NH",
+      "name": "New Hampshire",
+      "providerCount": 100,
+      "categoryCounts": {
+        "All": 100,
+        "Wheelchair": 3,
+        "Ambulatory": 0,
+        "Dialysis": 0,
+        "Doctor Visit": 0,
+        "Stretcher": 0,
+        "Companion": 0
+      },
+      "file": "data/providers/NH.json"
+    },
+    {
+      "abbr": "NJ",
+      "name": "New Jersey",
+      "providerCount": 876,
+      "categoryCounts": {
+        "All": 876,
+        "Wheelchair": 0,
+        "Ambulatory": 0,
+        "Dialysis": 0,
+        "Doctor Visit": 0,
+        "Stretcher": 0,
+        "Companion": 2
+      },
+      "file": "data/providers/NJ.json"
+    },
+    {
+      "abbr": "NM",
+      "name": "New Mexico",
+      "providerCount": 164,
+      "categoryCounts": {
+        "All": 164,
+        "Wheelchair": 0,
+        "Ambulatory": 0,
+        "Dialysis": 0,
+        "Doctor Visit": 0,
+        "Stretcher": 0,
+        "Companion": 0
+      },
+      "file": "data/providers/NM.json"
+    },
+    {
+      "abbr": "NY",
+      "name": "New York",
+      "providerCount": 1573,
+      "categoryCounts": {
+        "All": 1573,
+        "Wheelchair": 2,
+        "Ambulatory": 1,
+        "Dialysis": 0,
+        "Doctor Visit": 0,
+        "Stretcher": 1,
+        "Companion": 1
+      },
+      "file": "data/providers/NY.json"
+    },
+    {
+      "abbr": "NC",
+      "name": "North Carolina",
+      "providerCount": 2204,
+      "categoryCounts": {
+        "All": 2204,
+        "Wheelchair": 10,
+        "Ambulatory": 0,
+        "Dialysis": 0,
+        "Doctor Visit": 0,
+        "Stretcher": 0,
+        "Companion": 2
+      },
+      "file": "data/providers/NC.json"
+    },
+    {
+      "abbr": "ND",
+      "name": "North Dakota",
+      "providerCount": 108,
+      "categoryCounts": {
+        "All": 108,
+        "Wheelchair": 0,
+        "Ambulatory": 0,
+        "Dialysis": 2,
+        "Doctor Visit": 0,
+        "Stretcher": 0,
+        "Companion": 0
+      },
+      "file": "data/providers/ND.json"
+    },
+    {
+      "abbr": "OH",
+      "name": "Ohio",
+      "providerCount": 3768,
+      "categoryCounts": {
+        "All": 3768,
+        "Wheelchair": 7,
+        "Ambulatory": 0,
+        "Dialysis": 0,
+        "Doctor Visit": 0,
+        "Stretcher": 0,
+        "Companion": 5
+      },
+      "file": "data/providers/OH.json"
+    },
+    {
+      "abbr": "OK",
+      "name": "Oklahoma",
+      "providerCount": 116,
+      "categoryCounts": {
+        "All": 116,
+        "Wheelchair": 1,
+        "Ambulatory": 0,
+        "Dialysis": 0,
+        "Doctor Visit": 0,
+        "Stretcher": 1,
+        "Companion": 1
+      },
+      "file": "data/providers/OK.json"
+    },
+    {
+      "abbr": "OR",
+      "name": "Oregon",
+      "providerCount": 149,
+      "categoryCounts": {
+        "All": 149,
+        "Wheelchair": 1,
+        "Ambulatory": 0,
+        "Dialysis": 0,
+        "Doctor Visit": 0,
+        "Stretcher": 0,
+        "Companion": 1
+      },
+      "file": "data/providers/OR.json"
+    },
+    {
+      "abbr": "PA",
+      "name": "Pennsylvania",
+      "providerCount": 562,
+      "categoryCounts": {
+        "All": 562,
+        "Wheelchair": 0,
+        "Ambulatory": 0,
+        "Dialysis": 0,
+        "Doctor Visit": 0,
+        "Stretcher": 0,
+        "Companion": 2
+      },
+      "file": "data/providers/PA.json"
+    },
+    {
+      "abbr": "RI",
+      "name": "Rhode Island",
+      "providerCount": 84,
+      "categoryCounts": {
+        "All": 84,
+        "Wheelchair": 0,
+        "Ambulatory": 0,
+        "Dialysis": 0,
+        "Doctor Visit": 0,
+        "Stretcher": 0,
+        "Companion": 0
+      },
+      "file": "data/providers/RI.json"
+    },
+    {
+      "abbr": "SC",
+      "name": "South Carolina",
+      "providerCount": 485,
+      "categoryCounts": {
+        "All": 485,
+        "Wheelchair": 0,
+        "Ambulatory": 0,
+        "Dialysis": 0,
+        "Doctor Visit": 0,
+        "Stretcher": 0,
+        "Companion": 0
+      },
+      "file": "data/providers/SC.json"
+    },
+    {
+      "abbr": "SD",
+      "name": "South Dakota",
+      "providerCount": 73,
+      "categoryCounts": {
+        "All": 73,
+        "Wheelchair": 5,
+        "Ambulatory": 0,
+        "Dialysis": 0,
+        "Doctor Visit": 0,
+        "Stretcher": 0,
+        "Companion": 0
+      },
+      "file": "data/providers/SD.json"
+    },
+    {
+      "abbr": "TN",
+      "name": "Tennessee",
+      "providerCount": 1230,
+      "categoryCounts": {
+        "All": 1230,
+        "Wheelchair": 1,
+        "Ambulatory": 2,
+        "Dialysis": 0,
+        "Doctor Visit": 0,
+        "Stretcher": 0,
+        "Companion": 1
+      },
+      "file": "data/providers/TN.json"
+    },
+    {
+      "abbr": "TX",
+      "name": "Texas",
+      "providerCount": 3633,
+      "categoryCounts": {
+        "All": 3633,
+        "Wheelchair": 7,
+        "Ambulatory": 0,
+        "Dialysis": 1,
+        "Doctor Visit": 0,
+        "Stretcher": 0,
+        "Companion": 6
+      },
+      "file": "data/providers/TX.json"
+    },
+    {
+      "abbr": "UT",
+      "name": "Utah",
+      "providerCount": 66,
+      "categoryCounts": {
+        "All": 66,
+        "Wheelchair": 0,
+        "Ambulatory": 0,
+        "Dialysis": 0,
+        "Doctor Visit": 0,
+        "Stretcher": 0,
+        "Companion": 1
+      },
+      "file": "data/providers/UT.json"
+    },
+    {
+      "abbr": "VT",
+      "name": "Vermont",
+      "providerCount": 6,
+      "categoryCounts": {
+        "All": 6,
+        "Wheelchair": 0,
+        "Ambulatory": 0,
+        "Dialysis": 0,
+        "Doctor Visit": 0,
+        "Stretcher": 0,
+        "Companion": 0
+      },
+      "file": "data/providers/VT.json"
+    },
+    {
+      "abbr": "VA",
+      "name": "Virginia",
+      "providerCount": 2498,
+      "categoryCounts": {
+        "All": 2498,
+        "Wheelchair": 2,
+        "Ambulatory": 1,
+        "Dialysis": 0,
+        "Doctor Visit": 0,
+        "Stretcher": 2,
+        "Companion": 1
+      },
+      "file": "data/providers/VA.json"
+    },
+    {
+      "abbr": "WA",
+      "name": "Washington",
+      "providerCount": 181,
+      "categoryCounts": {
+        "All": 181,
+        "Wheelchair": 0,
+        "Ambulatory": 0,
+        "Dialysis": 0,
+        "Doctor Visit": 0,
+        "Stretcher": 0,
+        "Companion": 2
+      },
+      "file": "data/providers/WA.json"
+    },
+    {
+      "abbr": "WV",
+      "name": "West Virginia",
+      "providerCount": 117,
+      "categoryCounts": {
+        "All": 117,
+        "Wheelchair": 0,
+        "Ambulatory": 0,
+        "Dialysis": 0,
+        "Doctor Visit": 0,
+        "Stretcher": 0,
+        "Companion": 0
+      },
+      "file": "data/providers/WV.json"
+    },
+    {
+      "abbr": "WI",
+      "name": "Wisconsin",
+      "providerCount": 1005,
+      "categoryCounts": {
+        "All": 1005,
+        "Wheelchair": 1,
+        "Ambulatory": 0,
+        "Dialysis": 0,
+        "Doctor Visit": 0,
+        "Stretcher": 1,
+        "Companion": 0
+      },
+      "file": "data/providers/WI.json"
+    },
+    {
+      "abbr": "WY",
+      "name": "Wyoming",
+      "providerCount": 8,
+      "categoryCounts": {
+        "All": 8,
+        "Wheelchair": 0,
+        "Ambulatory": 0,
+        "Dialysis": 0,
+        "Doctor Visit": 0,
+        "Stretcher": 0,
+        "Companion": 0
+      },
+      "file": "data/providers/WY.json"
+    }
+  ],
+  "totalProviders": 42062,
+  "classificationNote": "All Providers is complete for active NPPES records carrying taxonomy 343900000X in the monthly dissemination file. Service-specific categories are assigned only when explicit evidence appears in the provider name or verified/claimed service data; NPPES does not itself certify those service offerings."
+}

@@ -1,1 +1,0 @@
-Provider cards use the clean historical artwork plus browser-rendered text overlays. No generative imaging.

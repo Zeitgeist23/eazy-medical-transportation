@@ -1,0 +1,57 @@
+name: Generate Ride2Dialysis Hero Photo
+
+on:
+  push:
+    paths:
+      - .r2d-hero-trigger
+
+permissions:
+  contents: write
+
+jobs:
+  build-hero:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.12'
+      - run: python -m pip install --quiet pillow
+      - name: Build dedicated sharpened hero photograph
+        run: |
+          python - <<'PY'
+          from pathlib import Path
+          from io import BytesIO
+          import base64
+          from PIL import Image, ImageEnhance, ImageFilter, ImageOps
+
+          root = Path('ride2dialysis')
+          parts = [root / f'approved-image.{i:02d}' for i in range(9)]
+          payload = ''.join(p.read_text(encoding='utf-8') for p in parts)
+          image = Image.open(BytesIO(base64.b64decode(''.join(payload.split())))).convert('RGB')
+          w, h = image.size
+
+          # The approved artwork contains the accessible-van photograph in the
+          # upper-right portion.  Crop that photograph into its own asset so the
+          # browser no longer has to magnify the entire page screenshot.
+          left = int(w * 0.615)
+          top = int(h * 0.045)
+          right = w
+          bottom = int(h * 0.315)
+          photo = image.crop((left, top, right, bottom))
+          photo = ImageOps.fit(photo, (1400, 1020), method=Image.Resampling.LANCZOS, centering=(0.50, 0.50))
+          photo = ImageEnhance.Contrast(photo).enhance(1.045)
+          photo = ImageEnhance.Color(photo).enhance(1.025)
+          photo = photo.filter(ImageFilter.UnsharpMask(radius=1.2, percent=125, threshold=3))
+          photo.save(root / 'hero-photo.webp', 'WEBP', quality=91, method=6)
+          print('source:', image.size, 'hero:', photo.size)
+          PY
+      - name: Commit hero asset
+        run: |
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git add ride2dialysis/hero-photo.webp
+          git diff --cached --quiet || git commit -m "Generate dedicated crisp Ride2Dialysis hero photo"
+          git push

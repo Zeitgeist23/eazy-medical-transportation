@@ -140,14 +140,9 @@
 <div class="modal-backdrop" id="modal"><div class="modal"><div class="modal-head"><h2 id="modalTitle">Providers</h2><button class="close" onclick="closeModal()">×</button></div><div class="modal-body" id="modalBody"></div></div></div>
 
 <script>
-const providers=[
-{name:'North Shore Medical Transport',city:'Evanston, IL',tags:['Wheelchair','Ambulatory']},
-{name:'Suburban Patient Transport',city:'Schaumburg, IL',tags:['Ambulatory','Wheelchair']},
-{name:'Metro Dialysis Rides',city:'Naperville, IL',tags:['Dialysis','Wheelchair']},
-{name:'Chicago Senior Ride Services',city:'Chicago, IL',tags:['Ambulatory','Companion']},
-{name:'Lake County Wheelchair Transit',city:'Waukegan, IL',tags:['Wheelchair','Stretcher']},
-{name:'Heartland Medical Transit',city:'Aurora, IL',tags:['Ambulatory','Stretcher']}
-];
+let providers=[];
+async function loadProviders(){try{const r=await fetch('providers-il.json?v=1',{cache:'no-store'});const d=await r.json();providers=d.providers||[];renderFeaturedProviders();}catch(e){console.error('Provider database failed to load',e)}}
+function renderFeaturedProviders(){const box=document.querySelector('.provider-list');if(!box||!providers.length)return;box.innerHTML=providers.slice(0,3).map((p,i)=>`<article class="provider"><div class="provider-top"><div><h3>${p.name}</h3><div class="city">${p.city}, ${p.state} ${p.zip||''}</div></div><button class="view" onclick="showProvider(${i})">View</button></div><div class="smalltags"><span>NEMT</span><span>Medical Transport Van</span></div></article>`).join('')}
 function toggleNav(){document.getElementById('mNav').classList.toggle('open')}
 function toggleMenuGroup(button){const group=button.closest('.nav-group');document.querySelectorAll('.nav-group.open').forEach(g=>{if(g!==group)g.classList.remove('open')});group.classList.toggle('open')}
 function closeMobileNav(){document.getElementById('mNav').classList.remove('open');document.querySelectorAll('.nav-group.open').forEach(g=>g.classList.remove('open'))}
@@ -156,14 +151,15 @@ function chooseRide(service){closeMobileNav();document.getElementById('mService'
 function openModal(title,body){document.getElementById('modalTitle').textContent=title;document.getElementById('modalBody').innerHTML=body;document.getElementById('modal').classList.add('open')}
 function closeModal(){document.getElementById('modal').classList.remove('open')}
 function showProvider(i){const p=providers[i];openModal(p.name,`<p>${p.city}</p><div class="tags">${p.tags.map(t=>`<span class="tag">${t}</span>`).join('')}</div><p style="margin-top:14px">Contact the provider directly to verify availability, pricing, credentials, and scheduling.</p>`)}
-function renderProviderList(list){return `<div class="results">${list.map(p=>`<div class="result"><h3>${p.name}</h3><p>${p.city}</p><div class="tags">${p.tags.map(t=>`<span class="tag">${t}</span>`).join('')}</div></div>`).join('')}</div>`}
-function showProviderCategory(tag){closeMobileNav();const list=tag==='All'?providers:providers.filter(p=>p.tags.includes(tag));openModal(tag==='All'?'All Providers':tag+' Providers',renderProviderList(list))}
+function renderProviderList(list){return `<div class="results">${list.map(p=>`<div class="result"><h3>${p.name}</h3><p>${p.city}, ${p.state} ${p.zip||''}${p.phone?`<br><a href="tel:${p.phone}">${p.phone}</a>`:''}</p><div class="tags">${p.tags.map(t=>`<span class="tag">${t}</span>`).join('')}</div></div>`).join('')}</div>`}
+function showProviderCategory(tag){closeMobileNav();const list=tag==='All'?providers:providers.filter(p=>p.tags.includes(tag));openModal(tag==='All'?`Illinois Providers (${list.length})`:tag+' Providers',renderProviderList(list.slice(0,250)))}
 function showStateOption(state){closeMobileNav();openModal(state==='All States'?'Browse by State':state+' Medical Transportation',`<p>${state==='All States'?'Select a state to browse independent medical transportation providers as directory coverage expands.':'Browse independent medical transportation providers serving '+state+'. Directory coverage is being expanded.'}</p>`)}
 function showWheelchairOption(kind){closeMobileNav();openModal(kind,`<p>Use the directory filters to compare providers offering ${kind.toLowerCase()}. Confirm vehicle accessibility, availability, pricing, and credentials directly with each provider.</p>`)}
-function renderResults(){return renderProviderList(providers)}
-function runMobileSearch(e){e.preventDefault();openModal('Matching Providers',renderResults())}
-function runSearch(){openModal('Matching Providers',renderResults())}
-document.getElementById('modal').addEventListener('click',e=>{if(e.target.id==='modal')closeModal()})
+function getFilteredProviders(){const q=(document.getElementById('mLocation')?.value||document.getElementById('location')?.value||'').trim().toLowerCase();if(!q)return providers;return providers.filter(p=>[p.name,p.city,p.zip,p.address1].some(v=>(v||'').toLowerCase().includes(q)))}
+function renderResults(){return renderProviderList(getFilteredProviders().slice(0,250))}
+function runMobileSearch(e){e.preventDefault();const list=getFilteredProviders();openModal(`Matching Providers (${list.length})`,renderProviderList(list.slice(0,250)))}
+function runSearch(){const list=getFilteredProviders();openModal(`Matching Providers (${list.length})`,renderProviderList(list.slice(0,250)))}
+document.getElementById('modal').addEventListener('click',e=>{if(e.target.id==='modal')closeModal()});loadProviders()
 </script>
 </body>
 </html>

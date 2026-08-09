@@ -1,0 +1,25 @@
+name: Trigger Ride2Dialysis dropdown update
+
+on:
+  issues:
+    types: [opened]
+
+permissions:
+  contents: write
+
+jobs:
+  update:
+    if: github.event.issue.title == 'APPLY RIDE2 MOBILE DROPDOWNS'
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - name: Patch Ride2Dialysis
+        run: python3 .github/scripts/patch_ride2_dropdowns.py
+      - name: Commit update
+        run: |
+          if git diff --quiet -- ride2dialysis/index.html; then exit 0; fi
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git add ride2dialysis/index.html
+          git commit -m "Add Ride2Dialysis mobile dropdown menus"
+          git push

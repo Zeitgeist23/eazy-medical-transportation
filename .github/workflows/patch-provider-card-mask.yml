@@ -1,0 +1,54 @@
+name: Patch provider card masks
+
+on:
+  push:
+    branches: [main]
+    paths:
+      - '.provider-mask-trigger'
+
+permissions:
+  contents: write
+
+jobs:
+  patch:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          ref: fix-provider-card-mask
+          fetch-depth: 0
+      - name: Add clean masks behind native provider text
+        shell: python
+        run: |
+          from pathlib import Path
+          p=Path('menu-fix.js')
+          s=p.read_text()
+          old="""      .crisp-provider-layer .cp-name,.crisp-provider-layer .cp-city,.crisp-provider-layer .cp-tags,.crisp-provider-layer .cp-view{position:absolute;box-sizing:border-box;text-align:center}\n"""
+          new="""      .crisp-provider-layer .cp-mask{position:absolute;top:48.65%;width:12.15%;height:13.75%;background:#fff;box-sizing:border-box}\n      .crisp-provider-layer .cp-name,.crisp-provider-layer .cp-city,.crisp-provider-layer .cp-tags,.crisp-provider-layer .cp-view{position:absolute;box-sizing:border-box;text-align:center;z-index:1}\n"""
+          if old not in s:
+              raise SystemExit('provider overlay CSS marker not found')
+          s=s.replace(old,new,1)
+          old2="""    layer.innerHTML=cards.map(c=>`<div class=\"cp-name\" style=\"left:${c.left}\">${esc(c.name)}</div><div class=\"cp-city\" style=\"left:${c.left}\">⌾ ${esc(c.city)}</div><div class=\"cp-tags\" style=\"left:${c.left}\">${c.tags.map(t=>`<span>${esc(t)}</span>`).join('')}</div><div class=\"cp-view\" style=\"left:${c.buttonLeft};width:${c.buttonWidth}\">View Provider</div>`).join('');\n"""
+          new2="""    layer.innerHTML=cards.map(c=>`<div class=\"cp-mask\" style=\"left:${c.left}\"></div><div class=\"cp-name\" style=\"left:${c.left}\">${esc(c.name)}</div><div class=\"cp-city\" style=\"left:${c.left}\">⌾ ${esc(c.city)}</div><div class=\"cp-tags\" style=\"left:${c.left}\">${c.tags.map(t=>`<span>${esc(t)}</span>`).join('')}</div><div class=\"cp-view\" style=\"left:${c.buttonLeft};width:${c.buttonWidth}\">View Provider</div>`).join('');\n"""
+          if old2 not in s:
+              raise SystemExit('provider overlay HTML marker not found')
+          s=s.replace(old2,new2,1)
+          p.write_text(s)
+      - name: Validate mask patch
+        run: |
+          python - <<'PY'
+          from pathlib import Path
+          s=Path('menu-fix.js').read_text()
+          assert '.cp-mask' in s
+          assert 'height:13.75%' in s
+          assert 'z-index:1' in s
+          print('provider card masks installed')
+          PY
+      - name: Commit patch
+        run: |
+          git config user.name github-actions[bot]
+          git config user.email 41898282+github-actions[bot]@users.noreply.github.com
+          git add menu-fix.js
+          git diff --cached --quiet && exit 0
+          git commit -m "Mask baked provider card text behind crisp overlays"
+          git push origin fix-provider-card-mask

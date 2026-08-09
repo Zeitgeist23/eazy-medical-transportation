@@ -14,7 +14,7 @@ permissions:
 
 concurrency:
   group: national-provider-db
-  cancel-in-progress: false
+  cancel-in-progress: true
 
 jobs:
   build:
@@ -24,6 +24,9 @@ jobs:
       - uses: actions/checkout@v4
         with:
           ref: main
+          fetch-depth: 0
+      - name: Sync current main
+        run: git pull --ff-only origin main
       - name: Show free disk
         run: df -h
       - name: Build state provider files from latest CMS NPPES monthly V2 dissemination
@@ -50,4 +53,5 @@ jobs:
           git add states.json data/provider-index.json data/providers/*.json
           git diff --cached --quiet && exit 0
           git commit -m "Refresh national NEMT provider database from CMS NPPES"
+          git pull --rebase origin main
           git push origin main

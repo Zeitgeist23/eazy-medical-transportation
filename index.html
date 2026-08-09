@@ -17,10 +17,13 @@
   html,body{background:#f8fcfd}.desktop{display:none}.mobile{display:block;background:#fff;min-height:100vh;padding-top:calc(70px + env(safe-area-inset-top));padding-bottom:env(safe-area-inset-bottom)}
   .m-header{position:fixed;top:0;left:0;right:0;width:100%;height:calc(70px + env(safe-area-inset-top));z-index:1000;background:rgba(255,255,255,.98);backdrop-filter:blur(12px);border-bottom:1px solid var(--line);padding:env(safe-area-inset-top) 12px 0;display:flex;align-items:center;gap:9px}
   .m-brand{display:flex;align-items:center;min-width:0;flex:1;height:58px}.m-logo{display:block;width:min(178px,57vw);height:58px;object-fit:contain;object-position:left center}
-  .m-menu{width:44px;height:44px;flex:0 0 44px;border:1px solid var(--line);border-radius:12px;background:#fff;color:var(--navy);font-size:22px}.m-nav{display:none;position:fixed;left:10px;right:10px;top:calc(70px + env(safe-area-inset-top));background:#fff;border:1px solid var(--line);border-radius:15px;padding:8px;box-shadow:var(--shadow);z-index:1001}.m-nav.open{display:grid}.m-nav button,.m-nav a{border:0;background:#fff;color:var(--navy);text-align:left;text-decoration:none;padding:13px;border-radius:10px;font-weight:800;font-size:15px}
+  .m-menu{width:44px;height:44px;flex:0 0 44px;border:1px solid var(--line);border-radius:12px;background:#fff;color:var(--navy);font-size:22px}
+  .m-nav{display:none;position:fixed;left:10px;right:10px;top:calc(70px + env(safe-area-inset-top));max-height:calc(100vh - 82px - env(safe-area-inset-top));overflow-y:auto;background:#fff;border:1px solid var(--line);border-radius:15px;padding:8px;box-shadow:var(--shadow);z-index:1001}.m-nav.open{display:block}
+  .nav-group{border-bottom:1px solid #edf4f6}.nav-group:last-child{border-bottom:0}.nav-toggle{width:100%;border:0;background:#fff;color:var(--navy);text-align:left;padding:14px 12px;border-radius:10px;font-weight:900;font-size:15px;display:flex;align-items:center;justify-content:space-between;gap:12px}.nav-toggle .chev{font-size:13px;transition:transform .2s ease}.nav-group.open .nav-toggle{background:#f3fafb;color:var(--teal)}.nav-group.open .chev{transform:rotate(180deg)}
+  .nav-submenu{display:none;padding:0 6px 8px}.nav-group.open .nav-submenu{display:grid;gap:4px}.nav-submenu button,.nav-submenu a{border:0;background:#f7fbfc;color:#31576a;text-align:left;text-decoration:none;padding:11px 14px 11px 20px;border-radius:9px;font-weight:700;font-size:13px}.nav-submenu button:active,.nav-submenu a:active{background:#e7f5f6;color:var(--teal)}
   .hero{padding:14px;background:linear-gradient(180deg,#f1fafb,#fff 82%)}.hero-art{height:230px;border-radius:22px;overflow:hidden;box-shadow:var(--shadow);background:#e8f4f6 url('directory-landing-approved.png') no-repeat 99% 13%/280% auto}.hero-art img{display:none}
   .hero-copy{padding:22px 2px 8px}.hero-copy h1{margin:0 0 12px;font-size:clamp(32px,9vw,38px);line-height:1.03;letter-spacing:-.045em}.hero-copy h1 span{color:var(--teal)}.hero-copy p{margin:0;color:#4f6979;font-size:16px;line-height:1.52}
-  .search-card{margin:8px 14px 0;padding:16px 16px 26px;border:1px solid var(--line);border-radius:22px;box-shadow:var(--shadow);display:grid;gap:14px;background:#fff}.search-card label{display:grid;gap:7px;font-size:13px;font-weight:900}.search-card input,.search-card select{width:100%;height:54px;border:1px solid #c9dce2;border-radius:13px;padding:0 14px;background:#fff;color:#29495c;font-size:16px}.search-card button{height:56px;border:0;border-radius:13px;background:linear-gradient(180deg,var(--teal2),var(--teal));color:#fff;font-size:18px;font-weight:900}
+  .search-card{margin:8px 14px 0;padding:16px 16px 26px;border:1px solid var(--line);border-radius:22px;box-shadow:var(--shadow);display:grid;gap:14px;background:#fff}.search-card label{display:grid;gap:7px;font-size:13px;font-weight:900}.search-card input,.search-card select{width:100%;height:54px;border:1px solid #c9dce2;border-radius:13px;padding:0 14px;background:#fff;color:#29495c;font-size:16px}.search-card>button{height:56px;border:0;border-radius:13px;background:linear-gradient(180deg,var(--teal2),var(--teal));color:#fff;font-size:18px;font-weight:900}
   .trust{display:grid;gap:9px}.trust>div{display:flex;align-items:center;gap:10px;background:#f5fbfc;padding:11px;border-radius:12px}.icon{width:32px;height:32px;flex:0 0 32px;border-radius:10px;background:#e2f5f6;color:var(--teal);display:grid;place-items:center;font-weight:900}.trust b{font-size:13px}.trust span{font-size:12px;color:#617a89}
   .section{padding:32px 14px}.section.alt{background:#f6fbfc}.section h2{font-size:27px;line-height:1.1;letter-spacing:-.03em;margin:0 0 8px}.section>p{font-size:14px;line-height:1.5;color:var(--muted);margin:0 0 20px}.steps,.provider-list{display:grid;gap:12px}.step{display:grid;grid-template-columns:44px 1fr;gap:12px;border:1px solid var(--line);border-radius:16px;padding:15px;background:#fff}.num{width:42px;height:42px;border-radius:13px;background:#e2f5f6;color:var(--teal);display:grid;place-items:center;font-weight:900}.step h3{margin:2px 0 5px;font-size:16px}.step p{margin:0;color:#607888;font-size:13px;line-height:1.45}
   .provider{border:1px solid var(--line);border-radius:17px;padding:16px;background:#fff}.provider-top{display:flex;justify-content:space-between;gap:10px;align-items:flex-start}.provider h3{margin:0;font-size:17px}.city{font-size:13px;color:#617786;margin:5px 0 11px}.view{border:0;background:var(--teal);color:#fff;border-radius:10px;padding:10px 12px;font-size:13px;font-weight:900}.smalltags{display:flex;gap:6px;flex-wrap:wrap}.smalltags span{background:#e7f5f6;color:#0b7180;padding:6px 9px;border-radius:999px;font-size:11px;font-weight:800}
@@ -43,11 +46,56 @@
   <div class="m-brand"><img class="m-logo" src="eazy-header-logo.svg" alt="Eazy Medical Transportation"></div>
   <button class="m-menu" aria-label="Open menu" onclick="toggleNav()">☰</button>
   <nav id="mNav" class="m-nav">
-    <button onclick="goTo('mSearch')">Find a Ride</button>
-    <button onclick="goTo('providers')">Providers</button>
-    <button onclick="showState()">By State</button>
-    <button onclick="showWheelchair()">Wheelchair Vans</button>
-    <a href="mailto:info@eazymedicaltransportation.com">Contact</a>
+    <div class="nav-group">
+      <button class="nav-toggle" onclick="toggleMenuGroup(this)"><span>Find a Ride</span><span class="chev">▼</span></button>
+      <div class="nav-submenu">
+        <button onclick="chooseRide('')">Search All Rides</button>
+        <button onclick="chooseRide('Ambulatory')">Ambulatory</button>
+        <button onclick="chooseRide('Wheelchair')">Wheelchair</button>
+        <button onclick="chooseRide('Dialysis')">Dialysis</button>
+        <button onclick="chooseRide('Doctor Visit')">Doctor Visit</button>
+        <button onclick="chooseRide('Stretcher')">Stretcher</button>
+        <button onclick="chooseRide('Companion')">Companion</button>
+      </div>
+    </div>
+    <div class="nav-group">
+      <button class="nav-toggle" onclick="toggleMenuGroup(this)"><span>Providers</span><span class="chev">▼</span></button>
+      <div class="nav-submenu">
+        <button onclick="goTo('providers')">Featured Providers</button>
+        <button onclick="showProviderCategory('All')">All Providers</button>
+        <button onclick="showProviderCategory('Wheelchair')">Wheelchair Providers</button>
+        <button onclick="showProviderCategory('Dialysis')">Dialysis Providers</button>
+        <button onclick="showProviderCategory('Ambulatory')">Ambulatory Providers</button>
+      </div>
+    </div>
+    <div class="nav-group">
+      <button class="nav-toggle" onclick="toggleMenuGroup(this)"><span>By State</span><span class="chev">▼</span></button>
+      <div class="nav-submenu">
+        <button onclick="showStateOption('Illinois')">Illinois</button>
+        <button onclick="showStateOption('Indiana')">Indiana</button>
+        <button onclick="showStateOption('Wisconsin')">Wisconsin</button>
+        <button onclick="showStateOption('Michigan')">Michigan</button>
+        <button onclick="showStateOption('All States')">Browse All States</button>
+      </div>
+    </div>
+    <div class="nav-group">
+      <button class="nav-toggle" onclick="toggleMenuGroup(this)"><span>Wheelchair Vans</span><span class="chev">▼</span></button>
+      <div class="nav-submenu">
+        <button onclick="showWheelchairOption('Wheelchair transportation')">Wheelchair Transportation</button>
+        <button onclick="showWheelchairOption('Wheelchair and companion transportation')">Wheelchair + Companion</button>
+        <button onclick="showWheelchairOption('Wheelchair dialysis transportation')">Wheelchair + Dialysis</button>
+        <button onclick="showWheelchairOption('Stretcher and accessible transportation')">Stretcher / Accessible</button>
+      </div>
+    </div>
+    <div class="nav-group">
+      <button class="nav-toggle" onclick="toggleMenuGroup(this)"><span>Contact</span><span class="chev">▼</span></button>
+      <div class="nav-submenu">
+        <a href="mailto:info@eazymedicaltransportation.com">Email Us</a>
+        <a href="mailto:info@eazymedicaltransportation.com?subject=Provider%20Listing%20Help">Provider Listing Help</a>
+        <a href="mailto:info@eazymedicaltransportation.com?subject=Directory%20Question">Directory Questions</a>
+        <a href="mailto:info@eazymedicaltransportation.com?subject=Accessibility%20Question">Accessibility Questions</a>
+      </div>
+    </div>
   </nav>
 </header>
 
@@ -101,13 +149,18 @@ const providers=[
 {name:'Heartland Medical Transit',city:'Aurora, IL',tags:['Ambulatory','Stretcher']}
 ];
 function toggleNav(){document.getElementById('mNav').classList.toggle('open')}
-function goTo(id){document.getElementById('mNav').classList.remove('open');document.getElementById(id).scrollIntoView({behavior:'smooth'})}
+function toggleMenuGroup(button){const group=button.closest('.nav-group');document.querySelectorAll('.nav-group.open').forEach(g=>{if(g!==group)g.classList.remove('open')});group.classList.toggle('open')}
+function closeMobileNav(){document.getElementById('mNav').classList.remove('open');document.querySelectorAll('.nav-group.open').forEach(g=>g.classList.remove('open'))}
+function goTo(id){closeMobileNav();document.getElementById(id).scrollIntoView({behavior:'smooth'})}
+function chooseRide(service){closeMobileNav();document.getElementById('mService').value=service;document.getElementById('mSearch').scrollIntoView({behavior:'smooth'})}
 function openModal(title,body){document.getElementById('modalTitle').textContent=title;document.getElementById('modalBody').innerHTML=body;document.getElementById('modal').classList.add('open')}
 function closeModal(){document.getElementById('modal').classList.remove('open')}
 function showProvider(i){const p=providers[i];openModal(p.name,`<p>${p.city}</p><div class="tags">${p.tags.map(t=>`<span class="tag">${t}</span>`).join('')}</div><p style="margin-top:14px">Contact the provider directly to verify availability, pricing, credentials, and scheduling.</p>`)}
-function showState(){openModal('Browse by State','<p>State browsing is being prepared for the directory.</p>')}
-function showWheelchair(){openModal('Wheelchair Transportation','<p>Use the accessibility filter to find providers offering wheelchair transportation.</p>')}
-function renderResults(){return `<div class="results">${providers.map((p,i)=>`<div class="result"><h3>${p.name}</h3><p>${p.city}</p><div class="tags">${p.tags.map(t=>`<span class="tag">${t}</span>`).join('')}</div></div>`).join('')}</div>`}
+function renderProviderList(list){return `<div class="results">${list.map(p=>`<div class="result"><h3>${p.name}</h3><p>${p.city}</p><div class="tags">${p.tags.map(t=>`<span class="tag">${t}</span>`).join('')}</div></div>`).join('')}</div>`}
+function showProviderCategory(tag){closeMobileNav();const list=tag==='All'?providers:providers.filter(p=>p.tags.includes(tag));openModal(tag==='All'?'All Providers':tag+' Providers',renderProviderList(list))}
+function showStateOption(state){closeMobileNav();openModal(state==='All States'?'Browse by State':state+' Medical Transportation',`<p>${state==='All States'?'Select a state to browse independent medical transportation providers as directory coverage expands.':'Browse independent medical transportation providers serving '+state+'. Directory coverage is being expanded.'}</p>`)}
+function showWheelchairOption(kind){closeMobileNav();openModal(kind,`<p>Use the directory filters to compare providers offering ${kind.toLowerCase()}. Confirm vehicle accessibility, availability, pricing, and credentials directly with each provider.</p>`)}
+function renderResults(){return renderProviderList(providers)}
 function runMobileSearch(e){e.preventDefault();openModal('Matching Providers',renderResults())}
 function runSearch(){openModal('Matching Providers',renderResults())}
 document.getElementById('modal').addEventListener('click',e=>{if(e.target.id==='modal')closeModal()})

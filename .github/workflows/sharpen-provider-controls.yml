@@ -1,0 +1,50 @@
+name: Sharpen provider card controls
+
+on:
+  push:
+    branches: [main]
+    paths:
+      - '.sharpen-provider-trigger'
+
+permissions:
+  contents: write
+
+jobs:
+  sharpen:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          ref: sharpen-provider-controls
+          fetch-depth: 0
+      - name: Install Pillow
+        run: python -m pip install --quiet pillow
+      - name: Sharpen provider-card text and buttons only
+        shell: python
+        run: |
+          from PIL import Image, ImageFilter, ImageEnhance
+          from pathlib import Path
+
+          path = Path('directory-landing-approved.png')
+          im = Image.open(path).convert('RGB')
+          w, h = im.size
+
+          # Provider cards occupy this horizontal strip in the approved artwork.
+          y1 = round(h * 0.39)
+          y2 = round(h * 0.66)
+          region = im.crop((0, y1, w, y2))
+
+          # Non-generative sharpening only: preserve every pixel position and dimension.
+          region = region.filter(ImageFilter.UnsharpMask(radius=1.2, percent=220, threshold=2))
+          region = ImageEnhance.Contrast(region).enhance(1.02)
+          im.paste(region, (0, y1))
+          im.save(path, optimize=True)
+          print(f'Sharpened provider strip {w}x{h}: y={y1}:{y2}')
+      - name: Commit sharpened artwork
+        run: |
+          git config user.name github-actions[bot]
+          git config user.email 41898282+github-actions[bot]@users.noreply.github.com
+          git add directory-landing-approved.png
+          git diff --cached --quiet && exit 0
+          git commit -m "Sharpen provider card text and buttons"
+          git push origin sharpen-provider-controls

@@ -1,0 +1,47 @@
+name: Fix disclaimer overlay
+
+on:
+  push:
+    branches: [main]
+    paths:
+      - '.disclaimer-fix-trigger'
+
+permissions:
+  contents: write
+
+jobs:
+  patch:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          ref: fix-disclaimer-overlay
+          fetch-depth: 0
+      - name: Patch disclaimer mask and centering
+        shell: python
+        run: |
+          from pathlib import Path
+          p=Path('menu-fix.js')
+          s=p.read_text()
+          old=".crisp-directory-note{position:absolute;left:34.6%;top:34.35%;width:42.2%;height:2.15%;z-index:6;display:flex;align-items:center;background:#fff;color:#40596b;font:600 clamp(8px,.72vw,13px)/1 Arial,Helvetica,sans-serif;pointer-events:none;-webkit-font-smoothing:antialiased;text-rendering:geometricPrecision}"
+          new=".crisp-directory-note{position:absolute;left:27.5%;top:34.15%;width:55%;height:2.55%;z-index:6;display:flex;align-items:center;justify-content:center;text-align:center;background:#fff;color:#40596b;font:600 clamp(8px,.72vw,13px)/1 Arial,Helvetica,sans-serif;pointer-events:none;-webkit-font-smoothing:antialiased;text-rendering:geometricPrecision}"
+          if old not in s:
+              raise SystemExit('disclaimer style marker not found')
+          s=s.replace(old,new,1)
+          p.write_text(s)
+      - name: Validate
+        run: |
+          python - <<'PY'
+          from pathlib import Path
+          s=Path('menu-fix.js').read_text()
+          assert 'left:27.5%' in s and 'width:55%' in s and 'justify-content:center' in s
+          print('disclaimer overlay widened and centered')
+          PY
+      - name: Commit patch
+        run: |
+          git config user.name github-actions[bot]
+          git config user.email 41898282+github-actions[bot]@users.noreply.github.com
+          git add menu-fix.js
+          git diff --cached --quiet && exit 0
+          git commit -m "Mask and center directory disclaimer"
+          git push origin fix-disclaimer-overlay

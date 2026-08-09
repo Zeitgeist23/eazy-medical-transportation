@@ -1,0 +1,53 @@
+name: Build national NEMT provider database
+
+on:
+  workflow_dispatch:
+  schedule:
+    - cron: '17 6 16 * *'
+  push:
+    branches: [main]
+    paths:
+      - '.provider-db-trigger'
+
+permissions:
+  contents: write
+
+concurrency:
+  group: national-provider-db
+  cancel-in-progress: false
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    timeout-minutes: 180
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          ref: main
+      - name: Show free disk
+        run: df -h
+      - name: Build state provider files from latest CMS NPPES monthly V2 dissemination
+        run: python scripts/build_national_provider_db.py
+      - name: Validate generated database
+        run: |
+          python - <<'PY'
+          import json
+          from pathlib import Path
+          idx=json.loads(Path('data/provider-index.json').read_text())
+          assert len(idx['states']) == 51, len(idx['states'])
+          assert idx['totalProviders'] > 0, idx['totalProviders']
+          missing=[s['abbr'] for s in idx['states'] if not Path(s['file']).exists()]
+          assert not missing, missing
+          print('states:', len(idx['states']))
+          print('total providers:', idx['totalProviders'])
+          for s in idx['states']:
+              print(s['abbr'], s['providerCount'], s['categoryCounts'])
+          PY
+      - name: Commit generated provider database
+        run: |
+          git config user.name github-actions[bot]
+          git config user.email 41898282+github-actions[bot]@users.noreply.github.com
+          git add states.json data/provider-index.json data/providers/*.json
+          git diff --cached --quiet && exit 0
+          git commit -m "Refresh national NEMT provider database from CMS NPPES"
+          git push origin main

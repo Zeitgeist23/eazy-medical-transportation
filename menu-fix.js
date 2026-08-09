@@ -11,7 +11,7 @@
   function openModal(title,html){const w=document.getElementById('modal'),t=document.getElementById('modalTitle'),b=document.getElementById('modalBody');if(!w||!t||!b)return;t.textContent=title;b.innerHTML=html;w.classList.add('open')}
   function closeModal(){const w=document.getElementById('modal');if(w)w.classList.remove('open')}
   function scrollRatio(r){const root=document.getElementById('desktopDirectory');if(!root)return;window.scrollTo({top:Math.max(0,Math.round(root.offsetTop+root.offsetHeight*r)),behavior:'smooth'})}
-  async function getStateData(abbr){const r=await fetch(`data/providers/${abbr}.json?v=controls5`,{cache:'no-store'});if(!r.ok)throw new Error('State database unavailable');return r.json()}
+  async function getStateData(abbr){const r=await fetch(`data/providers/${abbr}.json?v=controls6`,{cache:'no-store'});if(!r.ok)throw new Error('State database unavailable');return r.json()}
   function providerList(list,note=''){if(!list.length)return `${note?`<div class="claim-callout">${esc(note)}</div>`:''}<div class="claim-callout">No matching providers are currently indexed for this selection.</div>`;return `${note?`<div class="claim-callout">${esc(note)}</div>`:''}<div class="results">${list.slice(0,250).map(p=>`<div class="result"><h3>${esc(p.name)}</h3><p>${esc(p.address1||'')}${p.address1?'<br>':''}${esc(p.city)}, ${esc(p.state)} ${esc(String(p.zip||'').slice(0,5))}${p.phone?`<br>${esc(p.phone)}`:''}</p><div class="tags" style="margin-top:8px">${(p.categories||p.tags||['NEMT']).slice(0,4).map(x=>`<span class="tag">${esc(x)}</span>`).join('')}</div>${p.phone?`<div class="result-actions"><a class="btn-secondary" href="tel:${esc(p.phone)}">Call Provider</a></div>`:''}</div>`).join('')}</div>`}
   function categorySet(data,name){if(!name)return null;return new Set((data.categories?.[name]||[]).map(String))}
   function hasCategory(p,set,name){if(!name)return true;if(set&&set.has(String(p.npi)))return true;return [...(p.categories||[]),...(p.tags||[])].some(x=>String(x).toLowerCase().includes(String(name).toLowerCase()))}
@@ -56,6 +56,27 @@
     root.appendChild(layer);
   }
 
+  function installCrispSearchText(){
+    const root=document.getElementById('desktopDirectory');
+    if(!root||root.querySelector('.crisp-directory-note'))return;
+    const style=document.createElement('style');
+    style.textContent=`
+      #location{background:#fff!important;color:#4d6474!important;-webkit-text-fill-color:#4d6474!important;font-weight:500!important;font-size:clamp(9px,.78vw,14px)!important;-webkit-font-smoothing:antialiased;text-rendering:geometricPrecision}
+      #location::placeholder{color:#4d6474!important;opacity:1!important}
+      #service,#accessibility{color:#4d6474!important;-webkit-text-fill-color:#4d6474!important;font-weight:500!important;font-size:clamp(9px,.76vw,14px)!important;background:linear-gradient(90deg,#fff 0%,#fff 84%,rgba(255,255,255,0) 84%,rgba(255,255,255,0) 100%)!important;-webkit-font-smoothing:antialiased;text-rendering:geometricPrecision}
+      .crisp-directory-note{position:absolute;left:34.6%;top:34.35%;width:42.2%;height:2.15%;z-index:6;display:flex;align-items:center;background:#fff;color:#40596b;font:600 clamp(8px,.72vw,13px)/1 Arial,Helvetica,sans-serif;pointer-events:none;-webkit-font-smoothing:antialiased;text-rendering:geometricPrecision}
+      @media(max-width:760px){.crisp-directory-note{display:none}}
+    `;
+    document.head.appendChild(style);
+    const service=document.getElementById('service'),access=document.getElementById('accessibility');
+    if(service&&service.options.length)service.options[0].textContent='e.g., Dialysis, Doctor Visit';
+    if(access&&access.options.length)access.options[0].textContent='e.g., Wheelchair, Stretcher';
+    const note=document.createElement('div');
+    note.className='crisp-directory-note';
+    note.textContent='This directory lists independent providers. We do not provide transportation services.';
+    root.appendChild(note);
+  }
+
   const actions={'Eazy Medical Transportation home':()=>scrollRatio(0),'Home':()=>scrollRatio(0),'Browse Providers':()=>scrollRatio(.37),'Browse by State':el=>showStateDropdown(el),'Wheelchair Vans':()=>wheelchair(),'About':()=>scrollRatio(.835),'Footer Home':()=>scrollRatio(0),'Footer Browse Providers':()=>scrollRatio(.37),'Footer By State':el=>showStateDropdown(el),'Footer Wheelchair Vans':()=>wheelchair(),'EazyMedicalTransportation.com home':()=>scrollRatio(0),'Close':()=>closeModal()};
   document.addEventListener('click',e=>{const el=e.target.closest('[aria-label]');if(!el)return;const label=el.getAttribute('aria-label');if(label==='Find Providers'){e.preventDefault();e.stopImmediatePropagation();runSearch();return}const fn=actions[label];if(!fn)return;e.preventDefault();e.stopImmediatePropagation();fn(el)},true);
   document.addEventListener('click',e=>{if(e.target?.id==='modal'){e.preventDefault();e.stopImmediatePropagation();closeModal();return}if(dropdown&&!dropdown.contains(e.target)&&!e.target.closest('[aria-label="Browse by State"],[aria-label="Footer By State"]'))closeDropdown()},true);
@@ -63,5 +84,6 @@
   document.addEventListener('submit',e=>{if(e.target?.id==='mSearch'){e.preventDefault();e.stopImmediatePropagation();runSearch()}},true);
   window.__eazyIndependentSearch=runSearch;
   window.__eazyIndependentCloseModal=closeModal;
+  installCrispSearchText();
   installCrispProviderCards();
 })();

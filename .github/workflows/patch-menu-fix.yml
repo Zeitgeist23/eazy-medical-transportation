@@ -1,0 +1,43 @@
+name: Patch top menu fix branch
+
+on:
+  push:
+    branches: [main]
+    paths:
+      - '.menu-fix-trigger'
+
+permissions:
+  contents: write
+
+jobs:
+  patch:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          ref: fix-top-menu-final
+      - name: Insert independent menu controller
+        shell: python
+        run: |
+          from pathlib import Path
+          p=Path('index.html')
+          s=p.read_text()
+          marker='<script>\nlet providers=[];'
+          insert='<script src="menu-fix.js?v=2"></script>\n<script>\nlet providers=[];'
+          if 'menu-fix.js?v=2' not in s:
+              if marker not in s:
+                  raise SystemExit('main script marker not found')
+              s=s.replace(marker,insert,1)
+              p.write_text(s)
+      - name: Validate
+        run: |
+          grep -q 'menu-fix.js?v=2' index.html
+          test -f menu-fix.js
+      - name: Commit branch patch
+        run: |
+          git config user.name github-actions[bot]
+          git config user.email 41898282+github-actions[bot]@users.noreply.github.com
+          git add index.html menu-fix.js
+          git diff --cached --quiet && exit 0
+          git commit -m "Make top navigation independent and functional"
+          git push origin fix-top-menu-final

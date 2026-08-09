@@ -1,1 +1,0 @@
-Final UI polish: accessibility placeholder fit, soft disclaimer/browse masks, medical van icon, better Featured ranking, cleaner provider cards, crisp How the Directory Works heading. No generative imaging or header/hero/navigation changes.

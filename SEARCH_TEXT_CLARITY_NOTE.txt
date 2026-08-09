@@ -1,0 +1,1 @@
+Desktop search helper text now renders as native browser text over the existing approved artwork. No generative imaging or layout changes.

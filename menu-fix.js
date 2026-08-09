@@ -31,7 +31,8 @@
     const style=document.createElement('style');
     style.textContent=`
       .crisp-provider-layer{position:absolute;inset:0;z-index:6;pointer-events:none;font-family:Arial,Helvetica,sans-serif;-webkit-font-smoothing:antialiased;text-rendering:geometricPrecision}
-      .crisp-provider-layer .cp-name,.crisp-provider-layer .cp-city,.crisp-provider-layer .cp-tags,.crisp-provider-layer .cp-view{position:absolute;box-sizing:border-box;text-align:center}
+      .crisp-provider-layer .cp-mask{position:absolute;top:48.65%;width:12.15%;height:13.75%;background:#fff;box-sizing:border-box}
+      .crisp-provider-layer .cp-name,.crisp-provider-layer .cp-city,.crisp-provider-layer .cp-tags,.crisp-provider-layer .cp-view{position:absolute;box-sizing:border-box;text-align:center;z-index:1}
       .crisp-provider-layer .cp-name{top:49.35%;width:12.15%;min-height:3.25%;display:flex;align-items:center;justify-content:center;background:#fff;color:#111827;font-weight:700;font-size:clamp(9px,.72vw,14px);line-height:1.08;padding:0 .22%}
       .crisp-provider-layer .cp-city{top:53.18%;width:12.15%;height:1.72%;display:flex;align-items:center;justify-content:center;background:#fff;color:#174b83;font-weight:600;font-size:clamp(8px,.60vw,12px);line-height:1}
       .crisp-provider-layer .cp-tags{top:55.48%;width:12.15%;height:2.18%;display:flex;align-items:center;justify-content:center;gap:.55%;background:#fff}
@@ -51,7 +52,7 @@
     const layer=document.createElement('div');
     layer.className='crisp-provider-layer';
     layer.setAttribute('aria-hidden','true');
-    layer.innerHTML=cards.map(c=>`<div class="cp-name" style="left:${c.left}">${esc(c.name)}</div><div class="cp-city" style="left:${c.left}">⌾ ${esc(c.city)}</div><div class="cp-tags" style="left:${c.left}">${c.tags.map(t=>`<span>${esc(t)}</span>`).join('')}</div><div class="cp-view" style="left:${c.buttonLeft};width:${c.buttonWidth}">View Provider</div>`).join('');
+    layer.innerHTML=cards.map(c=>`<div class="cp-mask" style="left:${c.left}"></div><div class="cp-name" style="left:${c.left}">${esc(c.name)}</div><div class="cp-city" style="left:${c.left}">⌾ ${esc(c.city)}</div><div class="cp-tags" style="left:${c.left}">${c.tags.map(t=>`<span>${esc(t)}</span>`).join('')}</div><div class="cp-view" style="left:${c.buttonLeft};width:${c.buttonWidth}">View Provider</div>`).join('');
     root.appendChild(layer);
   }
 

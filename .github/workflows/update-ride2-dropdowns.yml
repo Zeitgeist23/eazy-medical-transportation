@@ -1,0 +1,80 @@
+name: Update Ride2Dialysis mobile dropdowns
+
+on:
+  push:
+    paths:
+      - '.github/workflows/update-ride2-dropdowns.yml'
+
+permissions:
+  contents: write
+
+jobs:
+  update-menu:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+
+      - name: Add mobile accordion dropdown menu
+        shell: python
+        run: |
+          from pathlib import Path
+
+          path = Path('ride2dialysis/index.html')
+          text = path.read_text(encoding='utf-8')
+
+          if 'ride-mobile-dropdowns' in text:
+              print('Ride2Dialysis dropdowns already installed.')
+              raise SystemExit(0)
+
+          old_menu_button = '''<button class="menu" aria-label="Open menu" onclick="document.querySelector('.navlinks').classList.toggle('open')">☰</button>'''
+          new_menu_button = '''<button class="menu" aria-label="Open menu" aria-expanded="false" aria-controls="ride-mobile-dropdowns" onclick="toggleRideMenu(this)">☰</button>'''
+          if old_menu_button not in text:
+              raise SystemExit('Could not find Ride2Dialysis mobile menu button')
+          text = text.replace(old_menu_button, new_menu_button, 1)
+
+          old_nav = '''<nav class="navlinks"><a class="active" href="#home">Home</a><a href="#finder">Find a Ride</a><a href="#providers">Providers</a><a href="#cities">Cities</a><a href="#how">How It Works</a><a href="#contact">Contact</a><a class="find-top" href="#finder">⌾&nbsp;&nbsp; Find Providers</a></nav>'''
+          mobile_nav = '''<nav id="ride-mobile-dropdowns" class="ride-mobile-dropdowns" aria-label="Mobile navigation">
+<div class="ride-nav-group"><button type="button" class="ride-nav-toggle" onclick="toggleRideGroup(this)"><span>Find a Ride</span><span class="ride-chev">▼</span></button><div class="ride-nav-submenu"><button type="button" onclick="rideSelect('service','Recurring Dialysis','#finder')">Recurring Dialysis</button><button type="button" onclick="rideSelect('service','One-Time Ride','#finder')">One-Time Ride</button><button type="button" onclick="rideSelect('service','Companion Assistance','#finder')">Companion Assistance</button><button type="button" onclick="rideSelect('', '', '#finder')">Search All Rides</button></div></div>
+<div class="ride-nav-group"><button type="button" class="ride-nav-toggle" onclick="toggleRideGroup(this)"><span>Providers</span><span class="ride-chev">▼</span></button><div class="ride-nav-submenu"><button type="button" onclick="rideSelect('', '', '#providers')">Featured Providers</button><button type="button" onclick="rideSelect('mobility','Wheelchair','#finder')">Wheelchair Providers</button><button type="button" onclick="rideSelect('mobility','Ambulatory','#finder')">Ambulatory Providers</button><button type="button" onclick="rideSelect('mobility','Stretcher','#finder')">Stretcher Providers</button></div></div>
+<div class="ride-nav-group"><button type="button" class="ride-nav-toggle" onclick="toggleRideGroup(this)"><span>Cities</span><span class="ride-chev">▼</span></button><div class="ride-nav-submenu"><button type="button" onclick="rideCity('60601')">Chicago</button><button type="button" onclick="rideCity('60540')">Naperville</button><button type="button" onclick="rideCity('60201')">Evanston</button><button type="button" onclick="rideCity('60173')">Schaumburg</button><button type="button" onclick="rideCity('60505')">Aurora</button></div></div>
+<div class="ride-nav-group"><button type="button" class="ride-nav-toggle" onclick="toggleRideGroup(this)"><span>How It Works</span><span class="ride-chev">▼</span></button><div class="ride-nav-submenu"><button type="button" onclick="rideSelect('', '', '#finder')">1 · Search Your Area</button><button type="button" onclick="rideSelect('', '', '#providers')">2 · Compare Providers</button><button type="button" onclick="rideSelect('', '', '#contact')">3 · Contact Directly</button></div></div>
+<div class="ride-nav-group"><button type="button" class="ride-nav-toggle" onclick="toggleRideGroup(this)"><span>Contact</span><span class="ride-chev">▼</span></button><div class="ride-nav-submenu"><button type="button" onclick="rideSelect('', '', '#contact')">Contact Information</button><a href="mailto:info@ride2dialysis.com">Email Ride2Dialysis</a><a href="mailto:info@ride2dialysis.com?subject=Provider%20Listing%20Help">Provider Listing Help</a><a href="mailto:info@ride2dialysis.com?subject=Directory%20Question">Directory Questions</a></div></div>
+</nav>'''
+          if old_nav not in text:
+              raise SystemExit('Could not find Ride2Dialysis navigation')
+          text = text.replace(old_nav, old_nav + mobile_nav, 1)
+
+          css_anchor = '''.menu{display:none;border:1px solid var(--line);border-radius:9px;background:#fff;font-size:22px;padding:6px 10px}'''
+          css_global = css_anchor + '''.ride-mobile-dropdowns{display:none}'''
+          if css_anchor not in text:
+              raise SystemExit('Could not find menu CSS anchor')
+          text = text.replace(css_anchor, css_global, 1)
+
+          mobile_anchor = '''.navlinks{display:none;position:absolute;top:72px;left:0;right:0;background:#fff;padding:12px 22px;border-bottom:1px solid var(--line);flex-direction:column;align-items:stretch}.navlinks.open{display:flex}'''
+          mobile_css = mobile_anchor + '''.ride-mobile-dropdowns{display:none;position:absolute;top:72px;left:10px;right:10px;max-height:calc(100vh - 86px);overflow-y:auto;background:#fff;border:1px solid var(--line);border-radius:15px;padding:8px;box-shadow:var(--shadow);z-index:1001}.ride-mobile-dropdowns.open{display:block}.ride-nav-group{border-bottom:1px solid #edf4f6}.ride-nav-group:last-child{border-bottom:0}.ride-nav-toggle{width:100%;border:0;background:#fff;color:var(--navy);text-align:left;padding:14px 12px;border-radius:10px;font-weight:850;font-size:15px;display:flex;align-items:center;justify-content:space-between;gap:12px}.ride-chev{font-size:12px;transition:transform .2s ease}.ride-nav-group.open>.ride-nav-toggle{background:#f1fafb;color:var(--teal-dark)}.ride-nav-group.open .ride-chev{transform:rotate(180deg)}.ride-nav-submenu{display:none;padding:0 6px 8px}.ride-nav-group.open .ride-nav-submenu{display:grid;gap:4px}.ride-nav-submenu button,.ride-nav-submenu a{width:100%;border:0;background:#f7fbfc;color:#31576a;text-align:left;text-decoration:none;padding:11px 14px 11px 20px;border-radius:9px;font-weight:700;font-size:13px}.ride-nav-submenu button:active,.ride-nav-submenu a:active{background:#e7f5f6;color:var(--teal-dark)}'''
+          if mobile_anchor not in text:
+              raise SystemExit('Could not find mobile navigation CSS')
+          text = text.replace(mobile_anchor, mobile_css, 1)
+
+          script_anchor = '''document.getElementById('finder').addEventListener('submit',e=>{'''
+          menu_js = '''function toggleRideMenu(btn){const nav=document.getElementById('ride-mobile-dropdowns');const open=nav.classList.toggle('open');btn.setAttribute('aria-expanded',String(open));if(!open)nav.querySelectorAll('.ride-nav-group.open').forEach(g=>g.classList.remove('open'))}\nfunction toggleRideGroup(btn){const group=btn.closest('.ride-nav-group');const wasOpen=group.classList.contains('open');document.querySelectorAll('.ride-nav-group.open').forEach(g=>g.classList.remove('open'));if(!wasOpen)group.classList.add('open')}\nfunction closeRideMenu(){const nav=document.getElementById('ride-mobile-dropdowns');nav.classList.remove('open');nav.querySelectorAll('.ride-nav-group.open').forEach(g=>g.classList.remove('open'));const btn=document.querySelector('.menu[aria-controls="ride-mobile-dropdowns"]');if(btn)btn.setAttribute('aria-expanded','false')}\nfunction rideSelect(field,value,target){if(field&&value){const el=document.getElementById(field);if(el){for(const opt of el.options){if(opt.value===value||opt.text===value){el.value=opt.value||opt.text;break}}}}closeRideMenu();const el=document.querySelector(target);if(el)setTimeout(()=>el.scrollIntoView({behavior:'smooth',block:'start'}),40)}\nfunction rideCity(zip){const el=document.getElementById('zip');if(el)el.value=zip;rideSelect('', '', '#finder')}\ndocument.querySelectorAll('#ride-mobile-dropdowns a').forEach(a=>a.addEventListener('click',closeRideMenu));\n'''
+          if script_anchor not in text:
+              raise SystemExit('Could not find script insertion point')
+          text = text.replace(script_anchor, menu_js + script_anchor, 1)
+
+          path.write_text(text, encoding='utf-8')
+          print('Ride2Dialysis mobile accordion dropdowns installed.')
+
+      - name: Commit Ride2Dialysis menu update
+        run: |
+          if git diff --quiet -- ride2dialysis/index.html; then
+            echo "No change needed"
+            exit 0
+          fi
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git add ride2dialysis/index.html
+          git commit -m "Add Ride2Dialysis mobile dropdown menus"
+          git push

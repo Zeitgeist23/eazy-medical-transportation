@@ -64,7 +64,7 @@
       #location{background:#fff!important;color:#4d6474!important;-webkit-text-fill-color:#4d6474!important;font-weight:500!important;font-size:clamp(9px,.78vw,14px)!important;-webkit-font-smoothing:antialiased;text-rendering:geometricPrecision}
       #location::placeholder{color:#4d6474!important;opacity:1!important}
       #service,#accessibility{color:#4d6474!important;-webkit-text-fill-color:#4d6474!important;font-weight:500!important;font-size:clamp(9px,.76vw,14px)!important;background:linear-gradient(90deg,#fff 0%,#fff 84%,rgba(255,255,255,0) 84%,rgba(255,255,255,0) 100%)!important;-webkit-font-smoothing:antialiased;text-rendering:geometricPrecision}
-      .crisp-directory-note{position:absolute;left:34.6%;top:34.35%;width:42.2%;height:2.15%;z-index:6;display:flex;align-items:center;background:#fff;color:#40596b;font:600 clamp(8px,.72vw,13px)/1 Arial,Helvetica,sans-serif;pointer-events:none;-webkit-font-smoothing:antialiased;text-rendering:geometricPrecision}
+      .crisp-directory-note{position:absolute;left:27.5%;top:34.15%;width:55%;height:2.55%;z-index:6;display:flex;align-items:center;justify-content:center;text-align:center;background:#fff;color:#40596b;font:600 clamp(8px,.72vw,13px)/1 Arial,Helvetica,sans-serif;pointer-events:none;-webkit-font-smoothing:antialiased;text-rendering:geometricPrecision}
       @media(max-width:760px){.crisp-directory-note{display:none}}
     `;
     document.head.appendChild(style);

@@ -15,7 +15,7 @@ jobs:
     steps:
       - uses: actions/checkout@v4
         with:
-          ref: national-state-directory
+          ref: national-state-directory-v2
           fetch-depth: 0
       - name: Get latest patch script from main
         run: |
@@ -42,4 +42,4 @@ jobs:
           git add index.html
           git diff --cached --quiet && exit 0
           git commit -m "Add all-state provider directory selector"
-          git push origin national-state-directory
+          git push origin national-state-directory-v2

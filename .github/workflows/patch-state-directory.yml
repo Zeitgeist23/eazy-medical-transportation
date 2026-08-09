@@ -16,8 +16,11 @@ jobs:
       - uses: actions/checkout@v4
         with:
           ref: national-state-directory
+          fetch-depth: 0
       - name: Get latest patch script from main
-        run: git show origin/main:scripts/patch_state_directory.py > /tmp/patch_state_directory.py
+        run: |
+          git fetch origin main:refs/remotes/origin/main
+          git show origin/main:scripts/patch_state_directory.py > /tmp/patch_state_directory.py
       - name: Patch existing approved page without altering artwork
         run: python /tmp/patch_state_directory.py
       - name: Validate state wiring

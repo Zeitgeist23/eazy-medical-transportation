@@ -28,3 +28,5 @@ jobs:
           git add index.html
           git commit -m "Add provider claims and direct ride routing"
           git push
+
+# trigger provider claim build

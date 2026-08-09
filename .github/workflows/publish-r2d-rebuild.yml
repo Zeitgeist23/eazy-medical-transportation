@@ -1,0 +1,28 @@
+name: Publish Corrected Ride2Dialysis Page
+
+on:
+  push:
+    paths:
+      - .r2d-publish-trigger
+
+permissions:
+  contents: write
+
+jobs:
+  publish:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+      - name: Assemble corrected page
+        run: |
+          cat ride2dialysis/.index-new.00 ride2dialysis/.index-new.01 ride2dialysis/.index-new.02 > ride2dialysis/index.html
+          rm ride2dialysis/.index-new.00 ride2dialysis/.index-new.01 ride2dialysis/.index-new.02
+      - name: Commit corrected live page
+        run: |
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git add -A ride2dialysis
+          git diff --cached --quiet || git commit -m "Rebuild and correct the Ride2Dialysis live page"
+          git push

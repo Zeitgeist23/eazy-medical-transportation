@@ -16,7 +16,7 @@
 @media(max-width:760px){
   html,body{background:#f8fcfd}.desktop{display:none}.mobile{display:block;background:#fff;min-height:100vh;padding-top:calc(70px + env(safe-area-inset-top));padding-bottom:env(safe-area-inset-bottom)}
   .m-header{position:fixed;top:0;left:0;right:0;width:100%;height:calc(70px + env(safe-area-inset-top));z-index:1000;background:rgba(255,255,255,.98);backdrop-filter:blur(12px);border-bottom:1px solid var(--line);padding:env(safe-area-inset-top) 12px 0;display:flex;align-items:center;gap:9px}
-  .m-brand{display:flex;align-items:center;gap:8px;min-width:0;flex:1}.m-mark{width:40px;height:40px;flex:0 0 40px;border-radius:50%;display:grid;place-items:center;background:linear-gradient(145deg,var(--teal),#075e71);color:#fff;font-size:20px;font-weight:900}.m-brandtext{min-width:0}.m-brandtext strong{display:block;font-size:clamp(12.8px,3.6vw,15px);white-space:nowrap;overflow:hidden;text-overflow:ellipsis;letter-spacing:-.03em}.m-brandtext span{display:block;font-size:9.5px;color:#647b89;margin-top:3px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+  .m-brand{display:flex;align-items:center;min-width:0;flex:1;height:58px}.m-logo{display:block;width:min(178px,57vw);height:58px;object-fit:contain;object-position:left center}
   .m-menu{width:44px;height:44px;flex:0 0 44px;border:1px solid var(--line);border-radius:12px;background:#fff;color:var(--navy);font-size:22px}.m-nav{display:none;position:fixed;left:10px;right:10px;top:calc(70px + env(safe-area-inset-top));background:#fff;border:1px solid var(--line);border-radius:15px;padding:8px;box-shadow:var(--shadow);z-index:1001}.m-nav.open{display:grid}.m-nav button,.m-nav a{border:0;background:#fff;color:var(--navy);text-align:left;text-decoration:none;padding:13px;border-radius:10px;font-weight:800;font-size:15px}
   .hero{padding:14px;background:linear-gradient(180deg,#f1fafb,#fff 82%)}.hero-art{height:230px;border-radius:22px;overflow:hidden;box-shadow:var(--shadow);background:#e8f4f6 url('directory-landing-approved.png') no-repeat 99% 13%/280% auto}.hero-art img{display:none}
   .hero-copy{padding:22px 2px 8px}.hero-copy h1{margin:0 0 12px;font-size:clamp(32px,9vw,38px);line-height:1.03;letter-spacing:-.045em}.hero-copy h1 span{color:var(--teal)}.hero-copy p{margin:0;color:#4f6979;font-size:16px;line-height:1.52}
@@ -40,7 +40,7 @@
 
 <main class="mobile">
 <header class="m-header">
-  <div class="m-brand"><div class="m-mark">+</div><div class="m-brandtext"><strong>EazyMedicalTransportation.com</strong><span>Independent transportation directory</span></div></div>
+  <div class="m-brand"><img class="m-logo" src="eazy-header-logo.svg" alt="Eazy Medical Transportation"></div>
   <button class="m-menu" aria-label="Open menu" onclick="toggleNav()">☰</button>
   <nav id="mNav" class="m-nav">
     <button onclick="goTo('mSearch')">Find a Ride</button>

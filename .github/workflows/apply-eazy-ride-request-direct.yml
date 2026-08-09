@@ -1,0 +1,31 @@
+name: Apply Eazy ride request flow direct
+
+on:
+  push:
+    paths:
+      - '.github/workflows/apply-eazy-ride-request-direct.yml'
+
+permissions:
+  contents: write
+
+jobs:
+  apply:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+      - name: Patch site
+        shell: python
+        run: python scripts/add_ride_request_flow.py
+      - name: Commit site change
+        run: |
+          if git diff --quiet -- index.html; then
+            echo "No change needed"
+            exit 0
+          fi
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git add index.html
+          git commit -m "Add provider ride request flow"
+          git push

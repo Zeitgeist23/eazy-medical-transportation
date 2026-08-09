@@ -1,0 +1,42 @@
+name: Patch national state directory branch
+
+on:
+  push:
+    branches: [main]
+    paths:
+      - '.state-directory-trigger'
+
+permissions:
+  contents: write
+
+jobs:
+  patch:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          ref: national-state-directory
+      - name: Get latest patch script from main
+        run: git show origin/main:scripts/patch_state_directory.py > /tmp/patch_state_directory.py
+      - name: Patch existing approved page without altering artwork
+        run: python /tmp/patch_state_directory.py
+      - name: Validate state wiring
+        run: |
+          python - <<'PY'
+          from pathlib import Path
+          s=Path('index.html').read_text()
+          assert "stateDirectory=" in s
+          assert "District of Columbia" in s
+          assert "mobileStateSelect" in s
+          assert "data/providers/${entry.abbr}.json" in s
+          assert "directory-landing-approved.png" in s
+          print('state directory wiring validated')
+          PY
+      - name: Commit branch patch
+        run: |
+          git config user.name github-actions[bot]
+          git config user.email 41898282+github-actions[bot]@users.noreply.github.com
+          git add index.html
+          git diff --cached --quiet && exit 0
+          git commit -m "Add all-state provider directory selector"
+          git push origin national-state-directory

@@ -1,0 +1,45 @@
+name: Wire safe UI fixes
+
+on:
+  push:
+    branches: [main]
+    paths:
+      - '.safe-ui-trigger'
+
+permissions:
+  contents: write
+
+jobs:
+  wire:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          ref: safe-surgical-ui-fixes
+      - name: Wire safe surgical fixes
+        shell: python
+        run: |
+          from pathlib import Path
+          p=Path('index.html')
+          s=p.read_text()
+          tag='<script src="safe-ui-fixes.js?v=1"></script>'
+          if tag not in s:
+              s=s.replace('</body>',tag+'\n</body>')
+          p.write_text(s)
+      - name: Validate
+        run: |
+          python - <<'PY'
+          from pathlib import Path
+          s=Path('index.html').read_text()
+          assert 'safe-ui-fixes.js?v=1' in s
+          assert Path('safe-ui-fixes.js').exists()
+          print('safe UI fixes wired')
+          PY
+      - name: Commit branch update
+        run: |
+          git config user.name github-actions[bot]
+          git config user.email 41898282+github-actions[bot]@users.noreply.github.com
+          git add index.html
+          git diff --cached --quiet && exit 0
+          git commit -m "Wire safe surgical UI fixes"
+          git push origin safe-surgical-ui-fixes

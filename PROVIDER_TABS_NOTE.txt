@@ -1,1 +1,0 @@
-The six existing provider cards remain visually unchanged. Transparent semantic HTML controls are positioned over the existing card and View Provider areas so the cards are mouse/touch/keyboard functional without repainting or masking the approved artwork. No generative imaging is used.

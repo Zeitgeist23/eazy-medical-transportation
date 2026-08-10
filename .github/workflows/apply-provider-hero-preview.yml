@@ -1,0 +1,89 @@
+name: Apply provider hero preview patch
+
+on:
+  push:
+    branches:
+      - provider-hero-screenshot-popup
+    paths:
+      - .apply-provider-hero-preview-trigger
+
+permissions:
+  contents: write
+
+jobs:
+  patch:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          ref: provider-hero-screenshot-popup
+      - name: Patch provider popup preview
+        run: |
+          python - <<'PY'
+          from pathlib import Path
+          p = Path('provider-cards-live.js')
+          s = p.read_text()
+
+          old_css = ".provider-popup-site img{width:100%;height:100%;object-fit:cover;display:block}"
+          new_css = ".provider-popup-site img{width:100%;height:calc(100% - 38px);object-fit:cover;object-position:top center;display:block}.provider-popup-website{background:#eef8fa;color:#087f91!important;border:1px solid #9fd5dc!important}.provider-popup-shot-fallback{height:calc(100% - 38px);display:flex;flex-direction:column;align-items:center;justify-content:center;text-align:center;padding:28px;color:#597181}.provider-popup-shot-fallback[hidden]{display:none}.provider-popup-shot-fallback strong{color:#0b3552;font-size:20px;margin-bottom:7px}"
+          if old_css not in s:
+              raise SystemExit('Expected provider popup image CSS not found')
+          s = s.replace(old_css, new_css, 1)
+
+          old_preview = '''  function websitePreview(p){
+    const image=landingOf(p),site=websiteOf(p);
+    if(image){const img=`<img src=\"${esc(image)}\" alt=\"${esc(p.name)} website landing page\">`;return site?`<a class=\"provider-popup-site\" href=\"${esc(site)}\" target=\"_blank\" rel=\"noopener\">${img}</a>`:`<div class=\"provider-popup-site\">${img}</div>`}
+    if(site&&p.websiteVerified){return `<a class=\"provider-popup-site\" href=\"${esc(site)}\" target=\"_blank\" rel=\"noopener\"><div class=\"provider-popup-browser\"><i></i><i></i><i></i><span>${esc(site)}</span></div><div class=\"provider-popup-unverified\"><strong>Live provider website</strong><p>This provider has a verified live public website. Click this preview to visit it.</p></div></a>`}
+    return `<div class=\"provider-popup-site\"><div class=\"provider-popup-browser\"><i></i><i></i><i></i><span>${esc(site||'Provider website not verified')}</span></div><div class=\"provider-popup-unverified\"><strong>Provider website not verified</strong><p>No verified public homepage image is attached to this Illinois provider record yet.</p></div></div>`;
+  }'''
+
+          new_preview = '''  function websiteScreenshot(site){
+    return `https://image.thum.io/get/width/1200/crop/650/noanimate/${site}`;
+  }
+
+  function websitePreview(p){
+    const image=landingOf(p),site=websiteOf(p);
+    if(image){
+      return `<div class=\"provider-popup-site\"><div class=\"provider-popup-browser\"><i></i><i></i><i></i><span>${esc(site||'Provider website')}</span></div><img class=\"provider-popup-hero\" src=\"${esc(image)}\" alt=\"${esc(p.name)} website hero\"><div class=\"provider-popup-shot-fallback\" hidden><strong>Website preview unavailable</strong><p>The provider website is still available from the Visit Website button below.</p></div></div>`;
+    }
+    if(site){
+      const shot=websiteScreenshot(site);
+      return `<div class=\"provider-popup-site\"><div class=\"provider-popup-browser\"><i></i><i></i><i></i><span>${esc(site)}</span></div><img class=\"provider-popup-hero\" src=\"${esc(shot)}\" alt=\"${esc(p.name)} website homepage hero preview\"><div class=\"provider-popup-shot-fallback\" hidden><strong>Website preview unavailable</strong><p>The provider website is still available from the Visit Website button below.</p></div></div>`;
+    }
+    return `<div class=\"provider-popup-site\"><div class=\"provider-popup-browser\"><i></i><i></i><i></i><span>Provider website not verified</span></div><div class=\"provider-popup-unverified\"><strong>Provider website not verified</strong><p>No verified public website is attached to this Illinois provider record yet.</p></div></div>`;
+  }'''
+
+          if old_preview not in s:
+              raise SystemExit('Expected websitePreview function not found')
+          s = s.replace(old_preview, new_preview, 1)
+
+          old_open = '''  function openProvider(p,tags=tagsFor(p)){
+    const address=[p.address1,p.address2,[p.city,p.state,p.zip].filter(Boolean).join(', ').replace(/, ([A-Z]{2})/,', $1')].filter(Boolean).map(esc).join('<br>');
+    const contact=p.phone?`<a class=\"provider-popup-contact\" href=\"tel:${esc(p.phone)}\">Contact Provider</a>`:`<button type=\"button\" class=\"provider-popup-contact\" data-contact-provider>Contact Provider</button>`;
+    setModal(p.name,`${websitePreview(p)}${facts(p)}<div class=\"provider-popup-summary\"><div><p class=\"provider-popup-address\">${address}</p><div class=\"tags\">${tags.map(t=>`<span class=\"tag\">${esc(t)}</span>`).join('')}</div></div><div class=\"provider-popup-actions\">${contact}<button type=\"button\" class=\"provider-popup-schedule\" data-schedule-provider>Schedule a Ride</button></div></div><p class=\"provider-popup-note\">Provider information comes from the Illinois NEMT provider record and should be independently verified before arranging transportation.</p>`);
+    modalBody.querySelector('[data-contact-provider]')?.addEventListener('click',()=>openContact(p));
+    modalBody.querySelector('[data-schedule-provider]')?.addEventListener('click',()=>openSchedule(p,tags));'''
+
+          new_open = '''  function openProvider(p,tags=tagsFor(p)){
+    const address=[p.address1,p.address2,[p.city,p.state,p.zip].filter(Boolean).join(', ').replace(/, ([A-Z]{2})/,', $1')].filter(Boolean).map(esc).join('<br>');
+    const contact=p.phone?`<a class=\"provider-popup-contact\" href=\"tel:${esc(p.phone)}\">Contact Provider</a>`:`<button type=\"button\" class=\"provider-popup-contact\" data-contact-provider>Contact Provider</button>`;
+    const site=websiteOf(p);
+    const websiteButton=site?`<a class=\"provider-popup-website\" href=\"${esc(site)}\" target=\"_blank\" rel=\"noopener\">Visit Website</a>`:'';
+    setModal(p.name,`${websitePreview(p)}${facts(p)}<div class=\"provider-popup-summary\"><div><p class=\"provider-popup-address\">${address}</p><div class=\"tags\">${tags.map(t=>`<span class=\"tag\">${esc(t)}</span>`).join('')}</div></div><div class=\"provider-popup-actions\">${contact}${websiteButton}<button type=\"button\" class=\"provider-popup-schedule\" data-schedule-provider>Schedule a Ride</button></div></div><p class=\"provider-popup-note\">Provider information comes from the Illinois NEMT provider record and should be independently verified before arranging transportation.</p>`);
+    modalBody.querySelector('.provider-popup-hero')?.addEventListener('error',e=>{e.currentTarget.hidden=true;const fallback=e.currentTarget.nextElementSibling;if(fallback)fallback.hidden=false});
+    modalBody.querySelector('[data-contact-provider]')?.addEventListener('click',()=>openContact(p));
+    modalBody.querySelector('[data-schedule-provider]')?.addEventListener('click',()=>openSchedule(p,tags));'''
+
+          if old_open not in s:
+              raise SystemExit('Expected openProvider block not found')
+          s = s.replace(old_open, new_open, 1)
+
+          p.write_text(s)
+          PY
+      - name: Commit popup hero preview
+        run: |
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git add provider-cards-live.js
+          git commit -m "Show provider website hero screenshots in popup"
+          git push origin HEAD:provider-hero-screenshot-popup

@@ -1,0 +1,72 @@
+name: Match Approved Ride2Dialysis Hero V2
+
+on:
+  push:
+    paths:
+      - .r2d-approved-hero-v2-trigger
+
+permissions:
+  contents: write
+
+jobs:
+  patch:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - name: Patch hero only
+        run: |
+          python - <<'PY'
+          from pathlib import Path
+          import re
+          p=Path('ride2dialysis/index.html')
+          text=p.read_text(encoding='utf-8')
+          start='/* R2D_APPROVED_HERO_START */'
+          end='/* R2D_APPROVED_HERO_END */'
+          text=re.sub(re.escape(start)+r'.*?'+re.escape(end),'',text,flags=re.S)
+          css='''
+/* R2D_APPROVED_HERO_START */
+@media (min-width:901px){
+.hero{min-height:838px;background:#fff}
+.hero-photo{width:64%;height:100%;right:0;top:0}
+.hero-photo img{width:100%;height:100%;object-fit:cover;object-position:58% center}
+.hero::after{display:block;content:"";position:absolute;inset:0;z-index:1;pointer-events:none;background:linear-gradient(90deg,#fff 0%,#fff 39%,rgba(255,255,255,.99) 44%,rgba(255,255,255,.92) 48%,rgba(255,255,255,.62) 53%,rgba(255,255,255,.2) 59%,rgba(255,255,255,0) 66%)}
+.hero-content{padding-top:82px;padding-bottom:68px}
+.hero-copy{width:600px;max-width:38vw}
+.hero h1{font-size:66px;line-height:1.04;letter-spacing:-.048em;font-weight:850;max-width:610px}
+.hero h1 .line:first-child{display:block;white-space:normal;max-width:590px}
+.hero h1 .line:last-child{white-space:nowrap}
+.hero-copy>p{max-width:505px;margin-top:28px;font-size:19px;line-height:1.58}
+.finder{width:min(1010px,61vw);margin-top:24px;padding:22px 25px 24px;border-radius:15px}
+.finder-grid{grid-template-columns:1fr 1fr 1fr 164px;gap:15px}
+.control,.search-btn{height:60px}
+.search-btn{justify-content:center;padding:0 20px}
+.finder-points{margin-top:22px;padding-top:20px;gap:16px}
+.point{grid-template-columns:38px 1fr}
+}
+@media (min-width:901px) and (max-width:1280px){
+.hero h1{font-size:58px}.hero-copy{width:540px;max-width:44vw}.hero h1 .line:first-child{max-width:520px}.finder{width:min(920px,72vw)}.hero-photo{width:62%}
+}
+/* R2D_APPROVED_HERO_END */
+'''
+          i=text.find('</style>')
+          if i<0: raise SystemExit('style end not found')
+          text=text[:i]+css+text[i:]
+          p.write_text(text,encoding='utf-8')
+          PY
+      - name: Publish patched HTML using contents API
+        env:
+          GH_TOKEN: ${{ github.token }}
+        run: |
+          set -euo pipefail
+          FILE=ride2dialysis/index.html
+          CONTENT=$(base64 -w0 "$FILE")
+          URL="${GITHUB_API_URL}/repos/${GITHUB_REPOSITORY}/contents/${FILE}"
+          for attempt in 1 2 3 4 5; do
+            SHA=$(curl -fsSL -H "Authorization: Bearer ${GH_TOKEN}" -H "Accept: application/vnd.github+json" "${URL}?ref=main" | jq -r '.sha')
+            jq -n --arg message "Match Ride2Dialysis hero to approved layout" --arg content "$CONTENT" --arg sha "$SHA" --arg branch "main" '{message:$message,content:$content,sha:$sha,branch:$branch}' >/tmp/payload.json
+            code=$(curl -sS -o /tmp/result.json -w "%{http_code}" -X PUT -H "Authorization: Bearer ${GH_TOKEN}" -H "Accept: application/vnd.github+json" "$URL" --data-binary @/tmp/payload.json)
+            if [ "$code" = "200" ] || [ "$code" = "201" ]; then cat /tmp/result.json; exit 0; fi
+            cat /tmp/result.json
+            sleep $((attempt*2))
+          done
+          exit 1

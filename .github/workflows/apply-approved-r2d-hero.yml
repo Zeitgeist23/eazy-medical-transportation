@@ -1,0 +1,136 @@
+name: Apply Approved Ride2Dialysis Hero
+
+on:
+  push:
+    paths:
+      - .r2d-approved-hero-trigger
+
+permissions:
+  contents: write
+
+jobs:
+  apply:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+      - name: Build approved hero asset and patch only the header/hero
+        run: |
+          set -euo pipefail
+          base64 -d ride2dialysis/.approved-hero-full.b64 > ride2dialysis/hero-approved.webp
+          python - <<'PY'
+          from pathlib import Path
+          import re
+
+          p = Path('ride2dialysis/index.html')
+          s = p.read_text(encoding='utf-8')
+
+          # Use the exact approved hero artwork supplied in this conversation as
+          # the visual/photo layer. All interactive controls remain live HTML.
+          s = re.sub(
+              r'<div class="hero-photo"><img src="[^"]+" alt="[^"]+"></div>',
+              '<div class="hero-photo"><img src="hero-approved.webp?v=1" alt="Accessible dialysis transportation van assisting a wheelchair passenger outside a dialysis center"></div>',
+              s,
+              count=1,
+          )
+
+          # Match the approved three-line headline exactly.
+          s = re.sub(
+              r'<h1>.*?</h1>',
+              '<h1><span class="line">Reliable</span><span class="line">Transportation</span><span class="line">to <em>Dialysis</em></span></h1>',
+              s,
+              count=1,
+              flags=re.S,
+          )
+
+          marker_start = '/* APPROVED_R2D_HERO_START */'
+          marker_end = '/* APPROVED_R2D_HERO_END */'
+          if marker_start in s:
+              s = re.sub(
+                  re.escape(marker_start) + r'.*?' + re.escape(marker_end),
+                  '',
+                  s,
+                  flags=re.S,
+              )
+
+          css = r'''
+/* APPROVED_R2D_HERO_START */
+/* Desktop proportions match the approved 1672×941 hero reference. */
+@media (min-width:901px){
+  .site-header{height:102px;}
+  .brand{font-size:clamp(25px,1.85vw,32px);gap:12px;}
+  .brand-mark{width:57px;height:57px;flex-basis:57px;}
+  .desktop-nav{gap:clamp(12px,1.45vw,25px);}
+  .desktop-nav a{font-size:14px;padding:12px 4px;}
+  .find-top{padding:13px 19px!important;border-radius:9px;}
+
+  .hero{min-height:838px;background:#fff;position:relative;overflow:hidden;}
+  .hero-photo{position:absolute;inset:0;width:100%;height:100%;z-index:0;}
+  .hero-photo img{display:block;width:100%;height:100%;object-fit:cover;object-position:center center;}
+  .hero::after{
+    content:"";position:absolute;inset:0;z-index:1;pointer-events:none;
+    background:linear-gradient(90deg,
+      #fff 0%,#fff 35%,
+      rgba(255,255,255,.995) 39%,
+      rgba(255,255,255,.94) 44%,
+      rgba(255,255,255,.72) 49%,
+      rgba(255,255,255,.35) 55%,
+      rgba(255,255,255,0) 63%);
+  }
+  .hero-content{position:relative;z-index:2;padding-top:86px;padding-bottom:42px;}
+  .hero-copy{width:min(560px,36vw);}
+  .hero h1{margin:0;font-size:clamp(70px,5.05vw,85px);line-height:1.055;letter-spacing:-.048em;font-weight:860;color:var(--navy);}
+  .hero h1 .line{display:block;white-space:normal!important;}
+  .hero h1 em{color:var(--teal);font-style:normal;}
+  .hero-copy>p{font-size:20px;line-height:1.55;max-width:500px;margin:27px 0 0;color:#294e61;}
+
+  .finder{
+    width:min(1020px,61vw);
+    margin-top:21px;
+    margin-left:-30px;
+    padding:26px 26px 25px;
+    border:1px solid #dce9ed;
+    border-radius:15px;
+    background:#fff;
+    box-shadow:0 18px 42px rgba(25,70,91,.14);
+  }
+  .finder-grid{grid-template-columns:1fr 1fr 1fr auto;gap:16px;align-items:end;}
+  .field label{font-size:14px;}
+  .control,.search-btn{height:59px;}
+  .control{border-radius:9px;padding:0 15px;}
+  .search-btn{border-radius:9px;padding:0 25px;}
+  .finder-points{margin-top:20px;padding-top:20px;gap:18px;}
+  .point{grid-template-columns:38px 1fr;gap:11px;}
+}
+
+/* On tablets/phones the same approved artwork is cropped to its clean photo
+   side so no baked-in mockup text or controls can appear behind live HTML. */
+@media (max-width:900px){
+  .hero-photo img{object-fit:cover;object-position:right center;}
+}
+@media (max-width:620px){
+  .hero-photo img{object-position:86% center;}
+}
+/* APPROVED_R2D_HERO_END */
+'''
+          s = s.replace('</style>', css + '</style>', 1)
+          p.write_text(s, encoding='utf-8')
+          PY
+
+          # Staging files are no longer needed after creating the binary asset.
+          rm -f ride2dialysis/.approved-hero-full.b64 ride2dialysis/.approved-hero-photo.00.b64
+
+      - name: Commit and publish
+        run: |
+          set -euo pipefail
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git add -A ride2dialysis
+          git diff --cached --quiet || git commit -m "Match live Ride2Dialysis hero to approved design"
+          for attempt in 1 2 3 4 5; do
+            git pull --rebase origin main || true
+            if git push origin HEAD:main; then exit 0; fi
+            sleep $((attempt * 2))
+          done
+          exit 1

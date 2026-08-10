@@ -1,0 +1,82 @@
+name: Direct Ride2Dialysis Hero Fix
+
+on:
+  push:
+    paths:
+      - .r2d-direct-hero-trigger
+
+permissions:
+  contents: write
+
+jobs:
+  patch:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+      - name: Patch the actual Ride2Dialysis hero
+        run: |
+          python - <<'PY'
+          from pathlib import Path
+          import re
+
+          page=Path('ride2dialysis/index.html')
+          text=page.read_text(encoding='utf-8')
+
+          # Make the heading match the approved 3-line composition.
+          text=text.replace(
+            '<h1><span class="line">Reliable Transportation</span><span class="line">to <em>Dialysis</em></span></h1>',
+            '<h1><span class="line">Reliable</span><span class="line">Transportation</span><span class="line">to <em>Dialysis</em></span></h1>'
+          )
+
+          start='/* R2D_DIRECT_HERO_FIX_START */'
+          end='/* R2D_DIRECT_HERO_FIX_END */'
+          text=re.sub(re.escape(start)+r'.*?'+re.escape(end),'',text,flags=re.S)
+          css=r'''
+/* R2D_DIRECT_HERO_FIX_START */
+@media (min-width:901px){
+  .site-header{height:100px!important}
+  .brand{font-size:31px!important}.brand-mark{width:58px!important;height:58px!important;flex-basis:58px!important}
+  .desktop-nav{gap:27px!important}.desktop-nav a{font-size:15px!important}.find-top{padding:14px 22px!important}
+  .hero{min-height:820px!important;background:#fff!important}
+  .hero-photo{width:63.5%!important;height:100%!important;right:0!important;top:0!important}
+  .hero-photo img{width:100%!important;height:100%!important;object-fit:cover!important;object-position:58% center!important}
+  .hero::after{display:block!important;content:""!important;position:absolute!important;inset:0!important;z-index:1!important;pointer-events:none!important;background:linear-gradient(90deg,#fff 0%,#fff 42%,rgba(255,255,255,.995) 48%,rgba(255,255,255,.92) 53%,rgba(255,255,255,.66) 58%,rgba(255,255,255,.28) 63%,rgba(255,255,255,0) 69%)!important}
+  .hero-content{padding-top:74px!important;padding-bottom:66px!important}
+  .hero-copy{width:545px!important;max-width:36vw!important}
+  .hero h1{font-size:68px!important;line-height:1.04!important;letter-spacing:-.05em!important;font-weight:850!important;max-width:550px!important;margin:0!important}
+  .hero h1 .line{display:block!important;white-space:nowrap!important}
+  .hero-copy>p{max-width:500px!important;margin-top:28px!important;font-size:19px!important;line-height:1.58!important}
+  .finder{width:min(1000px,61vw)!important;margin-top:22px!important;padding:22px 24px 24px!important;border-radius:15px!important}
+  .finder-grid{grid-template-columns:1fr 1fr 1fr 165px!important;gap:15px!important}
+  .control,.search-btn{height:58px!important}
+  .search-btn{justify-content:center!important;padding:0 20px!important}
+  .finder-points{margin-top:21px!important;padding-top:19px!important;gap:17px!important}
+  .point{grid-template-columns:38px 1fr!important}
+}
+@media (min-width:901px) and (max-width:1280px){
+  .hero h1{font-size:58px!important}
+  .hero-copy{width:470px!important;max-width:42vw!important}
+  .finder{width:min(900px,70vw)!important}
+  .hero-photo{width:61%!important}
+}
+/* R2D_DIRECT_HERO_FIX_END */
+'''
+          idx=text.find('</style>')
+          if idx<0: raise SystemExit('style tag not found')
+          text=text[:idx]+css+text[idx:]
+          page.write_text(text,encoding='utf-8')
+          PY
+      - name: Commit and push
+        run: |
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git add ride2dialysis/index.html
+          git diff --cached --quiet || git commit -m "Apply approved Ride2Dialysis hero directly"
+          for attempt in 1 2 3 4 5; do
+            git pull --rebase origin main || true
+            if git push origin HEAD:main; then exit 0; fi
+            sleep $((attempt*2))
+          done
+          exit 1

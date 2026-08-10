@@ -1,0 +1,59 @@
+name: Fix Featured carousel controls
+
+on:
+  push:
+    branches:
+      - main
+    paths:
+      - .fix-featured-carousel-controls-trigger
+
+permissions:
+  contents: write
+
+jobs:
+  patch:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          ref: main
+      - name: Fix arrows and empty Featured slots
+        run: |
+          python - <<'PY'
+          from pathlib import Path
+          path = Path('provider-cards-live.js')
+          text = path.read_text()
+
+          old_css = ".featured-carousel-arrow:hover{background:#eef8fa}.featured-carousel-arrow:focus-visible{outline:2px solid #087f91;outline-offset:2px}"
+          new_css = ".featured-carousel-arrow:hover{background:#eef8fa}.featured-carousel-arrow:focus-visible{outline:2px solid #087f91;outline-offset:2px}.featured-carousel-arrow.is-hidden{display:none!important}.featured-carousel-mask.is-empty{top:43.35%;height:18.65%;padding:0;background:#fff}"
+          if old_css not in text:
+              raise SystemExit('Expected carousel arrow CSS not found; no changes made')
+          text = text.replace(old_css, new_css, 1)
+
+          old_load = "    renderPage();\n    prev.disabled=next.disabled=providers.length<=pageSize;"
+          new_load = "    renderPage();\n    const canPaginate=providers.length>pageSize;\n    prev.disabled=next.disabled=!canPaginate;\n    prev.classList.toggle('is-hidden',!canPaginate);\n    next.classList.toggle('is-hidden',!canPaginate);"
+          if old_load not in text:
+              raise SystemExit('Expected carousel control state block not found; no changes made')
+          text = text.replace(old_load, new_load, 1)
+
+          old_empty = "      if(!p){mask.innerHTML='';hits[i].disabled=true;hits[i].removeAttribute('aria-label');hits[i].onclick=null;return}"
+          new_empty = "      if(!p){mask.innerHTML='';mask.classList.add('is-empty');hits[i].disabled=false;hits[i].setAttribute('aria-disabled','true');hits[i].setAttribute('aria-label','No featured provider in this position');hits[i].style.cursor='default';hits[i].onclick=e=>{e.preventDefault();e.stopPropagation()};return}"
+          if old_empty not in text:
+              raise SystemExit('Expected empty Featured slot block not found; no changes made')
+          text = text.replace(old_empty, new_empty, 1)
+
+          old_active = "      const tags=tagsFor(p);\n      mask.innerHTML=`<div class=\"featured-carousel-name\">${esc(p.name)}</div>"
+          new_active = "      mask.classList.remove('is-empty');\n      hits[i].removeAttribute('aria-disabled');\n      hits[i].style.cursor='pointer';\n      const tags=tagsFor(p);\n      mask.innerHTML=`<div class=\"featured-carousel-name\">${esc(p.name)}</div>"
+          if old_active not in text:
+              raise SystemExit('Expected active Featured slot block not found; no changes made')
+          text = text.replace(old_active, new_active, 1)
+
+          path.write_text(text)
+          PY
+      - name: Commit carousel control repair
+        run: |
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git add provider-cards-live.js
+          git diff --cached --quiet || git commit -m "Fix Featured carousel controls and empty slots"
+          git push origin HEAD:main

@@ -1,0 +1,33 @@
+name: Restore Ride2Dialysis Hero Photo
+
+on:
+  push:
+    paths:
+      - .r2d-restore-hero-trigger
+
+permissions:
+  contents: write
+
+jobs:
+  restore:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          ref: main
+          fetch-depth: 0
+      - name: Restore only the last working hero photo
+        run: |
+          git checkout 0b2d69a3f6171da9f019fd06bdb12d273277c775^ -- ride2dialysis/hero-photo.webp
+      - name: Commit hero photo only
+        run: |
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git add ride2dialysis/hero-photo.webp
+          git diff --cached --quiet || git commit -m "Restore working Ride2Dialysis hero photo"
+          for attempt in 1 2 3 4 5; do
+            git pull --rebase origin main || true
+            if git push origin HEAD:main; then exit 0; fi
+            sleep $((attempt * 2))
+          done
+          exit 1

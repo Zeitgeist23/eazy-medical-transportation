@@ -1,0 +1,147 @@
+name: Match Approved Ride2Dialysis Hero
+
+on:
+  push:
+    paths:
+      - .r2d-approved-hero-trigger
+
+permissions:
+  contents: write
+
+jobs:
+  patch:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+      - name: Match approved desktop hero without touching lower page
+        run: |
+          python - <<'PY'
+          from pathlib import Path
+          import re
+
+          page = Path('ride2dialysis/index.html')
+          text = page.read_text(encoding='utf-8')
+
+          start = '/* R2D_APPROVED_HERO_START */'
+          end = '/* R2D_APPROVED_HERO_END */'
+          text = re.sub(re.escape(start) + r'.*?' + re.escape(end), '', text, flags=re.S)
+
+          css = r'''\n/* R2D_APPROVED_HERO_START */
+@media (min-width:901px){
+  .hero{
+    min-height:838px;
+    background:#fff;
+  }
+  .hero-photo{
+    width:64%;
+    height:100%;
+    right:0;
+    top:0;
+  }
+  .hero-photo img{
+    width:100%;
+    height:100%;
+    object-fit:cover;
+    object-position:58% center;
+  }
+  .hero::after{
+    display:block;
+    content:"";
+    position:absolute;
+    inset:0;
+    z-index:1;
+    pointer-events:none;
+    background:linear-gradient(90deg,
+      #fff 0%,
+      #fff 39%,
+      rgba(255,255,255,.99) 44%,
+      rgba(255,255,255,.92) 48%,
+      rgba(255,255,255,.62) 53%,
+      rgba(255,255,255,.20) 59%,
+      rgba(255,255,255,0) 66%);
+  }
+  .hero-content{
+    padding-top:82px;
+    padding-bottom:68px;
+  }
+  .hero-copy{
+    width:600px;
+    max-width:38vw;
+  }
+  .hero h1{
+    font-size:66px;
+    line-height:1.04;
+    letter-spacing:-.048em;
+    font-weight:850;
+    max-width:610px;
+  }
+  .hero h1 .line:first-child{
+    display:block;
+    white-space:normal;
+    max-width:590px;
+  }
+  .hero h1 .line:last-child{
+    white-space:nowrap;
+  }
+  .hero-copy>p{
+    max-width:505px;
+    margin-top:28px;
+    font-size:19px;
+    line-height:1.58;
+  }
+  .finder{
+    width:min(1010px,61vw);
+    margin-top:24px;
+    padding:22px 25px 24px;
+    border-radius:15px;
+  }
+  .finder-grid{
+    grid-template-columns:1fr 1fr 1fr 164px;
+    gap:15px;
+  }
+  .control,.search-btn{
+    height:60px;
+  }
+  .search-btn{
+    justify-content:center;
+    padding:0 20px;
+  }
+  .finder-points{
+    margin-top:22px;
+    padding-top:20px;
+    gap:16px;
+  }
+  .point{
+    grid-template-columns:38px 1fr;
+  }
+}
+@media (min-width:901px) and (max-width:1280px){
+  .hero h1{font-size:58px}
+  .hero-copy{width:540px;max-width:44vw}
+  .hero h1 .line:first-child{max-width:520px}
+  .finder{width:min(920px,72vw)}
+  .hero-photo{width:62%}
+}
+/* R2D_APPROVED_HERO_END */\n'''
+
+          # Append after existing stylesheet rules so this cleanly overrides only the hero.
+          idx = text.find('</style>')
+          if idx == -1:
+              raise SystemExit('No </style> found')
+          text = text[:idx] + css + text[idx:]
+          page.write_text(text, encoding='utf-8')
+          PY
+      - name: Commit hero-only change
+        run: |
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git add ride2dialysis/index.html
+          git diff --cached --quiet || git commit -m "Match Ride2Dialysis hero to approved layout"
+          for attempt in 1 2 3 4 5; do
+            git pull --rebase origin main || true
+            if git push origin HEAD:main; then exit 0; fi
+            sleep $((attempt*2))
+          done
+          exit 1

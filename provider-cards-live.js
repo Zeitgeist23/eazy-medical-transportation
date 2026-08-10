@@ -5,12 +5,12 @@
   if(!root||root.querySelector('.live-provider-tabs')) return;
 
   const providers=[
-    {name:'North Shore Medical Transport',city:'Evanston, IL',services:['Wheelchair','Ambulatory'],website:null,landingImage:null},
-    {name:'Chicago Senior Ride Services',city:'Chicago, IL',services:['Ambulatory','Companion'],website:null,landingImage:null},
-    {name:'Lake County Wheelchair Transit',city:'Waukegan, IL',services:['Wheelchair','Stretcher'],website:null,landingImage:null},
-    {name:'Suburban Patient Transport',city:'Schaumburg, IL',services:['Ambulatory','Wheelchair'],website:null,landingImage:null},
-    {name:'Metro Dialysis Rides',city:'Naperville, IL',services:['Dialysis','Wheelchair'],website:null,landingImage:null},
-    {name:'Heartland Medical Transit',city:'Aurora, IL',services:['Ambulatory','Stretcher'],website:null,landingImage:null}
+    {name:'North Shore Medical Transport',city:'Evanston, IL',services:['Wheelchair','Ambulatory'],website:null,landingImage:null,phone:null,medicaidNumber:null},
+    {name:'Chicago Senior Ride Services',city:'Chicago, IL',services:['Ambulatory','Companion'],website:null,landingImage:null,phone:null,medicaidNumber:null},
+    {name:'Lake County Wheelchair Transit',city:'Waukegan, IL',services:['Wheelchair','Stretcher'],website:null,landingImage:null,phone:null,medicaidNumber:null},
+    {name:'Suburban Patient Transport',city:'Schaumburg, IL',services:['Ambulatory','Wheelchair'],website:null,landingImage:null,phone:null,medicaidNumber:null},
+    {name:'Metro Dialysis Rides',city:'Naperville, IL',services:['Dialysis','Wheelchair'],website:null,landingImage:null,phone:null,medicaidNumber:null},
+    {name:'Heartland Medical Transit',city:'Aurora, IL',services:['Ambulatory','Stretcher'],website:null,landingImage:null,phone:null,medicaidNumber:null}
   ];
 
   const cards=[
@@ -41,6 +41,12 @@
     .provider-popup-unverified{height:calc(100% - 38px);display:flex;flex-direction:column;align-items:center;justify-content:center;text-align:center;padding:28px;color:#597181}
     .provider-popup-unverified strong{display:block;color:#0b3552;font-size:22px;margin-bottom:8px}
     .provider-popup-unverified p{margin:0;max-width:560px;line-height:1.5;font-size:14px}
+    .provider-popup-facts{display:grid;grid-template-columns:1fr 1fr;gap:12px;margin:0 0 18px}
+    .provider-popup-fact{border:1px solid #d7e7eb;border-radius:12px;background:#f8fcfd;padding:13px 15px;min-width:0}
+    .provider-popup-fact-label{display:block;color:#597181;font-size:11px;font-weight:800;text-transform:uppercase;letter-spacing:.04em;margin-bottom:5px}
+    .provider-popup-fact-value{display:block;color:#0b3552;font-size:15px;font-weight:800;overflow-wrap:anywhere}
+    .provider-popup-fact-value a{color:#087f91;text-decoration:none}
+    .provider-popup-fact-value.is-unverified{color:#7b8f9c;font-weight:700}
     .provider-popup-summary{display:flex;align-items:center;justify-content:space-between;gap:18px;flex-wrap:wrap;margin:4px 0 2px}
     .provider-popup-city{color:#597181;font-size:16px;margin-bottom:9px}
     .provider-popup-actions{display:flex;gap:10px;flex-wrap:wrap;margin-top:18px}
@@ -54,7 +60,7 @@
     .provider-popup-form input,.provider-popup-form select,.provider-popup-form textarea{width:100%;border:1px solid #c9dce2;border-radius:10px;padding:10px 12px;background:#fff;color:#29495c;font-size:14px}
     .provider-popup-form textarea{min-height:82px;resize:vertical}
     .provider-popup-submit{border:0;border-radius:10px;background:#087f91;color:#fff;padding:12px 14px;font-weight:900;cursor:pointer}
-    @media(max-width:760px){.live-provider-tabs{display:none!important}#modal.provider-popup-large .modal{width:96vw}.provider-popup-site{height:220px}.provider-popup-grid{grid-template-columns:1fr}.provider-popup-unverified strong{font-size:18px}}
+    @media(max-width:760px){.live-provider-tabs{display:none!important}#modal.provider-popup-large .modal{width:96vw}.provider-popup-site{height:220px}.provider-popup-grid,.provider-popup-facts{grid-template-columns:1fr}.provider-popup-unverified strong{font-size:18px}}
   `;
   document.head.appendChild(style);
 
@@ -89,11 +95,18 @@
     return `<div class="provider-popup-site"><div class="provider-popup-browser"><i></i><i></i><i></i><span>${esc(p.website||'Provider website not verified')}</span></div><div class="provider-popup-unverified"><strong>Provider website not verified</strong><p>No verified public homepage is currently attached to this showcase provider. When a verified provider website is added, its actual landing-page image will appear here.</p></div></div>`;
   }
 
+  function providerFacts(p){
+    const phone=p.phone?`<a href="tel:${esc(p.phone)}">${esc(p.phone)}</a>`:'Not verified';
+    const medicaid=p.medicaidNumber?esc(p.medicaidNumber):'Not verified';
+    return `<div class="provider-popup-facts"><div class="provider-popup-fact"><span class="provider-popup-fact-label">Phone Number</span><span class="provider-popup-fact-value${p.phone?'':' is-unverified'}">${phone}</span></div><div class="provider-popup-fact"><span class="provider-popup-fact-label">Medicaid Number</span><span class="provider-popup-fact-value${p.medicaidNumber?'':' is-unverified'}">${medicaid}</span></div></div>`;
+  }
+
   function openProvider(index){
     const p=providers[index];
     if(!p) return;
     const html=`
       ${websitePreview(p)}
+      ${providerFacts(p)}
       <div class="provider-popup-summary">
         <div><div class="provider-popup-city">${esc(p.city)}</div><div class="tags">${p.services.map(s=>`<span class="tag">${esc(s)}</span>`).join('')}</div></div>
         <div class="provider-popup-actions"><button type="button" class="provider-popup-contact" data-provider-contact="${index}">Contact Provider</button><button type="button" class="provider-popup-schedule" data-provider-schedule="${index}">Schedule a Ride</button></div>
@@ -107,13 +120,13 @@
   function openContact(index){
     const p=providers[index];
     if(!p) return;
-    const html=`<p class="provider-meta"><b>${esc(p.name)}</b><br>${esc(p.city)}</p><form class="provider-popup-form" id="providerContactForm"><div class="provider-popup-grid"><label>Your Name<input name="name" required autocomplete="name"></label><label>Phone<input name="phone" required inputmode="tel" autocomplete="tel"></label></div><label>Email<input name="email" type="email" required autocomplete="email"></label><label>Message<textarea name="message" required placeholder="What would you like to ask the provider?"></textarea></label><button class="provider-popup-submit" type="submit">Send Contact Request</button><div class="ride-note">Eazy will route this contact request to the provider when direct provider contact information is not yet verified.</div></form>`;
+    const html=`<p class="provider-meta"><b>${esc(p.name)}</b><br>${esc(p.city)}${p.phone?`<br>${esc(p.phone)}`:''}${p.medicaidNumber?`<br>Medicaid Number: ${esc(p.medicaidNumber)}`:''}</p><form class="provider-popup-form" id="providerContactForm"><div class="provider-popup-grid"><label>Your Name<input name="name" required autocomplete="name"></label><label>Phone<input name="phone" required inputmode="tel" autocomplete="tel"></label></div><label>Email<input name="email" type="email" required autocomplete="email"></label><label>Message<textarea name="message" required placeholder="What would you like to ask the provider?"></textarea></label><button class="provider-popup-submit" type="submit">Send Contact Request</button><div class="ride-note">Eazy will route this contact request to the provider when direct provider contact information is not yet verified.</div></form>`;
     if(!setModal(`Contact ${p.name}`,html)) return;
     document.getElementById('providerContactForm')?.addEventListener('submit',e=>{
       e.preventDefault();
       const d=Object.fromEntries(new FormData(e.currentTarget).entries());
       const subject=`Provider Contact Request - ${p.name}`;
-      const body=[`Provider: ${p.name}`,`Location: ${p.city}`,`Name: ${d.name}`,`Phone: ${d.phone}`,`Email: ${d.email}`,`Message: ${d.message}`,`Submitted via: EazyMedicalTransportation.com`].join('\n');
+      const body=[`Provider: ${p.name}`,`Location: ${p.city}`,`Provider Phone: ${p.phone||'Not verified'}`,`Medicaid Number: ${p.medicaidNumber||'Not verified'}`,`Name: ${d.name}`,`Phone: ${d.phone}`,`Email: ${d.email}`,`Message: ${d.message}`,`Submitted via: EazyMedicalTransportation.com`].join('\n');
       window.location.href=`mailto:info@eazymedicaltransportation.com?subject=${encodeURIComponent(subject)}&body=${encodeURIComponent(body)}`;
     });
   }
@@ -122,13 +135,13 @@
     const p=providers[index];
     if(!p) return;
     const serviceOptions=[...new Set([...p.services,'Wheelchair','Ambulatory','Stretcher','Dialysis','Companion Assistance'])];
-    const html=`<p class="provider-meta"><b>${esc(p.name)}</b><br>${esc(p.city)}</p><form class="provider-popup-form" id="providerScheduleForm"><div class="provider-popup-grid"><label>Passenger Name<input name="passenger" required autocomplete="name"></label><label>Phone Number<input name="phone" required inputmode="tel" autocomplete="tel"></label></div><label>Pickup Address<input name="pickup" required autocomplete="street-address"></label><label>Destination<input name="destination" required></label><div class="provider-popup-grid"><label>Ride Date<input type="date" name="date" required></label><label>Pickup Time<input type="time" name="time" required></label></div><div class="provider-popup-grid"><label>Trip Type<select name="trip"><option>Round Trip</option><option>One Way</option></select></label><label>Service Needed<select name="service">${serviceOptions.map(s=>`<option>${esc(s)}</option>`).join('')}</select></label></div><label>Special Instructions<textarea name="notes" placeholder="Wheelchair details, stairs, oxygen, escort needs, return time, etc."></textarea></label><button class="provider-popup-submit" type="submit">Send Ride Request</button><div class="ride-note">A ride is not confirmed until the provider accepts the request and confirms the trip.</div></form>`;
+    const html=`<p class="provider-meta"><b>${esc(p.name)}</b><br>${esc(p.city)}${p.phone?`<br>${esc(p.phone)}`:''}${p.medicaidNumber?`<br>Medicaid Number: ${esc(p.medicaidNumber)}`:''}</p><form class="provider-popup-form" id="providerScheduleForm"><div class="provider-popup-grid"><label>Passenger Name<input name="passenger" required autocomplete="name"></label><label>Phone Number<input name="phone" required inputmode="tel" autocomplete="tel"></label></div><label>Pickup Address<input name="pickup" required autocomplete="street-address"></label><label>Destination<input name="destination" required></label><div class="provider-popup-grid"><label>Ride Date<input type="date" name="date" required></label><label>Pickup Time<input type="time" name="time" required></label></div><div class="provider-popup-grid"><label>Trip Type<select name="trip"><option>Round Trip</option><option>One Way</option></select></label><label>Service Needed<select name="service">${serviceOptions.map(s=>`<option>${esc(s)}</option>`).join('')}</select></label></div><label>Special Instructions<textarea name="notes" placeholder="Wheelchair details, stairs, oxygen, escort needs, return time, etc."></textarea></label><button class="provider-popup-submit" type="submit">Send Ride Request</button><div class="ride-note">A ride is not confirmed until the provider accepts the request and confirms the trip.</div></form>`;
     if(!setModal(`Schedule a Ride — ${p.name}`,html)) return;
     document.getElementById('providerScheduleForm')?.addEventListener('submit',e=>{
       e.preventDefault();
       const d=Object.fromEntries(new FormData(e.currentTarget).entries());
       const subject=`Ride Request - ${p.name}`;
-      const body=[`Provider: ${p.name}`,`Provider Location: ${p.city}`,`Passenger: ${d.passenger}`,`Phone: ${d.phone}`,`Pickup: ${d.pickup}`,`Destination: ${d.destination}`,`Date: ${d.date}`,`Time: ${d.time}`,`Trip: ${d.trip}`,`Service: ${d.service}`,`Notes: ${d.notes||''}`,`Submitted via: EazyMedicalTransportation.com`].join('\n');
+      const body=[`Provider: ${p.name}`,`Provider Location: ${p.city}`,`Provider Phone: ${p.phone||'Not verified'}`,`Medicaid Number: ${p.medicaidNumber||'Not verified'}`,`Passenger: ${d.passenger}`,`Phone: ${d.phone}`,`Pickup: ${d.pickup}`,`Destination: ${d.destination}`,`Date: ${d.date}`,`Time: ${d.time}`,`Trip: ${d.trip}`,`Service: ${d.service}`,`Notes: ${d.notes||''}`,`Submitted via: EazyMedicalTransportation.com`].join('\n');
       window.location.href=`mailto:info@eazymedicaltransportation.com?subject=${encodeURIComponent(subject)}&body=${encodeURIComponent(body)}`;
     });
   }

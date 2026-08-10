@@ -1,0 +1,66 @@
+name: Add provider name search live
+
+on:
+  push:
+    branches:
+      - main
+    paths:
+      - .github/workflows/add-provider-name-search-live.yml
+
+permissions:
+  contents: write
+
+jobs:
+  patch:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - name: Patch provider name search
+        run: |
+          python - <<'PY'
+          from pathlib import Path
+          p=Path('menu-fix.js')
+          s=p.read_text()
+
+          anchor="  let currentState='IL',dropdown=null;\n"
+          if anchor not in s:
+              raise SystemExit('currentState anchor not found')
+          if 'const stateCache=new Map();' not in s:
+              s=s.replace(anchor,anchor+"  const stateCache=new Map();\n",1)
+
+          old="  async function getStateData(abbr){const r=await fetch(`data/providers/${abbr}.json?v=controls5`,{cache:'no-store'});if(!r.ok)throw new Error('State database unavailable');return r.json()}"
+          new="  async function getStateData(abbr){if(stateCache.has(abbr))return stateCache.get(abbr);const pending=fetch(`data/providers/${abbr}.json?v=controls6`,{cache:'no-store'}).then(r=>{if(!r.ok)throw new Error('State database unavailable');return r.json()}).catch(e=>{stateCache.delete(abbr);throw e});stateCache.set(abbr,pending);return pending}"
+          if old not in s:
+              raise SystemExit('getStateData function not found')
+          s=s.replace(old,new,1)
+
+          helpers="""
+  function normalizeProviderName(v){return String(v||'').toLowerCase().replace(/&/g,' and ').replace(/[^a-z0-9]+/g,' ').replace(/\\s+/g,' ').trim()}
+  function providerNameScore(name,q){const n=normalizeProviderName(name),x=normalizeProviderName(q);if(!n||!x)return 0;if(n===x)return 100;if(n.startsWith(x))return 92;if(n.includes(x))return 84;const terms=x.split(/\\s+/).filter(t=>t.length>1);if(terms.length&&terms.every(t=>n.includes(t)))return 74;return 0}
+  function looksLikeProviderName(q){const n=normalizeProviderName(q),terms=n.split(/\\s+/).filter(Boolean);return /\\b(transport|transportation|medical|medicar|nemt|mobility|ride|rides|transit|ambulance|shuttle|logistics|care|health|services|service|llc|inc|corp|corporation|company)\\b/.test(n)||terms.length>=3}
+  async function searchProviderNamesNational(q){const nq=normalizeProviderName(q);if(nq.length<3)return[];const scored=[],seen=new Set(),abbrs=states.map(s=>s[0]);let cursor=0;async function worker(){while(cursor<abbrs.length){const abbr=abbrs[cursor++];try{const data=await getStateData(abbr);for(const p of data.providers||[]){const score=providerNameScore(p.name,q);if(!score)continue;const key=String(p.npi||'')+'|'+String(p.state||abbr)+'|'+normalizeProviderName(p.name);if(seen.has(key))continue;seen.add(key);scored.push({p,score})}}catch(_){}}}await Promise.all(Array.from({length:8},()=>worker()));return scored.sort((a,b)=>b.score-a.score||String(a.p.name||'').localeCompare(String(b.p.name||''))||String(a.p.state||'').localeCompare(String(b.p.state||''))).slice(0,100).map(x=>x.p)}
+"""
+          run_anchor="  async function runSearch(){"
+          if run_anchor not in s:
+              raise SystemExit('runSearch anchor not found')
+          if 'function searchProviderNamesNational' not in s:
+              s=s.replace(run_anchor,helpers+run_anchor,1)
+
+          start=s.index(run_anchor)
+          end=s.index("\n  const actions=",start)
+          new_run="""  async function runSearch(){const q=selected('location','mLocation').trim(),service=selected('service','mService').trim(),access=selected('accessibility','mAccessibility').trim(),zip=zip5(q),explicitState=stateFromText(q)||stateFromZip(zip),abbr=explicitState||window.__eazyMenuState||'IL',name=stateName(abbr);openModal('Find Providers','<div class=\"claim-callout\">Searching provider database…</div>');try{let nationalNameMatches=null;if(q&&!zip&&!explicitState&&looksLikeProviderName(q)){nationalNameMatches=await searchProviderNamesNational(q);if(nationalNameMatches.length){openModal(`Provider name matches for “${q}” (${nationalNameMatches.length})`,providerList(nationalNameMatches,'Searching the national Eazy provider directory by provider name.'));return}}const data=await getStateData(abbr);let list=data.providers||[],note='';if(zip){const exact=list.filter(p=>String(p.zip||'').slice(0,5)===zip);if(exact.length)list=exact;else{const prefix=zip.slice(0,3),near=list.filter(p=>String(p.zip||'').startsWith(prefix));if(near.length){list=near;note=`No providers are indexed in ZIP ${zip}; showing providers in nearby ${prefix}xx ZIP codes.`}else note=`No providers are indexed in ZIP ${zip} or nearby ${prefix}xx ZIP codes; showing ${name} providers.`}}else if(q){const terms=stripStateTerms(q,abbr).toLowerCase().split(/\\s+/).filter(Boolean);if(terms.length){const local=list.filter(p=>{const hay=[p.name,p.city,p.zip,p.address1].join(' ').toLowerCase();return terms.every(t=>hay.includes(t))});if(local.length)list=local;else{if(!explicitState){nationalNameMatches=nationalNameMatches||await searchProviderNamesNational(q);if(nationalNameMatches.length){openModal(`Provider name matches for “${q}” (${nationalNameMatches.length})`,providerList(nationalNameMatches,'No local location match was found, so Eazy searched provider names nationwide.'));return}}note=`No exact location matches were found for “${q}”; showing ${name} providers.`}}}const sset=categorySet(data,service),aset=categorySet(data,access);if(service)list=list.filter(p=>hasCategory(p,sset,service));if(access)list=list.filter(p=>hasCategory(p,aset,access));currentState=abbr;window.__eazyMenuState=abbr;openModal(`${zip?`Providers for ${zip}`:`${name} Providers`} (${list.length})`,providerList(list,note))}catch(e){console.error('Independent provider search failed',e);openModal('Find Providers','<div class=\"claim-callout\">The provider database could not be loaded. Please try again.</div>')}}"""
+          s=s[:start]+new_run+s[end:]
+          if 'window.__eazyProviderNameSearch' not in s:
+              s=s.replace("  window.__eazyIndependentSearch=runSearch;","  window.__eazyIndependentSearch=runSearch;\n  window.__eazyProviderNameSearch=searchProviderNamesNational;",1)
+          p.write_text(s)
+          PY
+      - name: Validate JavaScript
+        run: node --check menu-fix.js
+      - name: Commit provider name search
+        run: |
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git add menu-fix.js
+          git diff --cached --quiet && exit 0
+          git commit -m "Add nationwide provider name search"
+          git push origin HEAD:main

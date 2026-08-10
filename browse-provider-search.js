@@ -3,7 +3,13 @@
 
   const esc=v=>String(v??'').replace(/[&<>\"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','\"':'&quot;',"'":'&#39;'}[c]));
 
+  function closeDesktopMenus(){
+    document.querySelectorAll('body > [role="menu"]').forEach(menu=>menu.remove());
+    document.querySelectorAll('.nav-group.open').forEach(group=>group.classList.remove('open'));
+  }
+
   function openBrowseProviderSearch(){
+    closeDesktopMenus();
     const modal=document.getElementById('modal');
     const title=document.getElementById('modalTitle');
     const body=document.getElementById('modalBody');

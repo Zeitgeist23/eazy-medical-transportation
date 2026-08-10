@@ -1,0 +1,38 @@
+name: Fit provider hero preview
+
+on:
+  push:
+    branches:
+      - fit-provider-hero
+    paths:
+      - .fit-provider-hero-trigger
+
+permissions:
+  contents: write
+
+jobs:
+  patch:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          ref: fit-provider-hero
+      - name: Fit website hero inside popup
+        run: |
+          python - <<'PY'
+          from pathlib import Path
+          path = Path('provider-cards-live.js')
+          text = path.read_text()
+          old = '.provider-popup-site img{width:100%;height:calc(100% - 38px);object-fit:cover;object-position:top center;display:block}'
+          new = '.provider-popup-site img{width:100%;height:calc(100% - 38px);object-fit:contain;object-position:top center;display:block;background:#fff}'
+          if old not in text:
+              raise SystemExit('Expected provider hero CSS rule not found')
+          path.write_text(text.replace(old, new, 1))
+          PY
+      - name: Commit popup fit change
+        run: |
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git add provider-cards-live.js
+          git diff --cached --quiet || git commit -m "Fit provider website hero inside popup"
+          git push origin HEAD:fit-provider-hero

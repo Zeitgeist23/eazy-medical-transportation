@@ -1,0 +1,38 @@
+name: Filter Featured to verified websites
+
+on:
+  push:
+    branches:
+      - main
+    paths:
+      - .filter-featured-to-verified-websites-trigger
+
+permissions:
+  contents: write
+
+jobs:
+  patch:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          ref: main
+      - name: Remove providers without verified websites from Featured carousel
+        run: |
+          python - <<'PY'
+          from pathlib import Path
+          path = Path('provider-cards-live.js')
+          text = path.read_text()
+          old = "    }).filter(p=>p&&p.name);"
+          new = "    }).filter(p=>p&&p.name&&p.websiteVerified&&websiteOf(p));"
+          if old not in text:
+              raise SystemExit('Expected Featured provider filter not found; no changes made')
+          path.write_text(text.replace(old, new, 1))
+          PY
+      - name: Commit verified-website-only Featured carousel
+        run: |
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git add provider-cards-live.js
+          git diff --cached --quiet || git commit -m "Show only verified-website providers in Featured carousel"
+          git push origin HEAD:main

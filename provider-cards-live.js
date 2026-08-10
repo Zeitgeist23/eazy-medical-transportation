@@ -107,7 +107,7 @@
       const verified=verifiedWebsites[String(p.npi)]||'';
       if(verified){merged.website=verified;merged.websiteVerified=true}
       return merged;
-    }).filter(p=>p&&p.name);
+    }).filter(p=>p&&p.name&&p.websiteVerified&&websiteOf(p));
     providers.sort((a,b)=>
       Number(!!b.websiteVerified)-Number(!!a.websiteVerified)||
       Number(!!websiteOf(b))-Number(!!websiteOf(a))||

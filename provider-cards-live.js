@@ -37,7 +37,7 @@
     .featured-carousel-hit{position:absolute;top:43.15%;height:19.1%;border:0!important;background:transparent!important;color:transparent!important;padding:0!important;margin:0!important;box-shadow:none!important;cursor:pointer;pointer-events:auto;touch-action:manipulation}
     .featured-carousel-hit:focus-visible{outline:2px solid #087f91;outline-offset:2px;border-radius:8px}
     .featured-carousel-arrow{position:absolute;top:52.1%;transform:translateY(-50%);width:38px;height:38px;border:1px solid #a9d6de;border-radius:50%;background:#fff;color:#087f91;font:800 24px/1 Arial,Helvetica,sans-serif;display:grid;place-items:center;cursor:pointer;pointer-events:auto;box-shadow:0 5px 16px rgba(18,63,79,.14);z-index:12}
-    .featured-carousel-arrow:hover{background:#eef8fa}.featured-carousel-arrow:focus-visible{outline:2px solid #087f91;outline-offset:2px}.featured-carousel-arrow.is-hidden{display:none!important}.featured-carousel-mask.is-empty{top:43.35%;height:18.65%;padding:0;background:#fff}
+    .featured-carousel-arrow:hover{background:#eef8fa}.featured-carousel-arrow:focus-visible{outline:2px solid #087f91;outline-offset:2px}
     .featured-carousel-prev{left:1.6%}.featured-carousel-next{left:88.5%}
     .featured-carousel-sr{position:absolute;width:1px;height:1px;padding:0;margin:-1px;overflow:hidden;clip:rect(0,0,0,0);white-space:nowrap;border:0}
     #modal.provider-popup-large .modal{width:min(1040px,96vw);max-height:90vh}
@@ -115,10 +115,7 @@
       String(a.name).localeCompare(String(b.name))
     );
     renderPage();
-    const canPaginate=providers.length>pageSize;
-    prev.disabled=next.disabled=!canPaginate;
-    prev.classList.toggle('is-hidden',!canPaginate);
-    next.classList.toggle('is-hidden',!canPaginate);
+    prev.disabled=next.disabled=providers.length<=pageSize;
   }
 
   function tagsFor(p){
@@ -140,10 +137,7 @@
     const slice=providers.slice(start,start+pageSize);
     masks.forEach((mask,i)=>{
       const p=slice[i];
-      if(!p){mask.innerHTML='';mask.classList.add('is-empty');hits[i].disabled=false;hits[i].setAttribute('aria-disabled','true');hits[i].setAttribute('aria-label','No featured provider in this position');hits[i].style.cursor='default';hits[i].onclick=e=>{e.preventDefault();e.stopPropagation()};return}
-      mask.classList.remove('is-empty');
-      hits[i].removeAttribute('aria-disabled');
-      hits[i].style.cursor='pointer';
+      if(!p){mask.innerHTML='';hits[i].disabled=true;hits[i].removeAttribute('aria-label');hits[i].onclick=null;return}
       const tags=tagsFor(p);
       mask.innerHTML=`<div class="featured-carousel-name">${esc(p.name)}</div><div class="featured-carousel-city">${esc(p.city||'')}${p.state?`, ${esc(p.state)}`:''}</div><div class="featured-carousel-tags">${tags.slice(0,2).map(t=>`<span>${esc(t)}</span>`).join('')}</div>`;
       hits[i].disabled=false;

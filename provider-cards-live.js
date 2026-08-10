@@ -40,9 +40,9 @@
     .featured-carousel-arrow:hover{background:#eef8fa}.featured-carousel-arrow:focus-visible{outline:2px solid #087f91;outline-offset:2px}
     .featured-carousel-prev{left:1.6%}.featured-carousel-next{left:88.5%}
     .featured-carousel-sr{position:absolute;width:1px;height:1px;padding:0;margin:-1px;overflow:hidden;clip:rect(0,0,0,0);white-space:nowrap;border:0}
-    #modal.provider-popup-large .modal{width:min(1040px,96vw);max-height:90vh}
+    #modal.provider-popup-large .modal{width:min(940px,94vw);max-height:94vh}
     #modal.provider-popup-large .modal-body{padding:22px 24px 24px}
-    .provider-popup-site{width:100%;height:310px;border:1px solid #d7e7eb;border-radius:16px;overflow:hidden;background:#f8fbfc;margin-bottom:18px}
+    .provider-popup-site{width:100%;height:360px;border:1px solid #d7e7eb;border-radius:16px;overflow:hidden;background:#f8fbfc;margin-bottom:18px}
     .provider-popup-site img{width:100%;height:calc(100% - 38px);object-fit:contain;object-position:top center;display:block;background:#fff}
     .provider-popup-browser{height:38px;border-bottom:1px solid #d7e7eb;background:#eef5f7;display:flex;align-items:center;gap:7px;padding:0 12px;color:#597181;font-size:12px}
     .provider-popup-browser i{width:9px;height:9px;border-radius:50%;background:#c9dce2;display:block}.provider-popup-browser span{margin-left:8px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}

@@ -1,0 +1,37 @@
+name: Bump menu loader v11
+
+on:
+  push:
+    branches:
+      - main
+    paths:
+      - .github/workflows/bump-menu-loader-v11.yml
+
+permissions:
+  contents: write
+
+jobs:
+  bump-loader:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - name: Bump homepage menu loader
+        run: |
+          python - <<'PY'
+          from pathlib import Path
+          p=Path('index.html')
+          s=p.read_text()
+          old='<script src="menu-fix.js?v=10"></script>'
+          new='<script src="menu-fix.js?v=11"></script>'
+          if old not in s:
+              raise SystemExit('Expected menu loader v10 not found')
+          p.write_text(s.replace(old,new,1))
+          PY
+      - name: Commit cache bust
+        run: |
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git rm .github/workflows/bump-menu-loader-v11.yml
+          git add index.html
+          git commit -m "Activate corrected desktop menu behavior"
+          git push origin HEAD:main

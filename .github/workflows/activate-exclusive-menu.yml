@@ -1,0 +1,37 @@
+name: Activate exclusive menu behavior
+
+on:
+  push:
+    branches:
+      - main
+    paths:
+      - .github/workflows/activate-exclusive-menu.yml
+
+permissions:
+  contents: write
+
+jobs:
+  activate:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - name: Bump menu loader version
+        run: |
+          python - <<'PY'
+          from pathlib import Path
+          p=Path('index.html')
+          s=p.read_text()
+          old='<script src="menu-fix.js?v=9"></script>'
+          new='<script src="menu-fix.js?v=10"></script>'
+          if old not in s:
+              raise SystemExit('Expected menu loader version not found')
+          p.write_text(s.replace(old,new,1))
+          PY
+      - name: Commit activation
+        run: |
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git rm .github/workflows/activate-exclusive-menu.yml
+          git add index.html
+          git commit -m "Activate exclusive menu behavior"
+          git push origin HEAD:main

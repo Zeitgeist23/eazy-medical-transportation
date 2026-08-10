@@ -19,6 +19,7 @@
   let providers=[];
   let page=0;
   let stateData=null;
+  let verifiedWebsites={};
 
   const esc=v=>String(v??'').replace(/[&<>\"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','\"':'&quot;',"'":'&#39;'}[c]));
   const medicaidOf=p=>p.medicaidNumber||p.medicaidProviderId||p.medicaidId||p.medicaid||'';
@@ -90,16 +91,28 @@
   document.addEventListener('keydown',e=>{if(e.key==='Escape'&&modal.classList.contains('open'))closeModal()},true);
 
   async function loadData(){
-    const [r,cr]=await Promise.all([
-      fetch('data/providers/IL.json?v=carousel2',{cache:'no-store'}),
-      fetch('providers-claimed.json?v=carousel2',{cache:'no-store'}).catch(()=>null)
+    const [r,cr,wr]=await Promise.all([
+      fetch('data/providers/IL.json?v=carousel3',{cache:'no-store'}),
+      fetch('providers-claimed.json?v=carousel3',{cache:'no-store'}).catch(()=>null),
+      fetch('provider-website-priority.json?v=carousel3',{cache:'no-store'}).catch(()=>null)
     ]);
     if(!r.ok) throw new Error('Illinois provider database unavailable');
     const data=await r.json();
     const claims=cr&&cr.ok?((await cr.json()).claims||{}):{};
+    verifiedWebsites=wr&&wr.ok?((await wr.json()).verified||{}):{};
     stateData=data;
-    providers=(data.providers||[]).map(p=>Object.assign({},p,claims[String(p.npi)]||{})).filter(p=>p&&p.name);
-    providers.sort((a,b)=>Number(!!b.phone)-Number(!!a.phone)||String(a.name).localeCompare(String(b.name)));
+    providers=(data.providers||[]).map(p=>{
+      const merged=Object.assign({},p,claims[String(p.npi)]||{});
+      const verified=verifiedWebsites[String(p.npi)]||'';
+      if(verified){merged.website=verified;merged.websiteVerified=true}
+      return merged;
+    }).filter(p=>p&&p.name);
+    providers.sort((a,b)=>
+      Number(!!b.websiteVerified)-Number(!!a.websiteVerified)||
+      Number(!!websiteOf(b))-Number(!!websiteOf(a))||
+      Number(!!b.phone)-Number(!!a.phone)||
+      String(a.name).localeCompare(String(b.name))
+    );
     renderPage();
     prev.disabled=next.disabled=providers.length<=pageSize;
   }
@@ -145,6 +158,7 @@
   function websitePreview(p){
     const image=landingOf(p),site=websiteOf(p);
     if(image){const img=`<img src="${esc(image)}" alt="${esc(p.name)} website landing page">`;return site?`<a class="provider-popup-site" href="${esc(site)}" target="_blank" rel="noopener">${img}</a>`:`<div class="provider-popup-site">${img}</div>`}
+    if(site&&p.websiteVerified){return `<a class="provider-popup-site" href="${esc(site)}" target="_blank" rel="noopener"><div class="provider-popup-browser"><i></i><i></i><i></i><span>${esc(site)}</span></div><div class="provider-popup-unverified"><strong>Live provider website</strong><p>This provider has a verified live public website. Click this preview to visit it.</p></div></a>`}
     return `<div class="provider-popup-site"><div class="provider-popup-browser"><i></i><i></i><i></i><span>${esc(site||'Provider website not verified')}</span></div><div class="provider-popup-unverified"><strong>Provider website not verified</strong><p>No verified public homepage image is attached to this Illinois provider record yet.</p></div></div>`;
   }
 

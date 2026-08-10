@@ -1,0 +1,32 @@
+name: Restore Ride2Dialysis Clean Hero
+
+on:
+  push:
+    paths:
+      - .r2d-clean-hero-trigger
+
+permissions:
+  contents: write
+
+jobs:
+  restore:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+      - name: Restore last known-good hero photo
+        run: |
+          git checkout c0dc18b1a9a6e8f54b2c880d3ee26ee82d6c29ba^ -- ride2dialysis/hero-photo.webp
+      - name: Commit restored hero
+        run: |
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git add ride2dialysis/hero-photo.webp
+          git diff --cached --quiet || git commit -m "Restore working Ride2Dialysis hero image"
+          for attempt in 1 2 3 4 5; do
+            git pull --rebase origin main || true
+            if git push origin HEAD:main; then exit 0; fi
+            sleep $((attempt*2))
+          done
+          exit 1

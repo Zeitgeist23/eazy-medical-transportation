@@ -29,3 +29,11 @@
   window.__eazyIndependentSearch=runSearch;
   window.__eazyIndependentCloseModal=closeModal;
 })();
+
+(()=>{
+  if(document.querySelector('script[data-provider-cards-live]'))return;
+  const s=document.createElement('script');
+  s.src='provider-cards-live.js?v=1';
+  s.dataset.providerCardsLive='1';
+  document.head.appendChild(s);
+})();

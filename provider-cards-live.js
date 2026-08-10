@@ -43,7 +43,7 @@
     #modal.provider-popup-large .modal{width:min(1040px,96vw);max-height:90vh}
     #modal.provider-popup-large .modal-body{padding:22px 24px 24px}
     .provider-popup-site{width:100%;height:310px;border:1px solid #d7e7eb;border-radius:16px;overflow:hidden;background:#f8fbfc;margin-bottom:18px}
-    .provider-popup-site img{width:100%;height:calc(100% - 38px);object-fit:cover;object-position:top center;display:block}
+    .provider-popup-site img{width:100%;height:calc(100% - 38px);object-fit:contain;object-position:top center;display:block;background:#fff}
     .provider-popup-browser{height:38px;border-bottom:1px solid #d7e7eb;background:#eef5f7;display:flex;align-items:center;gap:7px;padding:0 12px;color:#597181;font-size:12px}
     .provider-popup-browser i{width:9px;height:9px;border-radius:50%;background:#c9dce2;display:block}.provider-popup-browser span{margin-left:8px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
     .provider-popup-unverified{height:calc(100% - 38px);display:flex;flex-direction:column;align-items:center;justify-content:center;text-align:center;padding:28px;color:#597181}.provider-popup-unverified strong{color:#0b3552;font-size:21px;margin-bottom:7px}.provider-popup-unverified p{margin:0;max-width:600px;line-height:1.5;font-size:14px}

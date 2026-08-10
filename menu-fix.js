@@ -37,3 +37,37 @@
   s.dataset.providerCardsLive='1';
   document.head.appendChild(s);
 })();
+
+(()=>{
+  if(document.getElementById('r2d-approved-hero-style')) return;
+  const style=document.createElement('style');
+  style.id='r2d-approved-hero-style';
+  style.textContent=`
+    @media (min-width:901px){
+      .hero{min-height:838px!important;background:#fff!important}
+      .hero-photo{width:64%!important;height:100%!important;right:0!important;top:0!important}
+      .hero-photo img{width:100%!important;height:100%!important;object-fit:cover!important;object-position:58% center!important}
+      .hero::after{display:block!important;content:""!important;position:absolute!important;inset:0!important;z-index:1!important;pointer-events:none!important;background:linear-gradient(90deg,#fff 0%,#fff 39%,rgba(255,255,255,.99) 44%,rgba(255,255,255,.92) 48%,rgba(255,255,255,.62) 53%,rgba(255,255,255,.20) 59%,rgba(255,255,255,0) 66%)!important}
+      .hero-content{padding-top:82px!important;padding-bottom:68px!important}
+      .hero-copy{width:600px!important;max-width:38vw!important}
+      .hero h1{font-size:66px!important;line-height:1.04!important;letter-spacing:-.048em!important;font-weight:850!important;max-width:610px!important}
+      .hero h1 .line:first-child{display:block!important;white-space:normal!important;max-width:590px!important}
+      .hero h1 .line:last-child{white-space:nowrap!important}
+      .hero-copy>p{max-width:505px!important;margin-top:28px!important;font-size:19px!important;line-height:1.58!important}
+      .finder{width:min(1010px,61vw)!important;margin-top:24px!important;padding:22px 25px 24px!important;border-radius:15px!important}
+      .finder-grid{grid-template-columns:1fr 1fr 1fr 164px!important;gap:15px!important}
+      .control,.search-btn{height:60px!important}
+      .search-btn{justify-content:center!important;padding:0 20px!important}
+      .finder-points{margin-top:22px!important;padding-top:20px!important;gap:16px!important}
+      .point{grid-template-columns:38px 1fr!important}
+    }
+    @media (min-width:901px) and (max-width:1280px){
+      .hero h1{font-size:58px!important}
+      .hero-copy{width:540px!important;max-width:44vw!important}
+      .hero h1 .line:first-child{max-width:520px!important}
+      .finder{width:min(920px,72vw)!important}
+      .hero-photo{width:62%!important}
+    }
+  `;
+  document.head.appendChild(style);
+})();

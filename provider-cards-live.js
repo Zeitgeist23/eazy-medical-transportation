@@ -43,12 +43,13 @@
     #modal.provider-popup-large .modal{width:min(1040px,96vw);max-height:90vh}
     #modal.provider-popup-large .modal-body{padding:22px 24px 24px}
     .provider-popup-site{width:100%;height:310px;border:1px solid #d7e7eb;border-radius:16px;overflow:hidden;background:#f8fbfc;margin-bottom:18px}
-    .provider-popup-site img{width:100%;height:100%;object-fit:cover;display:block}
+    .provider-popup-site img{width:100%;height:calc(100% - 38px);object-fit:cover;object-position:top center;display:block}
     .provider-popup-browser{height:38px;border-bottom:1px solid #d7e7eb;background:#eef5f7;display:flex;align-items:center;gap:7px;padding:0 12px;color:#597181;font-size:12px}
     .provider-popup-browser i{width:9px;height:9px;border-radius:50%;background:#c9dce2;display:block}.provider-popup-browser span{margin-left:8px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
     .provider-popup-unverified{height:calc(100% - 38px);display:flex;flex-direction:column;align-items:center;justify-content:center;text-align:center;padding:28px;color:#597181}.provider-popup-unverified strong{color:#0b3552;font-size:21px;margin-bottom:7px}.provider-popup-unverified p{margin:0;max-width:600px;line-height:1.5;font-size:14px}
+    .provider-popup-shot-fallback{height:calc(100% - 38px);display:flex;flex-direction:column;align-items:center;justify-content:center;text-align:center;padding:28px;color:#597181}.provider-popup-shot-fallback[hidden]{display:none}.provider-popup-shot-fallback strong{color:#0b3552;font-size:20px;margin-bottom:7px}.provider-popup-shot-fallback p{margin:0;max-width:600px;line-height:1.5;font-size:14px}
     .provider-popup-facts{display:grid;grid-template-columns:repeat(3,1fr);gap:12px;margin:0 0 18px}.provider-popup-fact{border:1px solid #d7e7eb;border-radius:12px;background:#f8fcfd;padding:13px 15px;min-width:0}.provider-popup-fact-label{display:block;color:#597181;font-size:11px;font-weight:800;text-transform:uppercase;letter-spacing:.04em;margin-bottom:5px}.provider-popup-fact-value{display:block;color:#0b3552;font-size:15px;font-weight:800;overflow-wrap:anywhere}.provider-popup-fact-value a{color:#087f91;text-decoration:none}.provider-popup-fact-value.is-unverified{color:#7b8f9c;font-weight:700}
-    .provider-popup-address{color:#597181;font-size:14px;line-height:1.5;margin:0 0 12px}.provider-popup-summary{display:flex;align-items:flex-end;justify-content:space-between;gap:18px;flex-wrap:wrap}.provider-popup-actions{display:flex;gap:10px;flex-wrap:wrap}.provider-popup-actions button,.provider-popup-actions a{border-radius:10px;padding:12px 18px;font-weight:800;cursor:pointer;font-size:14px;text-decoration:none}.provider-popup-contact{background:#fff;color:#0b5269;border:1px solid #9fd5dc}.provider-popup-schedule{background:#087f91;color:#fff;border:1px solid #087f91}.provider-popup-note{margin:14px 0 0;color:#597181;font-size:12px;line-height:1.5}
+    .provider-popup-address{color:#597181;font-size:14px;line-height:1.5;margin:0 0 12px}.provider-popup-summary{display:flex;align-items:flex-end;justify-content:space-between;gap:18px;flex-wrap:wrap}.provider-popup-actions{display:flex;gap:10px;flex-wrap:wrap}.provider-popup-actions button,.provider-popup-actions a{border-radius:10px;padding:12px 18px;font-weight:800;cursor:pointer;font-size:14px;text-decoration:none}.provider-popup-contact{background:#fff;color:#0b5269;border:1px solid #9fd5dc}.provider-popup-website{background:#eef8fa;color:#087f91!important;border:1px solid #9fd5dc!important}.provider-popup-schedule{background:#087f91;color:#fff;border:1px solid #087f91}.provider-popup-note{margin:14px 0 0;color:#597181;font-size:12px;line-height:1.5}
     .provider-popup-form{display:grid;gap:12px;margin-top:6px}.provider-popup-grid{display:grid;grid-template-columns:1fr 1fr;gap:10px}.provider-popup-form label{display:grid;gap:6px;font-size:13px;font-weight:800;color:#0b3552}.provider-popup-form input,.provider-popup-form select,.provider-popup-form textarea{width:100%;border:1px solid #c9dce2;border-radius:10px;padding:10px 12px;background:#fff;color:#29495c;font-size:14px}.provider-popup-form textarea{min-height:82px;resize:vertical}.provider-popup-submit{border:0;border-radius:10px;background:#087f91;color:#fff;padding:12px 14px;font-weight:900;cursor:pointer}
     @media(max-width:760px){.featured-carousel-layer{display:none!important}#modal.provider-popup-large .modal{width:96vw}.provider-popup-site{height:210px}.provider-popup-grid,.provider-popup-facts{grid-template-columns:1fr}}
   `;
@@ -155,11 +156,20 @@
   prev.addEventListener('click',()=>move(-1));
   next.addEventListener('click',()=>move(1));
 
+  function websiteScreenshot(site){
+    return `https://image.thum.io/get/width/1200/crop/650/noanimate/${site}`;
+  }
+
   function websitePreview(p){
     const image=landingOf(p),site=websiteOf(p);
-    if(image){const img=`<img src="${esc(image)}" alt="${esc(p.name)} website landing page">`;return site?`<a class="provider-popup-site" href="${esc(site)}" target="_blank" rel="noopener">${img}</a>`:`<div class="provider-popup-site">${img}</div>`}
-    if(site&&p.websiteVerified){return `<a class="provider-popup-site" href="${esc(site)}" target="_blank" rel="noopener"><div class="provider-popup-browser"><i></i><i></i><i></i><span>${esc(site)}</span></div><div class="provider-popup-unverified"><strong>Live provider website</strong><p>This provider has a verified live public website. Click this preview to visit it.</p></div></a>`}
-    return `<div class="provider-popup-site"><div class="provider-popup-browser"><i></i><i></i><i></i><span>${esc(site||'Provider website not verified')}</span></div><div class="provider-popup-unverified"><strong>Provider website not verified</strong><p>No verified public homepage image is attached to this Illinois provider record yet.</p></div></div>`;
+    if(image){
+      return `<div class="provider-popup-site"><div class="provider-popup-browser"><i></i><i></i><i></i><span>${esc(site||'Provider website')}</span></div><img class="provider-popup-hero" src="${esc(image)}" alt="${esc(p.name)} website hero"><div class="provider-popup-shot-fallback" hidden><strong>Website preview unavailable</strong><p>The provider website is still available from the Visit Website button below.</p></div></div>`;
+    }
+    if(site){
+      const shot=websiteScreenshot(site);
+      return `<div class="provider-popup-site"><div class="provider-popup-browser"><i></i><i></i><i></i><span>${esc(site)}</span></div><img class="provider-popup-hero" src="${esc(shot)}" alt="${esc(p.name)} website homepage hero preview"><div class="provider-popup-shot-fallback" hidden><strong>Website preview unavailable</strong><p>The provider website is still available from the Visit Website button below.</p></div></div>`;
+    }
+    return `<div class="provider-popup-site"><div class="provider-popup-browser"><i></i><i></i><i></i><span>Provider website not verified</span></div><div class="provider-popup-unverified"><strong>Provider website not verified</strong><p>No verified public website is attached to this Illinois provider record yet.</p></div></div>`;
   }
 
   function facts(p){
@@ -173,7 +183,10 @@
   function openProvider(p,tags=tagsFor(p)){
     const address=[p.address1,p.address2,[p.city,p.state,p.zip].filter(Boolean).join(', ').replace(/, ([A-Z]{2})/,', $1')].filter(Boolean).map(esc).join('<br>');
     const contact=p.phone?`<a class="provider-popup-contact" href="tel:${esc(p.phone)}">Contact Provider</a>`:`<button type="button" class="provider-popup-contact" data-contact-provider>Contact Provider</button>`;
-    setModal(p.name,`${websitePreview(p)}${facts(p)}<div class="provider-popup-summary"><div><p class="provider-popup-address">${address}</p><div class="tags">${tags.map(t=>`<span class="tag">${esc(t)}</span>`).join('')}</div></div><div class="provider-popup-actions">${contact}<button type="button" class="provider-popup-schedule" data-schedule-provider>Schedule a Ride</button></div></div><p class="provider-popup-note">Provider information comes from the Illinois NEMT provider record and should be independently verified before arranging transportation.</p>`);
+    const site=websiteOf(p);
+    const websiteButton=site?`<a class="provider-popup-website" href="${esc(site)}" target="_blank" rel="noopener">Visit Website</a>`:'';
+    setModal(p.name,`${websitePreview(p)}${facts(p)}<div class="provider-popup-summary"><div><p class="provider-popup-address">${address}</p><div class="tags">${tags.map(t=>`<span class="tag">${esc(t)}</span>`).join('')}</div></div><div class="provider-popup-actions">${contact}${websiteButton}<button type="button" class="provider-popup-schedule" data-schedule-provider>Schedule a Ride</button></div></div><p class="provider-popup-note">Provider information comes from the Illinois NEMT provider record and should be independently verified before arranging transportation.</p>`);
+    modalBody.querySelector('.provider-popup-hero')?.addEventListener('error',e=>{e.currentTarget.hidden=true;const fallback=e.currentTarget.nextElementSibling;if(fallback)fallback.hidden=false});
     modalBody.querySelector('[data-contact-provider]')?.addEventListener('click',()=>openContact(p));
     modalBody.querySelector('[data-schedule-provider]')?.addEventListener('click',()=>openSchedule(p,tags));
   }

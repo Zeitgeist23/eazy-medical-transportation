@@ -1,7 +1,8 @@
 (()=>{
   'use strict';
 
-  const MEDICAL_WORDS=/(hospital|medical|health|clinic|urgent|doctor|physician|veteran|\bva\b|rehab|dialysis|surgery|surgical|cancer|cardio|ortho|pediatr|healthcare|health care|imaging|radiology|therapy|center|centre)/i;
+  const STRONG_MEDICAL=/(hospital|medical|health|clinic|urgent care|urgent|doctor|physician|veteran|\bva\b|rehab|dialysis|surgery|surgical|cancer|cardio|ortho|pediatr|healthcare|health care|imaging|radiology|therapy)/i;
+  const MEDICAL_TYPES=/(hospital|clinic|doctors|doctor|healthcare|urgent_care|medical|dentist|physician|rehabilitation|dialysis)/i;
   const US_STATES='AL|AK|AZ|AR|CA|CO|CT|DE|FL|GA|HI|ID|IL|IN|IA|KS|KY|LA|ME|MD|MA|MI|MN|MS|MO|MT|NE|NV|NH|NJ|NM|NY|NC|ND|OH|OK|OR|PA|RI|SC|SD|TN|TX|UT|VT|VA|WA|WV|WI|WY|DC';
   const controllers=new WeakMap();
   const timers=new WeakMap();
@@ -110,21 +111,26 @@
     return /united states|usa|u\.s\.a\.?/i.test(item.country||'')||/\b(?:IL|IN|WI|MI|MO|IA)\b/.test(item.address||'');
   }
 
+  function isMedicalCandidate(item){
+    return MEDICAL_TYPES.test(item.type||'')||STRONG_MEDICAL.test(`${item.name||''} ${item.type||''}`);
+  }
+
   function stateMatches(item,state){
     if(!state)return false;
-    const names={IL:'Illinois',IN:'Indiana',WI:'Wisconsin',MI:'Michigan',MO:'Missouri',IA:'Iowa',FL:'Florida',CA:'California',NY:'New York',TX:'Texas'};
+    const names={IL:'Illinois',IN:'Indiana',WI:'Wisconsin',MI:'Michigan',MO:'Missouri',IA:'Iowa',FL:'Florida',CA:'California',NY:'New York',TX:'Texas',OK:'Oklahoma',VA:'Virginia',NC:'North Carolina',LA:'Louisiana'};
     return new RegExp(`\\b${state}\\b|\\b${names[state]||state}\\b`,'i').test(`${item.state} ${item.address}`);
   }
 
-  function medicalScore(item,q,ctx){
-    const hay=`${item.name} ${item.address} ${item.type}`;
-    let s=MEDICAL_WORDS.test(hay)?20:0;
+  function score(item,q,ctx){
+    const hay=`${item.name} ${item.address} ${item.type}`.toLowerCase();
+    let s=0;
     const terms=norm(q).toLowerCase().split(/\s+/).filter(Boolean);
-    const h=hay.toLowerCase();
-    terms.forEach(t=>{if(h.includes(t))s+=4});
-    if(/hospital|clinic|doctors|healthcare|urgent_care/i.test(item.type))s+=18;
-    if(ctx?.state&&stateMatches(item,ctx.state))s+=30;
-    if(ctx?.city&&new RegExp(`\\b${ctx.city.replace(/[.*+?^${}()|[\]\\]/g,'\\$&')}\\b`,'i').test(item.address))s+=12;
+    terms.forEach(t=>{if(hay.includes(t))s+=8});
+    if(MEDICAL_TYPES.test(item.type||''))s+=40;
+    if(STRONG_MEDICAL.test(item.name||''))s+=20;
+    if(ctx?.state&&stateMatches(item,ctx.state))s+=50;
+    else if(ctx?.state)s-=35;
+    if(ctx?.city&&new RegExp(`\\b${ctx.city.replace(/[.*+?^${}()|[\]\\]/g,'\\$&')}\\b`,'i').test(item.address))s+=20;
     return s;
   }
 
@@ -141,24 +147,35 @@
     controllers.get(dest)?.abort();
     const ac=new AbortController();controllers.set(dest,ac);
     const ctx=locationContext(dest);
-    const regional=norm(`${q} ${ctx.state||ctx.text}`);
+    const region=norm(`${ctx.city||''} ${ctx.state||''}`);
+    const queries=[
+      norm(`${q} hospital ${region}`),
+      norm(`${q} medical ${region}`),
+      norm(`${q} clinic ${region}`)
+    ].filter(Boolean);
     let items=[];
 
     const jobs=[];
-    jobs.push(fetch(`https://photon.komoot.io/api/?lang=en&limit=20&q=${encodeURIComponent(regional)}`,{signal:ac.signal,headers:{Accept:'application/json'}})
-      .then(async r=>r.ok?(await r.json()).features||[]:[])
-      .then(fs=>fs.map(photonAddress).filter(isUS)));
-    jobs.push(fetch(`https://nominatim.openstreetmap.org/search?format=jsonv2&addressdetails=1&countrycodes=us&limit=20&q=${encodeURIComponent(regional)}`,{signal:ac.signal,headers:{Accept:'application/json','Accept-Language':'en'}})
-      .then(async r=>r.ok?await r.json():[])
-      .then(xs=>xs.map(nominatimAddress).filter(isUS)));
+    for(const query of queries){
+      jobs.push(fetch(`https://photon.komoot.io/api/?lang=en&limit=12&q=${encodeURIComponent(query)}`,{signal:ac.signal,headers:{Accept:'application/json'}})
+        .then(async r=>r.ok?(await r.json()).features||[]:[])
+        .then(fs=>fs.map(photonAddress).filter(isUS).filter(isMedicalCandidate)));
+      jobs.push(fetch(`https://nominatim.openstreetmap.org/search?format=jsonv2&addressdetails=1&countrycodes=us&limit=12&q=${encodeURIComponent(query)}`,{signal:ac.signal,headers:{Accept:'application/json','Accept-Language':'en'}})
+        .then(async r=>r.ok?await r.json():[])
+        .then(xs=>xs.map(nominatimAddress).filter(isUS).filter(isMedicalCandidate)));
+    }
 
     try{
       const results=await Promise.allSettled(jobs);
       results.forEach(r=>{if(r.status==='fulfilled')items=items.concat(r.value)});
     }catch(e){if(e.name==='AbortError')throw e}
 
-    items=unique(items).map(x=>({...x,score:medicalScore(x,q,ctx)})).filter(x=>x.score>0).sort((a,b)=>b.score-a.score);
-    return unique(items).slice(0,8);
+    items=unique(items).map(x=>({...x,score:score(x,q,ctx)}));
+    if(ctx?.state){
+      const sameState=items.filter(x=>stateMatches(x,ctx.state));
+      if(sameState.length)items=sameState;
+    }
+    return unique(items.sort((a,b)=>b.score-a.score)).slice(0,8);
   }
 
   function positionBox(input,box){
@@ -170,8 +187,8 @@
   }
 
   function enhance(input){
-    if(!input||input.dataset.eazyMedicalAutocomplete==='3')return;
-    input.dataset.eazyMedicalAutocomplete='3';
+    if(!input||input.dataset.eazyMedicalAutocomplete==='4')return;
+    input.dataset.eazyMedicalAutocomplete='4';
     input.setAttribute('autocomplete','off');
     if(!input.placeholder)input.placeholder='Start typing a hospital, VA, urgent care, doctor or facility';
 
@@ -199,7 +216,7 @@
       items=next;selectedIndex.set(input,-1);
       if(!items.length){close();return}
       positionBox(input,box);
-      box.innerHTML=items.map((x,i)=>`<button type="button" class="eazy-medical-option" data-i="${i}" role="option"><b>${esc(x.name)}</b><span>${esc(x.address)}</span></button>`).join('')+'<div class="eazy-medical-hint">Nearby U.S. medical-facility search · verify the destination before sending the ride request · © OpenStreetMap contributors</div>';
+      box.innerHTML=items.map((x,i)=>`<button type="button" class="eazy-medical-option" data-i="${i}" role="option"><b>${esc(x.name)}</b><span>${esc(x.address)}</span></button>`).join('')+'<div class="eazy-medical-hint">Medical facilities near the pickup/provider area · verify the destination before sending the ride request · © OpenStreetMap contributors</div>';
       box.classList.add('open');
       box.querySelectorAll('.eazy-medical-option').forEach(b=>b.addEventListener('mousedown',e=>{e.preventDefault();choose(Number(b.dataset.i))}));
     };

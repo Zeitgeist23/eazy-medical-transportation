@@ -1,0 +1,36 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<meta name="robots" content="noindex,nofollow">
+<title>EAZY Ride Request Response</title>
+<style>
+:root{--navy:#0b3552;--teal:#087f91;--line:#d7e7eb;--muted:#597181}*{box-sizing:border-box}body{margin:0;background:#f4fafb;color:var(--navy);font-family:Arial,Helvetica,sans-serif}.wrap{min-height:100vh;display:grid;place-items:center;padding:24px}.card{width:min(680px,96vw);background:#fff;border:1px solid var(--line);border-radius:22px;box-shadow:0 18px 48px rgba(18,63,79,.14);overflow:hidden}.head{padding:24px 26px;border-bottom:1px solid var(--line)}.head h1{margin:0 0 7px;font-size:28px}.head p{margin:0;color:var(--muted);line-height:1.5}.body{padding:26px}.request{background:#f5fbfc;border:1px solid var(--line);border-radius:14px;padding:16px;margin-bottom:20px;line-height:1.55}.actions{display:grid;grid-template-columns:1fr 1fr;gap:12px}.actions button{min-height:56px;border-radius:12px;font-size:17px;font-weight:900;cursor:pointer}.accept{border:0;background:var(--teal);color:#fff}.decline{background:#fff;color:var(--navy);border:1px solid #bfd5dc}.note{margin:18px 0 0;color:var(--muted);font-size:13px;line-height:1.55}.status{margin-top:18px;padding:14px;border-radius:12px;background:#f5fbfc;border:1px solid var(--line);display:none}@media(max-width:560px){.actions{grid-template-columns:1fr}.head,.body{padding:20px}}
+</style>
+</head>
+<body>
+<main class="wrap"><section class="card"><div class="head"><h1>Respond to EAZY Ride Request</h1><p>Accept or decline the trip. Your response is sent in the background; no email application is required.</p></div><div class="body"><div class="request" id="requestBox">Loading request reference…</div><div class="actions"><button class="accept" id="acceptBtn" type="button">Accept Ride</button><button class="decline" id="declineBtn" type="button">Decline Ride</button></div><div class="status" id="statusBox"></div><p class="note">The rider receives a copy of your response when a passenger email address was supplied with the request.</p></div></section></main>
+<script>
+(()=>{
+  const q=new URLSearchParams(location.search),id=(q.get('id')||'').trim(),provider=(q.get('provider')||'Provider').trim(),passengerEmail=(q.get('passengerEmail')||'').trim(),passengerName=(q.get('passengerName')||'').trim();
+  const box=document.getElementById('requestBox'),accept=document.getElementById('acceptBtn'),decline=document.getElementById('declineBtn'),status=document.getElementById('statusBox');
+  const esc=v=>String(v).replace(/[&<>\"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','\"':'&quot;',"'":'&#39;'}[c]));
+  if(!id){box.innerHTML='<b>Missing ride request number.</b><br>Please use the response link included with the EAZY request.';accept.style.display='none';decline.style.display='none';return}
+  box.innerHTML=`<b>Request:</b> ${esc(id)}<br><b>Provider:</b> ${esc(provider)}<br><b>Current status:</b> Pending Provider Confirmation`;
+  async function respond(decision){
+    accept.disabled=decline.disabled=true;status.style.display='block';status.textContent='Sending response…';
+    try{
+      const r=await fetch('/api/ride-request',{method:'POST',headers:{'content-type':'application/json','accept':'application/json'},body:JSON.stringify({kind:'provider_response',id,provider,decision,passengerEmail,passengerName})});
+      const data=await r.json().catch(()=>({ok:false,error:'Unreadable server response.'}));
+      if(!r.ok||!data.ok)throw new Error(data.error||'Response could not be submitted.');
+      const accepted=decision==='accept';
+      status.innerHTML=accepted?'<b>Ride accepted.</b><br>EAZY recorded the provider response and notified the rider when an email address was available.':'<b>Ride declined.</b><br>EAZY recorded the response so the rider can select another provider.';
+      box.innerHTML=`<b>Request:</b> ${esc(id)}<br><b>Provider:</b> ${esc(provider)}<br><b>Status:</b> ${accepted?'Accepted':'Declined'}`;
+    }catch(err){status.innerHTML=`<b>Response not sent.</b><br>${esc(err?.message||'Please try again.')}`;accept.disabled=decline.disabled=false}
+  }
+  accept.addEventListener('click',()=>respond('accept'));decline.addEventListener('click',()=>respond('decline'));
+})();
+</script>
+</body>
+</html>

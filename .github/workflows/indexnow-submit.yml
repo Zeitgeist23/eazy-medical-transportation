@@ -1,0 +1,72 @@
+name: Submit URLs to Bing via IndexNow
+
+on:
+  workflow_dispatch:
+  push:
+    branches: [main]
+    paths:
+      - '**/*.html'
+      - 'sitemap.xml'
+      - 'provider-sitemap.xml'
+      - 'content-sitemap.xml'
+      - 'robots.txt'
+      - '8f3a9c71b2d64e5fa18c0d77e9b4312f.txt'
+
+permissions:
+  contents: read
+
+concurrency:
+  group: indexnow-submit
+  cancel-in-progress: true
+
+jobs:
+  submit:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - name: Wait briefly for deployment
+        run: sleep 75
+      - name: Collect URLs and submit to Bing IndexNow
+        env:
+          INDEXNOW_KEY: 8f3a9c71b2d64e5fa18c0d77e9b4312f
+        run: |
+          python - <<'PY'
+          import json, re, urllib.request
+          from pathlib import Path
+
+          base='https://eazymedicaltransportation.com'
+          urls=[]
+          for name in ['sitemap.xml','provider-sitemap.xml','content-sitemap.xml']:
+              p=Path(name)
+              if not p.exists():
+                  continue
+              text=p.read_text(encoding='utf-8',errors='ignore')
+              urls.extend(re.findall(r'<loc>(https://eazymedicaltransportation\.com[^<]+)</loc>', text))
+          urls=sorted(set(urls))
+          if not urls:
+              raise SystemExit('No URLs found for IndexNow submission')
+
+          payload={
+              'host':'eazymedicaltransportation.com',
+              'key':'8f3a9c71b2d64e5fa18c0d77e9b4312f',
+              'keyLocation':base+'/8f3a9c71b2d64e5fa18c0d77e9b4312f.txt',
+              'urlList':urls[:10000],
+          }
+          req=urllib.request.Request(
+              'https://api.indexnow.org/indexnow',
+              data=json.dumps(payload).encode('utf-8'),
+              headers={'Content-Type':'application/json; charset=utf-8','User-Agent':'EazyMedicalTransportation-IndexNow/1.0'},
+              method='POST',
+          )
+          try:
+              with urllib.request.urlopen(req,timeout=30) as r:
+                  body=r.read().decode('utf-8','ignore')
+                  print('IndexNow status:',r.status)
+                  print('URLs submitted:',len(payload['urlList']))
+                  if body:
+                      print(body[:1000])
+          except urllib.error.HTTPError as e:
+              print('IndexNow HTTP status:',e.code)
+              print(e.read().decode('utf-8','ignore')[:2000])
+              raise
+          PY

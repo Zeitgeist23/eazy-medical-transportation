@@ -1,0 +1,49 @@
+name: Finalize background ride submission
+
+on:
+  push:
+    branches:
+      - main
+    paths:
+      - .github/workflows/finalize-background-ride-v16.yml
+
+permissions:
+  contents: write
+
+jobs:
+  validate:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - name: Validate background submission JavaScript
+        run: |
+          node --check ride-submit-background.js
+          node --check api/ride-request.mjs
+          python - <<'PY'
+          from pathlib import Path
+          s=Path('ride-response-v2.html').read_text()
+          start=s.rfind('<script>')+len('<script>')
+          end=s.rfind('</script>')
+          Path('/tmp/ride-response.js').write_text(s[start:end])
+          PY
+          node --check /tmp/ride-response.js
+      - name: Bump homepage loader to v16
+        run: |
+          python - <<'PY'
+          from pathlib import Path
+          p=Path('index.html')
+          s=p.read_text()
+          old='menu-fix.js?v=15'
+          new='menu-fix.js?v=16'
+          if old not in s:
+              raise SystemExit('Expected menu loader v15 not found')
+          p.write_text(s.replace(old,new,1))
+          PY
+      - name: Commit final activation
+        run: |
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git rm .github/workflows/finalize-background-ride-v16.yml
+          git add index.html
+          git commit -m "Activate no-mail-app ride submission"
+          git push origin HEAD:main

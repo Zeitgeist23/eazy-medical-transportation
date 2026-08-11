@@ -1,29 +1,35 @@
 (()=>{
   'use strict';
 
-  const isAbout=el=>{
-    if(!el)return false;
-    const label=(el.getAttribute?.('aria-label')||el.textContent||'').trim();
-    return /^about$/i.test(label);
-  };
+  function installDirectAboutLink(){
+    const desktop=document.getElementById('desktopDirectory');
+    if(desktop && !desktop.querySelector('#directAboutLink')){
+      const a=document.createElement('a');
+      a.id='directAboutLink';
+      a.href='/about/';
+      a.setAttribute('aria-label','About');
+      Object.assign(a.style,{
+        position:'absolute',
+        left:'79.4%',
+        top:'4.25%',
+        width:'5%',
+        height:'4.2%',
+        zIndex:'9999',
+        display:'block',
+        background:'transparent',
+        cursor:'pointer'
+      });
+      desktop.appendChild(a);
+    }
 
-  document.addEventListener('click',e=>{
-    const el=e.target?.closest?.('a,button');
-    if(!isAbout(el))return;
-    e.preventDefault();
-    e.stopPropagation();
-    e.stopImmediatePropagation?.();
-    window.location.assign('/about/');
-  },true);
-
-  function wireAbout(){
     document.querySelectorAll('a,button').forEach(el=>{
-      if(!isAbout(el))return;
-      if(el.tagName==='A')el.setAttribute('href','/about/');
-      el.setAttribute('data-eazy-about-link','1');
+      const label=(el.getAttribute?.('aria-label')||el.textContent||'').trim();
+      if(!/^about$/i.test(label) || el.id==='directAboutLink')return;
+      if(el.tagName==='A') el.href='/about/';
+      else el.onclick=()=>{location.href='/about/';};
     });
   }
 
-  wireAbout();
-  new MutationObserver(wireAbout).observe(document.body,{subtree:true,childList:true});
+  installDirectAboutLink();
+  new MutationObserver(installDirectAboutLink).observe(document.body,{subtree:true,childList:true});
 })();

@@ -47,24 +47,32 @@ jobs:
         run: python scripts/generate_provider_pages.py
       - name: Generate browse architecture, city directories, guides and trust pages
         run: python scripts/generate_guides_and_browse.py
+      - name: Generate focused secondary sitemaps
+        run: python scripts/generate_secondary_sitemaps.py
       - name: Validate SEO output
         run: |
           python - <<'PY'
           from pathlib import Path
           import re
           s=Path('sitemap.xml').read_text()
-          required=['browse/index.html','browse/il/chicago/index.html','guides/index.html','claim-provider/index.html','about/index.html','data-sources/index.html','listing-policy/index.html','editorial-policy/index.html']
+          required=['browse/index.html','browse/il/chicago/index.html','guides/index.html','claim-provider/index.html','about/index.html','data-sources/index.html','listing-policy/index.html','editorial-policy/index.html','404.html','provider-sitemap.xml','content-sitemap.xml']
           missing=[p for p in required if not Path(p).exists()]
           assert not missing, missing
           assert len(re.findall(r'<loc>',s)) > 160
-          print('sitemap URLs:',len(re.findall(r'<loc>',s)))
+          ps=Path('provider-sitemap.xml').read_text()
+          cs=Path('content-sitemap.xml').read_text()
+          assert '/providers/' in ps
+          assert '/browse/' in cs or '/guides/' in cs
+          print('main sitemap URLs:',len(re.findall(r'<loc>',s)))
+          print('provider sitemap URLs:',len(re.findall(r'<loc>',ps)))
+          print('content sitemap URLs:',len(re.findall(r'<loc>',cs)))
           PY
       - name: Commit generated provider database and SEO pages
         run: |
           git config user.name github-actions[bot]
           git config user.email 41898282+github-actions[bot]@users.noreply.github.com
-          git add scripts/build_national_provider_db.py states.json data/provider-index.json data/providers/*.json providers browse guides about data-sources listing-policy editorial-policy sitemap.xml
+          git add scripts/build_national_provider_db.py states.json data/provider-index.json data/providers/*.json providers browse guides about data-sources listing-policy editorial-policy sitemap.xml provider-sitemap.xml content-sitemap.xml
           git diff --cached --quiet && exit 0
-          git commit -m "Refresh NEMT directory, city browse pages, guides and trust pages"
+          git commit -m "Refresh NEMT directory, crawl maps, guides and trust pages"
           git pull --rebase origin main
           git push origin main

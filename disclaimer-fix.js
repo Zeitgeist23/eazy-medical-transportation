@@ -34,21 +34,21 @@
           align-items:center;
           justify-content:center;
           text-align:center;
-          background:#fff;
-          color:#536b78;
-          border-bottom:1px solid #d7e7eb;
-          font:600 clamp(10px,.72vw,13px)/1.35 Arial,Helvetica,sans-serif;
+          background:#087f91;
+          color:#fff;
+          border-bottom:0;
+          font:700 clamp(10px,.72vw,13px)/1.35 Arial,Helvetica,sans-serif;
           letter-spacing:.01em;
         }
         .eazy-mobile-disclaimer{
-          margin:0 14px 10px;
-          padding:10px 12px;
-          border:1px solid #d7e7eb;
-          border-radius:12px;
-          background:#f7fbfc;
-          color:#597181;
+          margin:0;
+          padding:10px 14px;
+          border:0;
+          border-radius:0;
+          background:#087f91;
+          color:#fff;
           text-align:center;
-          font:600 11px/1.45 Arial,Helvetica,sans-serif;
+          font:700 11px/1.45 Arial,Helvetica,sans-serif;
         }
         @media(max-width:760px){
           .eazy-desktop-disclaimer{display:none!important}

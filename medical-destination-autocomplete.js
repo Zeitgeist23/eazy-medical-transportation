@@ -2,6 +2,7 @@
   'use strict';
 
   const MEDICAL_WORDS=/(hospital|medical|health|clinic|urgent|doctor|physician|veteran|\bva\b|rehab|dialysis|surgery|surgical|cancer|cardio|ortho|pediatr|healthcare|health care|imaging|radiology|therapy|center|centre)/i;
+  const US_STATES='AL|AK|AZ|AR|CA|CO|CT|DE|FL|GA|HI|ID|IL|IN|IA|KS|KY|LA|ME|MD|MA|MI|MN|MS|MO|MT|NE|NV|NH|NJ|NM|NY|NC|ND|OH|OK|OR|PA|RI|SC|SD|TN|TX|UT|VT|VA|WA|WV|WI|WY|DC';
   const controllers=new WeakMap();
   const timers=new WeakMap();
   const selectedIndex=new WeakMap();
@@ -52,21 +53,38 @@
     return /pickup\s*address|pickup|origin/i.test(key)&&!/time/i.test(key);
   }
 
-  function sameScopeInputs(dest){
-    const scope=dest.closest('form')||dest.closest('[role="dialog"]')||dest.closest('.modal')||dest.closest('[class*="modal"]')||document;
-    return [...scope.querySelectorAll('input,textarea')];
-  }
-
+  function sameScope(dest){return dest.closest('form')||dest.closest('[role="dialog"]')||dest.closest('.modal')||dest.closest('[class*="modal"]')||document}
+  function sameScopeInputs(dest){return [...sameScope(dest).querySelectorAll('input,textarea')]}
   function pickupInput(dest){return sameScopeInputs(dest).find(x=>x!==dest&&isPickup(x))||null}
 
+  function parseLocation(value){
+    value=norm(value);
+    const zip=value.match(/\b\d{5}(?:-\d{4})?\b/)?.[0]||'';
+    const state=value.match(new RegExp(`(?:,|\\s)(${US_STATES})(?:\\s+\\d{5})?\\b`,'i'))?.[1]?.toUpperCase()||'';
+    const beforeState=state?value.split(new RegExp(`,?\\s+${state}\\b`,'i'))[0]:'';
+    const city=beforeState?beforeState.split(',').pop().trim():'';
+    return {city,state,zip,text:[city,state,zip].filter(Boolean).join(' ')};
+  }
+
+  function providerLocation(dest){
+    const scope=sameScope(dest);
+    const text=norm(scope.textContent||'');
+    const re=new RegExp(`\\b([A-Z][A-Z .'-]{2,35}),\\s*(${US_STATES})\\b`,'g');
+    let m;
+    while((m=re.exec(text))){
+      const city=norm(m[1]);
+      const state=m[2].toUpperCase();
+      if(!/PASSENGER|PICKUP|DESTINATION|SERVICE|SCHEDULE|TRANSPORTATION/i.test(city))return {city,state,zip:'',text:`${city} ${state}`};
+    }
+    return {city:'',state:'',zip:'',text:''};
+  }
+
   function locationContext(dest){
-    const value=norm(pickupInput(dest)?.value);
-    if(!value)return '';
-    const zip=value.match(/\b\d{5}\b/)?.[0]||'';
-    const state=value.match(/(?:,|\s)([A-Z]{2})(?:\s+\d{5})?\b/i)?.[1]||'';
-    const comma=value.split(',').map(x=>x.trim()).filter(Boolean);
-    const city=comma.length>=2?comma[comma.length-(zip?2:1)].replace(/\b[A-Z]{2}\b.*$/i,'').trim():'';
-    return [city,state,zip].filter(Boolean).join(' ');
+    const pickup=parseLocation(pickupInput(dest)?.value);
+    const provider=providerLocation(dest);
+    if(pickup.state||pickup.zip)return pickup;
+    if(pickup.city&&provider.state)return {city:pickup.city,state:provider.state,zip:'',text:`${pickup.city} ${provider.state}`};
+    return provider;
   }
 
   function photonAddress(f){
@@ -75,7 +93,7 @@
     const locality=p.city||p.town||p.village||p.district||p.county||'';
     const addr=[street,locality,p.state,p.postcode].filter(Boolean).join(', ');
     const name=p.name||p.street||locality||'';
-    return {name:norm(name),address:norm(addr),type:norm(`${p.osm_value||''} ${p.osm_key||''}`)};
+    return {name:norm(name),address:norm(addr),type:norm(`${p.osm_value||''} ${p.osm_key||''}`),state:norm(p.state||''),country:norm(p.country||''),countrycode:norm(p.countrycode||'').toUpperCase()};
   }
 
   function nominatimAddress(x){
@@ -84,16 +102,29 @@
     const street=[a.house_number,a.road].filter(Boolean).join(' ');
     const locality=a.city||a.town||a.village||a.hamlet||a.county||'';
     const addr=[street,locality,a.state,a.postcode].filter(Boolean).join(', ');
-    return {name:norm(name),address:norm(addr||x.display_name),type:norm(`${x.type||''} ${x.category||''} ${a.amenity||''} ${a.healthcare||''}`)};
+    return {name:norm(name),address:norm(addr||x.display_name),type:norm(`${x.type||''} ${x.category||''} ${a.amenity||''} ${a.healthcare||''}`),state:norm(a.state||''),country:norm(a.country||''),countrycode:norm(a.country_code||'').toUpperCase()};
   }
 
-  function medicalScore(item,q){
+  function isUS(item){
+    if(item.countrycode)return item.countrycode==='US';
+    return /united states|usa|u\.s\.a\.?/i.test(item.country||'')||/\b(?:IL|IN|WI|MI|MO|IA)\b/.test(item.address||'');
+  }
+
+  function stateMatches(item,state){
+    if(!state)return false;
+    const names={IL:'Illinois',IN:'Indiana',WI:'Wisconsin',MI:'Michigan',MO:'Missouri',IA:'Iowa',FL:'Florida',CA:'California',NY:'New York',TX:'Texas'};
+    return new RegExp(`\\b${state}\\b|\\b${names[state]||state}\\b`,'i').test(`${item.state} ${item.address}`);
+  }
+
+  function medicalScore(item,q,ctx){
     const hay=`${item.name} ${item.address} ${item.type}`;
     let s=MEDICAL_WORDS.test(hay)?20:0;
     const terms=norm(q).toLowerCase().split(/\s+/).filter(Boolean);
     const h=hay.toLowerCase();
-    terms.forEach(t=>{if(h.includes(t))s+=3});
-    if(/hospital|clinic|doctors|healthcare|urgent_care/i.test(item.type))s+=15;
+    terms.forEach(t=>{if(h.includes(t))s+=4});
+    if(/hospital|clinic|doctors|healthcare|urgent_care/i.test(item.type))s+=18;
+    if(ctx?.state&&stateMatches(item,ctx.state))s+=30;
+    if(ctx?.city&&new RegExp(`\\b${ctx.city.replace(/[.*+?^${}()|[\]\\]/g,'\\$&')}\\b`,'i').test(item.address))s+=12;
     return s;
   }
 
@@ -110,22 +141,24 @@
     controllers.get(dest)?.abort();
     const ac=new AbortController();controllers.set(dest,ac);
     const ctx=locationContext(dest);
-    const full=norm(`${q} ${ctx}`);
+    const regional=norm(`${q} ${ctx.state||ctx.text}`);
     let items=[];
+
+    const jobs=[];
+    jobs.push(fetch(`https://photon.komoot.io/api/?lang=en&limit=20&q=${encodeURIComponent(regional)}`,{signal:ac.signal,headers:{Accept:'application/json'}})
+      .then(async r=>r.ok?(await r.json()).features||[]:[])
+      .then(fs=>fs.map(photonAddress).filter(isUS)));
+    jobs.push(fetch(`https://nominatim.openstreetmap.org/search?format=jsonv2&addressdetails=1&countrycodes=us&limit=20&q=${encodeURIComponent(regional)}`,{signal:ac.signal,headers:{Accept:'application/json','Accept-Language':'en'}})
+      .then(async r=>r.ok?await r.json():[])
+      .then(xs=>xs.map(nominatimAddress).filter(isUS)));
+
     try{
-      const u=`https://photon.komoot.io/api/?lang=en&limit=15&q=${encodeURIComponent(full)}`;
-      const r=await fetch(u,{signal:ac.signal,headers:{Accept:'application/json'}});
-      if(r.ok){const j=await r.json();items=(j.features||[]).map(photonAddress)}
+      const results=await Promise.allSettled(jobs);
+      results.forEach(r=>{if(r.status==='fulfilled')items=items.concat(r.value)});
     }catch(e){if(e.name==='AbortError')throw e}
-    items=unique(items).map(x=>({...x,score:medicalScore(x,q)})).filter(x=>x.score>0).sort((a,b)=>b.score-a.score);
-    if(items.length<4){
-      try{
-        const u=`https://nominatim.openstreetmap.org/search?format=jsonv2&addressdetails=1&countrycodes=us&limit=12&q=${encodeURIComponent(full)}`;
-        const r=await fetch(u,{signal:ac.signal,headers:{Accept:'application/json','Accept-Language':'en'}});
-        if(r.ok){const j=await r.json();items=items.concat(j.map(nominatimAddress).map(x=>({...x,score:medicalScore(x,q)})).filter(x=>x.score>0))}
-      }catch(e){if(e.name==='AbortError')throw e}
-    }
-    return unique(items.sort((a,b)=>(b.score||0)-(a.score||0))).slice(0,8);
+
+    items=unique(items).map(x=>({...x,score:medicalScore(x,q,ctx)})).filter(x=>x.score>0).sort((a,b)=>b.score-a.score);
+    return unique(items).slice(0,8);
   }
 
   function positionBox(input,box){
@@ -137,8 +170,8 @@
   }
 
   function enhance(input){
-    if(!input||input.dataset.eazyMedicalAutocomplete==='2')return;
-    input.dataset.eazyMedicalAutocomplete='2';
+    if(!input||input.dataset.eazyMedicalAutocomplete==='3')return;
+    input.dataset.eazyMedicalAutocomplete='3';
     input.setAttribute('autocomplete','off');
     if(!input.placeholder)input.placeholder='Start typing a hospital, VA, urgent care, doctor or facility';
 
@@ -166,7 +199,7 @@
       items=next;selectedIndex.set(input,-1);
       if(!items.length){close();return}
       positionBox(input,box);
-      box.innerHTML=items.map((x,i)=>`<button type="button" class="eazy-medical-option" data-i="${i}" role="option"><b>${esc(x.name)}</b><span>${esc(x.address)}</span></button>`).join('')+'<div class="eazy-medical-hint">Medical-facility search · verify the destination before sending the ride request · © OpenStreetMap contributors</div>';
+      box.innerHTML=items.map((x,i)=>`<button type="button" class="eazy-medical-option" data-i="${i}" role="option"><b>${esc(x.name)}</b><span>${esc(x.address)}</span></button>`).join('')+'<div class="eazy-medical-hint">Nearby U.S. medical-facility search · verify the destination before sending the ride request · © OpenStreetMap contributors</div>';
       box.classList.add('open');
       box.querySelectorAll('.eazy-medical-option').forEach(b=>b.addEventListener('mousedown',e=>{e.preventDefault();choose(Number(b.dataset.i))}));
     };
@@ -176,7 +209,7 @@
       clearTimeout(timers.get(input));
       if(q.length<2){close();return}
       const t=setTimeout(async()=>{
-        positionBox(input,box);box.innerHTML='<div class="eazy-medical-loading">Searching medical facilities…</div>';box.classList.add('open');
+        positionBox(input,box);box.innerHTML='<div class="eazy-medical-loading">Searching nearby medical facilities…</div>';box.classList.add('open');
         try{render(await lookup(input,q))}catch(e){if(e?.name!=='AbortError')close()}
       },400);timers.set(input,t);
     });

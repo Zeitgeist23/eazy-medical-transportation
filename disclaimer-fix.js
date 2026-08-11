@@ -36,7 +36,8 @@
           text-align:center;
           background:#087f91;
           color:#fff;
-          border-bottom:0;
+          border:0;
+          box-shadow:0 5px 0 #087f91;
           font:700 clamp(10px,.72vw,13px)/1.35 Arial,Helvetica,sans-serif;
           letter-spacing:.01em;
         }
@@ -48,6 +49,7 @@
           background:#087f91;
           color:#fff;
           text-align:center;
+          box-shadow:none;
           font:700 11px/1.45 Arial,Helvetica,sans-serif;
         }
         @media(max-width:760px){

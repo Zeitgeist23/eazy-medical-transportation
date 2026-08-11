@@ -53,15 +53,27 @@
     return m?m[1]:'';
   }
 
-  async function providerFromCard(card){
-    const name=String(card?.querySelector('h3')?.textContent||'').trim();
-    const details=String(card?.querySelector('p')?.innerText||'');
+  async function resolveByNameDetails(name,details){
     const state=stateFromDetails(details);
     if(!name||!state)return null;
     const data=await loadState(state),phone=phoneDigits(details);
-    const same=(data.providers||[]).filter(p=>String(p.name||'').trim().toLowerCase()===name.toLowerCase());
+    const same=(data.providers||[]).filter(p=>String(p.name||'').trim().toLowerCase()===String(name).trim().toLowerCase());
     if(phone){const exact=same.find(p=>phoneDigits(p.phone)===phone);if(exact)return exact}
     return same[0]||null;
+  }
+
+  async function providerFromCard(card){
+    const name=String(card?.querySelector('h3')?.textContent||'').trim();
+    const details=String(card?.querySelector('p')?.innerText||'');
+    return resolveByNameDetails(name,details);
+  }
+
+  async function providerFromPopup(){
+    const popup=document.getElementById('providerWebsitePopup');
+    if(!popup)return null;
+    const name=String(popup.querySelector('#pwpTitle')?.textContent||'').trim();
+    const details=String(popup.querySelector('.pwp-details')?.innerText||'');
+    return resolveByNameDetails(name,details);
   }
 
   async function providerFromNpi(npi){
@@ -95,6 +107,7 @@
 
   async function openRide(record){
     if(!record){openModal('Request a Ride','<div class="claim-callout">This provider record could not be loaded. Please try again.</div>');return}
+    document.getElementById('providerWebsitePopup')?.classList.remove('open');
     const claims=await loadClaims(),claim=claimFor(record,claims),route=connectedRouting(record,claim);
     if(!openModal('Request a Ride',rideForm(record,route)))return;
     const form=document.getElementById('eazyLiveRideForm');
@@ -168,6 +181,24 @@
     actions.appendChild(button);
   }
 
+  async function enhanceProviderPopup(){
+    const popup=document.getElementById('providerWebsitePopup');
+    if(!popup?.classList.contains('open')||popup.querySelector('.eazy-popup-request'))return;
+    const record=await providerFromPopup();
+    if(!record||!popup.classList.contains('open')||popup.querySelector('.eazy-popup-request'))return;
+    const body=popup.querySelector('.pwp-body');
+    if(!body)return;
+    let actions=body.querySelector('.pwp-actions');
+    if(!actions){actions=document.createElement('div');actions.className='pwp-actions';body.appendChild(actions)}
+    const button=document.createElement('button');
+    button.type='button';
+    button.className='pwp-call eazy-popup-request';
+    button.textContent='Request a Ride';
+    button.style.cursor='pointer';
+    button.addEventListener('click',e=>{e.preventDefault();e.stopPropagation();openRide(record)});
+    actions.appendChild(button);
+  }
+
   function enhanceResults(root=document){
     root.querySelectorAll?.('.result').forEach(addRequestButton);
   }
@@ -183,7 +214,8 @@
 
   new MutationObserver(mutations=>{
     for(const m of mutations)for(const node of m.addedNodes)if(node.nodeType===1){if(node.matches?.('.result'))addRequestButton(node);enhanceResults(node)}
-  }).observe(document.body,{subtree:true,childList:true});
+    enhanceProviderPopup();
+  }).observe(document.body,{subtree:true,childList:true,attributes:true,attributeFilter:['class']});
 
   enhanceResults();
   window.__eazyOpenRideRequest=async npi=>openRide(await providerFromNpi(npi));

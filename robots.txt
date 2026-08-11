@@ -2,3 +2,5 @@ User-agent: *
 Allow: /
 
 Sitemap: https://eazymedicaltransportation.com/sitemap.xml
+Sitemap: https://eazymedicaltransportation.com/provider-sitemap.xml
+Sitemap: https://eazymedicaltransportation.com/content-sitemap.xml

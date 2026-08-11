@@ -10,22 +10,38 @@
 </style>
 </head>
 <body>
-<main class="wrap"><section class="card"><div class="head"><h1>Respond to EAZY Ride Request</h1><p>Accept or decline the trip. Your response is sent in the background; no email application is required.</p></div><div class="body"><div class="request" id="requestBox">Loading request reference…</div><div class="actions"><button class="accept" id="acceptBtn" type="button">Accept Ride</button><button class="decline" id="declineBtn" type="button">Decline Ride</button></div><div class="status" id="statusBox"></div><p class="note">The rider receives a copy of your response when a passenger email address was supplied with the request.</p></div></section></main>
+<main class="wrap"><section class="card"><div class="head"><h1>Respond to EAZY Ride Request</h1><p>Accept or decline the trip. Your response is sent in the background; no email application is required.</p></div><div class="body"><div class="request" id="requestBox">Loading request reference…</div><div class="actions"><button class="accept" id="acceptBtn" type="button">Accept Ride</button><button class="decline" id="declineBtn" type="button">Decline Ride</button></div><div class="status" id="statusBox"></div><p class="note">The rider receives a copy of your response when a passenger email address was supplied with the request and the EAZY relay is active.</p></div></section></main>
 <script>
 (()=>{
+  const RELAY='https://formsubmit.co/ajax/info@eazymedicaltransportation.com';
+  const SITE='https://www.eazymedicaltransportation.com/';
   const q=new URLSearchParams(location.search),id=(q.get('id')||'').trim(),provider=(q.get('provider')||'Provider').trim(),passengerEmail=(q.get('passengerEmail')||'').trim(),passengerName=(q.get('passengerName')||'').trim();
   const box=document.getElementById('requestBox'),accept=document.getElementById('acceptBtn'),decline=document.getElementById('declineBtn'),status=document.getElementById('statusBox');
   const esc=v=>String(v).replace(/[&<>\"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','\"':'&quot;',"'":'&#39;'}[c]));
+  const validEmail=v=>/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(String(v||'').trim());
   if(!id){box.innerHTML='<b>Missing ride request number.</b><br>Please use the response link included with the EAZY request.';accept.style.display='none';decline.style.display='none';return}
   box.innerHTML=`<b>Request:</b> ${esc(id)}<br><b>Provider:</b> ${esc(provider)}<br><b>Current status:</b> Pending Provider Confirmation`;
   async function respond(decision){
     accept.disabled=decline.disabled=true;status.style.display='block';status.textContent='Sending response…';
     try{
-      const r=await fetch('/api/ride-request',{method:'POST',headers:{'content-type':'application/json','accept':'application/json'},body:JSON.stringify({kind:'provider_response',id,provider,decision,passengerEmail,passengerName})});
-      const data=await r.json().catch(()=>({ok:false,error:'Unreadable server response.'}));
-      if(!r.ok||!data.ok)throw new Error(data.error||'Response could not be submitted.');
       const accepted=decision==='accept';
-      status.innerHTML=accepted?'<b>Ride accepted.</b><br>EAZY recorded the provider response and notified the rider when an email address was available.':'<b>Ride declined.</b><br>EAZY recorded the response so the rider can select another provider.';
+      const fields={
+        _subject:`EAZY Ride ${accepted?'ACCEPTED':'DECLINED'} — ${id}`,
+        _template:'table',_captcha:'false',_url:SITE,
+        request_id:id,provider,provider_response:accepted?'ACCEPTED':'DECLINED',rider:passengerName||'Passenger',
+        message:accepted?`${provider} accepted EAZY ride request ${id}. Please coordinate final pickup details with the provider.`:`${provider} declined EAZY ride request ${id}. Please return to EAZY to select another provider.`
+      };
+      if(validEmail(passengerEmail))fields._cc=passengerEmail;
+      const r=await fetch(RELAY,{method:'POST',headers:{'Content-Type':'application/json','Accept':'application/json'},body:JSON.stringify(fields)});
+      const data=await r.json().catch(()=>({success:false,message:'The EAZY relay returned an unreadable response.'}));
+      if(!r.ok||data.success===false)throw new Error(data.message||`Response relay failed (${r.status}).`);
+      const relayMessage=String(data.message||'');
+      if(/activate|activation|confirm your email/i.test(relayMessage)){
+        status.innerHTML='<b>Response not yet delivered.</b><br>The EAZY background relay still requires its one-time owner activation.';
+        accept.disabled=decline.disabled=false;
+        return;
+      }
+      status.innerHTML=accepted?'<b>Ride accepted.</b><br>EAZY recorded and sent your response in the background.':'<b>Ride declined.</b><br>EAZY recorded and sent your response so the rider can select another provider.';
       box.innerHTML=`<b>Request:</b> ${esc(id)}<br><b>Provider:</b> ${esc(provider)}<br><b>Status:</b> ${accepted?'Accepted':'Declined'}`;
     }catch(err){status.innerHTML=`<b>Response not sent.</b><br>${esc(err?.message||'Please try again.')}`;accept.disabled=decline.disabled=false}
   }

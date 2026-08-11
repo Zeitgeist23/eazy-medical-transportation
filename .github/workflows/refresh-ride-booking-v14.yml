@@ -1,0 +1,37 @@
+name: Refresh live ride booking loader
+
+on:
+  push:
+    branches:
+      - main
+    paths:
+      - .github/workflows/refresh-ride-booking-v14.yml
+
+permissions:
+  contents: write
+
+jobs:
+  refresh:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - name: Bump homepage loader
+        run: |
+          python - <<'PY'
+          from pathlib import Path
+          p=Path('index.html')
+          s=p.read_text()
+          old='menu-fix.js?v=13'
+          new='menu-fix.js?v=14'
+          if old not in s:
+              raise SystemExit('Expected homepage menu loader version not found')
+          p.write_text(s.replace(old,new,1))
+          PY
+      - name: Commit refreshed loader
+        run: |
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git rm .github/workflows/refresh-ride-booking-v14.yml
+          git add index.html
+          git commit -m "Refresh live ride booking loader"
+          git push origin HEAD:main

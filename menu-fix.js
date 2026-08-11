@@ -11,3 +11,4 @@ document.write('<script src="seo-directory-links.js?v=1"><\/script>');
 document.write('<script src="analytics-events.js?v=1"><\/script>');
 document.write('<script src="menu-fix-base.js?v=6"><\/script>');
 document.write('<script src="about-link-fix.js?v=4"><\/script>');
+document.write('<script src="footer-hover.js?v=1"><\/script>');

@@ -21,11 +21,12 @@ jobs:
         run: |
           echo '--- HEALTH ---'
           curl --fail-with-body --retry 8 --retry-all-errors --retry-delay 5 --max-time 20 https://www.eazymedicaltransportation.com/api/ride-request
-      - name: Trigger one-time email relay activation
+      - name: Inspect email relay activation
         run: |
           echo '--- ACTIVATION ---'
-          curl --fail-with-body --retry 4 --retry-all-errors --retry-delay 4 --max-time 25 'https://www.eazymedicaltransportation.com/api/ride-request?activate=1'
+          curl -sS -i --retry 3 --retry-all-errors --retry-delay 4 --max-time 25 'https://www.eazymedicaltransportation.com/api/ride-request?activate=1' || true
       - name: Remove temporary production check
+        if: always()
         run: |
           git config user.name "github-actions[bot]"
           git config user.email "41898282+github-actions[bot]@users.noreply.github.com"

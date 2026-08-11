@@ -150,6 +150,36 @@
     "url": "/providers/alpha-angel-health-care-1518712215/"
   },
   {
+    "name": "AM SERENECARE TRANSPORTATION INC",
+    "city": "CHICAGO",
+    "npi": "1700763646",
+    "url": "/providers/am-serenecare-transportation-inc-1700763646/"
+  },
+  {
+    "name": "AMAZING MEDICAL TRANSPORT SERVICES INC",
+    "city": "CHICAGO",
+    "npi": "1275260820",
+    "url": "/providers/amazing-medical-transport-services-inc-1275260820/"
+  },
+  {
+    "name": "AMBACO LIMITED",
+    "city": "CHICAGO",
+    "npi": "1396566972",
+    "url": "/providers/ambaco-limited-1396566972/"
+  },
+  {
+    "name": "AMEGROW GROUP INC.",
+    "city": "CHICAGO",
+    "npi": "1942399753",
+    "url": "/providers/amegrow-group-inc-1942399753/"
+  },
+  {
+    "name": "ANGIE HEALTHCARE LLC",
+    "city": "CHICAGO",
+    "npi": "1225821028",
+    "url": "/providers/angie-healthcare-llc-1225821028/"
+  },
+  {
     "name": "A BLESSING HOME HEALTH CARE LLC",
     "city": "SCHAUMBURG",
     "npi": "1407600877",
@@ -598,5 +628,275 @@
     "city": "AURORA",
     "npi": "1548198419",
     "url": "/providers/japheth-healthcare-services-llc-1548198419/"
+  },
+  {
+    "name": "LAS ENTERPRISES",
+    "city": "AURORA",
+    "npi": "1154831253",
+    "url": "/providers/las-enterprises-1154831253/"
+  },
+  {
+    "name": "WILL-DU TRANSPORTATION",
+    "city": "AURORA",
+    "npi": "1811319346",
+    "url": "/providers/will-du-transportation-1811319346/"
+  },
+  {
+    "name": "ESTEEM TRANSPORTATION SERVICES LLC",
+    "city": "ADDISON",
+    "npi": "1043090913",
+    "url": "/providers/esteem-transportation-services-llc-1043090913/"
+  },
+  {
+    "name": "LIFESTAR MEDICAR",
+    "city": "ALGONQUIN",
+    "npi": "1962655118",
+    "url": "/providers/lifestar-medicar-1962655118/"
+  },
+  {
+    "name": "SEMPALA TRANSPORTATION GROUP INC.",
+    "city": "ALGONQUIN",
+    "npi": "1992261010",
+    "url": "/providers/sempala-transportation-group-inc-1992261010/"
+  },
+  {
+    "name": "HOOD GENIUS SOLUTIONS LLC",
+    "city": "ALSIP",
+    "npi": "1013613165",
+    "url": "/providers/hood-genius-solutions-llc-1013613165/"
+  },
+  {
+    "name": "LP RELIABLE TRANSPORTATION",
+    "city": "ALSIP",
+    "npi": "1801671417",
+    "url": "/providers/lp-reliable-transportation-1801671417/"
+  },
+  {
+    "name": "YOUR DESTINATION TRANSPORTATION, LLC",
+    "city": "ALSIP",
+    "npi": "1801103304",
+    "url": "/providers/your-destination-transportation-llc-1801103304/"
+  },
+  {
+    "name": "IMPACT MEDICAL TRANSPORT",
+    "city": "BARRY",
+    "npi": "1023627395",
+    "url": "/providers/impact-medical-transport-1023627395/"
+  },
+  {
+    "name": "E&E HEALTHCARE LOGISTICS LLC",
+    "city": "BARTLETT",
+    "npi": "1013727692",
+    "url": "/providers/e-e-healthcare-logistics-llc-1013727692/"
+  },
+  {
+    "name": "FLASH SPEED TRANSPORT INC",
+    "city": "BARTLETT",
+    "npi": "1215700091",
+    "url": "/providers/flash-speed-transport-inc-1215700091/"
+  },
+  {
+    "name": "N MOTION EXPRESS LLC",
+    "city": "BARTLETT",
+    "npi": "1720769219",
+    "url": "/providers/n-motion-express-llc-1720769219/"
+  },
+  {
+    "name": "NORTHWESTERN MEDIVAN INC",
+    "city": "BARTLETT",
+    "npi": "1952682361",
+    "url": "/providers/northwestern-medivan-inc-1952682361/"
+  },
+  {
+    "name": "JEAN TRANSPORTATION BUSINESS, LLC",
+    "city": "BATAVIA",
+    "npi": "1841826641",
+    "url": "/providers/jean-transportation-business-llc-1841826641/"
+  },
+  {
+    "name": "METTASHUTTLE CORPORATION",
+    "city": "BATAVIA",
+    "npi": "1164835161",
+    "url": "/providers/mettashuttle-corporation-1164835161/"
+  },
+  {
+    "name": "EAZY MEDICAL TRANSPORTATION LLC",
+    "city": "BEACH PARK",
+    "npi": "1619794500",
+    "url": "/providers/eazy-medical-transportation-llc-1619794500/"
+  },
+  {
+    "name": "ILLINOIS RIVER VALLEY PUBLIC TRANSPORT",
+    "city": "BEARDSTOWN",
+    "npi": "1164709556",
+    "url": "/providers/illinois-river-valley-public-transport-1164709556/"
+  },
+  {
+    "name": "6 STAR M-SHIFT LLC",
+    "city": "BELLEVILLE",
+    "npi": "1083415715",
+    "url": "/providers/6-star-m-shift-llc-1083415715/"
+  },
+  {
+    "name": "HEART OF TRANSPORTATION",
+    "city": "BELLEVILLE",
+    "npi": "1700731122",
+    "url": "/providers/heart-of-transportation-1700731122/"
+  },
+  {
+    "name": "HELPING HANDS MEDICAL SERVICE CAR INC",
+    "city": "BELLEVILLE",
+    "npi": "1245402890",
+    "url": "/providers/helping-hands-medical-service-car-inc-1245402890/"
+  },
+  {
+    "name": "MERCURY TRANSPORT SERVICES",
+    "city": "BELLEVILLE",
+    "npi": "1194696880",
+    "url": "/providers/mercury-transport-services-1194696880/"
+  },
+  {
+    "name": "MVP TRANSPORTATION",
+    "city": "BELLEVILLE",
+    "npi": "1760857585",
+    "url": "/providers/mvp-transportation-1760857585/"
+  },
+  {
+    "name": "REST ASSURED MEDICAL TRANSPORT, LLC",
+    "city": "BELLEVILLE",
+    "npi": "1265318893",
+    "url": "/providers/rest-assured-medical-transport-llc-1265318893/"
+  },
+  {
+    "name": "SOUTHWESTERN ILLINOIS COLLEGE",
+    "city": "BELLEVILLE",
+    "npi": "1063728871",
+    "url": "/providers/southwestern-illinois-college-1063728871/"
+  },
+  {
+    "name": "TOUCH OF GRACE HOME CARE",
+    "city": "BELLEVILLE",
+    "npi": "1336993476",
+    "url": "/providers/touch-of-grace-home-care-1336993476/"
+  },
+  {
+    "name": "TOUCH OF GRACE TRANSPORT LLC",
+    "city": "BELLEVILLE",
+    "npi": "1508658055",
+    "url": "/providers/touch-of-grace-transport-llc-1508658055/"
+  },
+  {
+    "name": "TRUSTED HEARTS HOME CARE LLC",
+    "city": "BELLEVILLE",
+    "npi": "1669349452",
+    "url": "/providers/trusted-hearts-home-care-llc-1669349452/"
+  },
+  {
+    "name": "WITHIN HANDS REACH",
+    "city": "BELLEVILLE",
+    "npi": "1548102288",
+    "url": "/providers/within-hands-reach-1548102288/"
+  },
+  {
+    "name": "ABSOLUTE COMFORT, HOME CARE INC",
+    "city": "BELLWOOD",
+    "npi": "1891549861",
+    "url": "/providers/absolute-comfort-home-care-inc-1891549861/"
+  },
+  {
+    "name": "C&M SAFE AND SECURE TRANSPORTATION SERVICES, LLC",
+    "city": "BELLWOOD",
+    "npi": "1194649467",
+    "url": "/providers/c-m-safe-and-secure-transportation-services-llc-1194649467/"
+  },
+  {
+    "name": "HELPING HANDS OF AMERICA",
+    "city": "BELLWOOD",
+    "npi": "1295885341",
+    "url": "/providers/helping-hands-of-america-1295885341/"
+  },
+  {
+    "name": "UNIVERSAL TRANSPORTATION II",
+    "city": "BELLWOOD",
+    "npi": "1508966466",
+    "url": "/providers/universal-transportation-ii-1508966466/"
+  },
+  {
+    "name": "FOCUS 3 LOGISTICS LLC",
+    "city": "BELVIDERE",
+    "npi": "1689501629",
+    "url": "/providers/focus-3-logistics-llc-1689501629/"
+  },
+  {
+    "name": "SOLCARE MEDICAL TRANSPORTATION",
+    "city": "BELVIDERE",
+    "npi": "1164379640",
+    "url": "/providers/solcare-medical-transportation-1164379640/"
+  },
+  {
+    "name": "CARDINAL EMS LTD",
+    "city": "BENTON",
+    "npi": "1962659888",
+    "url": "/providers/cardinal-ems-ltd-1962659888/"
+  },
+  {
+    "name": "MERCY REGIONAL HEALTH SYSTEMS",
+    "city": "BENTON",
+    "npi": "1518997469",
+    "url": "/providers/mercy-regional-health-systems-1518997469/"
+  },
+  {
+    "name": "VIA SOL TRANSPORT, LLC",
+    "city": "BERKELEY",
+    "npi": "1881483899",
+    "url": "/providers/via-sol-transport-llc-1881483899/"
+  },
+  {
+    "name": "WILLIS TRANSPORTATION SERVICE",
+    "city": "BERWYN",
+    "npi": "1346592144",
+    "url": "/providers/willis-transportation-service-1346592144/"
+  },
+  {
+    "name": "BRANCHING OFF, INC",
+    "city": "BLOOMINGTON",
+    "npi": "1902453459",
+    "url": "/providers/branching-off-inc-1902453459/"
+  },
+  {
+    "name": "CALIKHOMECARE LLC",
+    "city": "BLOOMINGTON",
+    "npi": "1356053656",
+    "url": "/providers/calikhomecare-llc-1356053656/"
+  },
+  {
+    "name": "CHECKER CAB OF BLOOMINGTON, INC",
+    "city": "BLOOMINGTON",
+    "npi": "1871815654",
+    "url": "/providers/checker-cab-of-bloomington-inc-1871815654/"
+  },
+  {
+    "name": "INTEGRITY TRANSPORTATION AND CONSULTING SERVICES LLC",
+    "city": "BLOOMINGTON",
+    "npi": "1790597425",
+    "url": "/providers/integrity-transportation-and-consulting-services-llc-1790597425/"
+  },
+  {
+    "name": "PACALO LLC",
+    "city": "BLOOMINGTON",
+    "npi": "1689339004",
+    "url": "/providers/pacalo-llc-1689339004/"
+  },
+  {
+    "name": "BEE WELL HOMECARE LLC",
+    "city": "BLUE ISLAND",
+    "npi": "1447067756",
+    "url": "/providers/bee-well-homecare-llc-1447067756/"
+  },
+  {
+    "name": "H & H TRANSPORTATION SERVICE FOR THE AGING INC",
+    "city": "BLUE ISLAND",
+    "npi": "1851701999",
+    "url": "/providers/h-h-transportation-service-for-the-aging-inc-1851701999/"
   }
 ]

@@ -1,5 +1,6 @@
 const EAZY_EMAIL='info@eazymedicaltransportation.com';
 const FORMSUBMIT=`https://formsubmit.co/ajax/${EAZY_EMAIL}`;
+const SITE_ORIGIN='https://www.eazymedicaltransportation.com';
 
 const json=(data,status=200)=>new Response(JSON.stringify(data),{status,headers:{'content-type':'application/json; charset=utf-8','cache-control':'no-store'}});
 const clean=(v,max=500)=>String(v??'').trim().slice(0,max);
@@ -24,15 +25,26 @@ async function claimsFor(origin){
 }
 
 async function sendFormSubmit(fields){
-  const r=await fetch(FORMSUBMIT,{method:'POST',headers:{'content-type':'application/json','accept':'application/json'},body:JSON.stringify(fields)});
+  const r=await fetch(FORMSUBMIT,{
+    method:'POST',
+    headers:{
+      'content-type':'application/json',
+      'accept':'application/json',
+      'origin':SITE_ORIGIN,
+      'referer':`${SITE_ORIGIN}/`,
+      'user-agent':'Mozilla/5.0 (compatible; EAZY-Ride-Relay/1.0)'
+    },
+    body:JSON.stringify(fields)
+  });
+  const text=await r.text();
   let data={};
-  try{data=await r.json()}catch{data={success:false,message:'Email relay returned an unreadable response.'}}
+  try{data=JSON.parse(text)}catch{throw new Error(`Email relay returned ${r.status} ${r.headers.get('content-type')||'response'} instead of JSON.`)}
   if(!r.ok||data?.success===false)throw new Error(clean(data?.message||`Email relay failed (${r.status})`,300));
   return data;
 }
 
 function baseFields(subject){
-  return {_subject:subject,_template:'table',_captcha:'false',_url:'https://www.eazymedicaltransportation.com/'};
+  return {_subject:subject,_template:'table',_captcha:'false',_url:`${SITE_ORIGIN}/`};
 }
 
 async function rideRequest(request,body){

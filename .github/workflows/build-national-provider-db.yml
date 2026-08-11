@@ -29,6 +29,8 @@ jobs:
         run: git pull --ff-only origin main
       - name: Show free disk
         run: df -h
+      - name: Add organization entity type to provider records
+        run: python scripts/patch_entity_type.py
       - name: Build state provider files from latest CMS NPPES monthly V2 dissemination
         run: python scripts/build_national_provider_db.py
       - name: Validate generated database
@@ -39,19 +41,21 @@ jobs:
           idx=json.loads(Path('data/provider-index.json').read_text())
           assert len(idx['states']) == 51, len(idx['states'])
           assert idx['totalProviders'] > 0, idx['totalProviders']
+          il=json.loads(Path('data/providers/IL.json').read_text())
+          assert any(p.get('entityType') == '2' for p in il.get('providers', []))
           missing=[s['abbr'] for s in idx['states'] if not Path(s['file']).exists()]
           assert not missing, missing
           print('states:', len(idx['states']))
           print('total providers:', idx['totalProviders'])
-          for s in idx['states']:
-              print(s['abbr'], s['providerCount'], s['categoryCounts'])
           PY
-      - name: Commit generated provider database
+      - name: Generate crawlable Illinois organization provider pages
+        run: python scripts/generate_provider_pages.py
+      - name: Commit generated provider database and profile pages
         run: |
           git config user.name github-actions[bot]
           git config user.email 41898282+github-actions[bot]@users.noreply.github.com
-          git add states.json data/provider-index.json data/providers/*.json
+          git add scripts/build_national_provider_db.py states.json data/provider-index.json data/providers/*.json providers sitemap.xml
           git diff --cached --quiet && exit 0
-          git commit -m "Refresh national NEMT provider database from CMS NPPES"
+          git commit -m "Refresh NEMT database and provider profile pages"
           git pull --rebase origin main
           git push origin main

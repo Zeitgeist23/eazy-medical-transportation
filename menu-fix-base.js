@@ -21,7 +21,29 @@
   function selected(desktop,mobile){return document.getElementById(mobile)?.value||document.getElementById(desktop)?.value||''}
   function stripStateTerms(q,abbr){let s=String(q||''),name=stateName(abbr);s=s.replace(new RegExp(`\\b${abbr}\\b`,'ig'),' ').replace(new RegExp(name.replace(/[.*+?^${}()|[\]\\]/g,'\\$&'),'ig'),' ');return s.replace(/[,]+/g,' ').replace(/\s+/g,' ').trim()}
   async function runSearch(){const q=selected('location','mLocation').trim(),service=selected('service','mService').trim(),access=selected('accessibility','mAccessibility').trim(),zip=zip5(q),abbr=stateFromText(q)||stateFromZip(zip)||window.__eazyMenuState||'IL',name=stateName(abbr);openModal('Find Providers','<div class="claim-callout">Searching provider database…</div>');try{const data=await getStateData(abbr);let list=data.providers||[],note='';if(zip){const exact=list.filter(p=>String(p.zip||'').slice(0,5)===zip);if(exact.length)list=exact;else{const prefix=zip.slice(0,3),near=list.filter(p=>String(p.zip||'').startsWith(prefix));if(near.length){list=near;note=`No providers are indexed in ZIP ${zip}; showing providers in nearby ${prefix}xx ZIP codes.`}else note=`No providers are indexed in ZIP ${zip} or nearby ${prefix}xx ZIP codes; showing ${name} providers.`}}else if(q){const terms=stripStateTerms(q,abbr).toLowerCase().split(/\s+/).filter(Boolean);if(terms.length){const local=list.filter(p=>{const hay=[p.name,p.city,p.zip,p.address1].join(' ').toLowerCase();return terms.every(t=>hay.includes(t))});if(local.length)list=local;else note=`No exact location matches were found for “${q}”; showing ${name} providers.`}}const sset=categorySet(data,service),aset=categorySet(data,access);if(service)list=list.filter(p=>hasCategory(p,sset,service));if(access)list=list.filter(p=>hasCategory(p,aset,access));currentState=abbr;window.__eazyMenuState=abbr;openModal(`${zip?`Providers for ${zip}`:`${name} Providers`} (${list.length})`,providerList(list,note))}catch(e){console.error('Independent provider search failed',e);openModal('Find Providers','<div class="claim-callout">The provider database could not be loaded. Please try again.</div>')}}
-  const actions={'Eazy Medical Transportation home':()=>scrollRatio(0),'Home':()=>scrollRatio(0),'Browse Providers':()=>scrollRatio(.37),'Browse by State':el=>showStateDropdown(el),'Wheelchair Vans':()=>wheelchair(),'About':()=>{window.location.href='/about/'},'Footer Home':()=>scrollRatio(0),'Footer Browse Providers':()=>scrollRatio(.37),'Footer By State':el=>showStateDropdown(el),'Footer Wheelchair Vans':()=>wheelchair(),'EazyMedicalTransportation.com home':()=>scrollRatio(0),'Close':()=>closeModal()};
+  const go=path=>{window.location.href=path};
+  const actions={
+    'Eazy Medical Transportation home':()=>go('/'),
+    'Home':()=>go('/'),
+    'Browse Providers':()=>go('/browse/'),
+    'Browse by State':()=>go('/browse/'),
+    'Wheelchair Vans':()=>go('/wheelchair-transportation/'),
+    'About':()=>go('/about/'),
+    'Footer Home':()=>go('/'),
+    'Footer Browse Providers':()=>go('/browse/'),
+    'Footer By State':()=>go('/browse/'),
+    'Footer Wheelchair Vans':()=>go('/wheelchair-transportation/'),
+    'What is NEMT':()=>go('/guides/how-nemt-works/'),
+    'Types of Services':()=>go('/guides/'),
+    'Tips for Choosing a Provider':()=>go('/guides/how-to-choose-a-nemt-provider/'),
+    'Frequently Asked Questions':()=>go('/guides/'),
+    'Terms of Use':()=>openModal('Terms of Use','<div class="claim-callout">EazyMedicalTransportation.com is an independent informational directory. Provider information, availability, pricing, credentials, insurance participation and service details should be verified directly with the provider before arranging transportation.</div>'),
+    'Privacy Policy':()=>openModal('Privacy Policy','<div class="claim-callout">Eazy uses information entered into directory and ride-request forms only to provide directory functionality and route requested information. Do not submit diagnoses, medical records or other sensitive medical information through general directory fields.</div>'),
+    'Disclaimer':()=>openModal('Disclaimer','<div class="claim-callout">EazyMedicalTransportation.com is an independent directory and is not owned by or affiliated with any transportation provider listed on this site. A listing is not an endorsement or guarantee of service.</div>'),
+    'Email Eazy Medical Transportation Directory':()=>{window.location.href='mailto:info@eazymedicaltransportation.com'},
+    'EazyMedicalTransportation.com home':()=>go('/'),
+    'Close':()=>closeModal()
+  };
   document.addEventListener('click',e=>{const el=e.target.closest('[aria-label]');if(!el)return;const label=el.getAttribute('aria-label');if(label==='Find Providers'){e.preventDefault();e.stopImmediatePropagation();runSearch();return}const fn=actions[label];if(!fn)return;e.preventDefault();e.stopImmediatePropagation();fn(el)},true);
   document.addEventListener('click',e=>{if(e.target?.id==='modal'){e.preventDefault();e.stopImmediatePropagation();closeModal();return}if(dropdown&&!dropdown.contains(e.target)&&!e.target.closest('[aria-label="Browse by State"],[aria-label="Footer By State"]'))closeDropdown()},true);
   document.addEventListener('keydown',e=>{if(e.key==='Escape'){closeDropdown();closeModal()}else if(e.key==='Enter'&&e.target?.id==='location'){e.preventDefault();e.stopImmediatePropagation();runSearch()}},true);

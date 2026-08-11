@@ -184,6 +184,7 @@ def main():
                 tags = ["NEMT", "Medical Transport Van"] + cats
                 provider = {
                     "name": name,
+                    "entityType": entity,
                     "city": clean(row[i_city]),
                     "state": state,
                     "zip": zip5(row[i_zip]),

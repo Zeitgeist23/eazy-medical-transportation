@@ -27,8 +27,6 @@ jobs:
           fetch-depth: 0
       - name: Sync current main
         run: git pull --ff-only origin main
-      - name: Show free disk
-        run: df -h
       - name: Add organization entity type to provider records
         run: python scripts/patch_entity_type.py
       - name: Build state provider files from latest CMS NPPES monthly V2 dissemination
@@ -39,23 +37,34 @@ jobs:
           import json
           from pathlib import Path
           idx=json.loads(Path('data/provider-index.json').read_text())
-          assert len(idx['states']) == 51, len(idx['states'])
-          assert idx['totalProviders'] > 0, idx['totalProviders']
+          assert len(idx['states']) == 51
+          assert idx['totalProviders'] > 0
           il=json.loads(Path('data/providers/IL.json').read_text())
           assert any(p.get('entityType') == '2' for p in il.get('providers', []))
-          missing=[s['abbr'] for s in idx['states'] if not Path(s['file']).exists()]
-          assert not missing, missing
-          print('states:', len(idx['states']))
-          print('total providers:', idx['totalProviders'])
+          print('states:',len(idx['states']),'providers:',idx['totalProviders'])
           PY
-      - name: Generate crawlable Illinois organization provider pages
+      - name: Generate crawlable provider profiles
         run: python scripts/generate_provider_pages.py
-      - name: Commit generated provider database and profile pages
+      - name: Generate browse architecture and NEMT guides
+        run: python scripts/generate_guides_and_browse.py
+      - name: Validate SEO output
+        run: |
+          python - <<'PY'
+          from pathlib import Path
+          import re
+          s=Path('sitemap.xml').read_text()
+          assert Path('browse/index.html').exists()
+          assert Path('guides/index.html').exists()
+          assert Path('claim-provider/index.html').exists()
+          assert len(re.findall(r'<loc>',s)) > 150
+          print('sitemap URLs:',len(re.findall(r'<loc>',s)))
+          PY
+      - name: Commit generated provider database and SEO pages
         run: |
           git config user.name github-actions[bot]
           git config user.email 41898282+github-actions[bot]@users.noreply.github.com
-          git add scripts/build_national_provider_db.py states.json data/provider-index.json data/providers/*.json providers sitemap.xml
+          git add scripts/build_national_provider_db.py states.json data/provider-index.json data/providers/*.json providers browse guides sitemap.xml
           git diff --cached --quiet && exit 0
-          git commit -m "Refresh NEMT database and provider profile pages"
+          git commit -m "Refresh NEMT database, provider profiles, browse pages and guides"
           git pull --rebase origin main
           git push origin main

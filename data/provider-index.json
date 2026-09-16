@@ -1,7 +1,7 @@
 {
-  "generatedAt": "2026-08-16T06:58:15.940469Z",
+  "generatedAt": "2026-09-16T11:31:32.991057Z",
   "source": "CMS NPPES Data Dissemination",
-  "sourceUrl": "https://download.cms.gov/nppes/NPPES_Data_Dissemination_August_2026_V2.zip",
+  "sourceUrl": "https://download.cms.gov/nppes/NPPES_Data_Dissemination_September_2026_V2.zip",
   "taxonomy": "343900000X",
   "categories": [
     "All",
@@ -16,9 +16,9 @@
     {
       "abbr": "AL",
       "name": "Alabama",
-      "providerCount": 290,
+      "providerCount": 293,
       "categoryCounts": {
-        "All": 290,
+        "All": 293,
         "Wheelchair": 1,
         "Ambulatory": 0,
         "Dialysis": 0,
@@ -46,9 +46,9 @@
     {
       "abbr": "AZ",
       "name": "Arizona",
-      "providerCount": 1454,
+      "providerCount": 1472,
       "categoryCounts": {
-        "All": 1454,
+        "All": 1472,
         "Wheelchair": 1,
         "Ambulatory": 1,
         "Dialysis": 1,
@@ -61,9 +61,9 @@
     {
       "abbr": "AR",
       "name": "Arkansas",
-      "providerCount": 260,
+      "providerCount": 263,
       "categoryCounts": {
-        "All": 260,
+        "All": 263,
         "Wheelchair": 0,
         "Ambulatory": 1,
         "Dialysis": 0,
@@ -76,9 +76,9 @@
     {
       "abbr": "CA",
       "name": "California",
-      "providerCount": 4804,
+      "providerCount": 4871,
       "categoryCounts": {
-        "All": 4804,
+        "All": 4871,
         "Wheelchair": 5,
         "Ambulatory": 1,
         "Dialysis": 1,
@@ -91,9 +91,9 @@
     {
       "abbr": "CO",
       "name": "Colorado",
-      "providerCount": 977,
+      "providerCount": 986,
       "categoryCounts": {
-        "All": 977,
+        "All": 986,
         "Wheelchair": 1,
         "Ambulatory": 0,
         "Dialysis": 0,
@@ -106,9 +106,9 @@
     {
       "abbr": "CT",
       "name": "Connecticut",
-      "providerCount": 163,
+      "providerCount": 167,
       "categoryCounts": {
-        "All": 163,
+        "All": 167,
         "Wheelchair": 5,
         "Ambulatory": 0,
         "Dialysis": 0,
@@ -121,9 +121,9 @@
     {
       "abbr": "DE",
       "name": "Delaware",
-      "providerCount": 76,
+      "providerCount": 78,
       "categoryCounts": {
-        "All": 76,
+        "All": 78,
         "Wheelchair": 0,
         "Ambulatory": 0,
         "Dialysis": 0,
@@ -151,13 +151,13 @@
     {
       "abbr": "FL",
       "name": "Florida",
-      "providerCount": 2905,
+      "providerCount": 2953,
       "categoryCounts": {
-        "All": 2905,
+        "All": 2953,
         "Wheelchair": 20,
         "Ambulatory": 0,
         "Dialysis": 0,
-        "Doctor Visit": 0,
+        "Doctor Visit": 1,
         "Stretcher": 2,
         "Companion": 13
       },
@@ -166,9 +166,9 @@
     {
       "abbr": "GA",
       "name": "Georgia",
-      "providerCount": 1714,
+      "providerCount": 1734,
       "categoryCounts": {
-        "All": 1714,
+        "All": 1734,
         "Wheelchair": 2,
         "Ambulatory": 0,
         "Dialysis": 0,
@@ -181,9 +181,9 @@
     {
       "abbr": "HI",
       "name": "Hawaii",
-      "providerCount": 115,
+      "providerCount": 116,
       "categoryCounts": {
-        "All": 115,
+        "All": 116,
         "Wheelchair": 1,
         "Ambulatory": 0,
         "Dialysis": 0,
@@ -196,9 +196,9 @@
     {
       "abbr": "ID",
       "name": "Idaho",
-      "providerCount": 138,
+      "providerCount": 137,
       "categoryCounts": {
-        "All": 138,
+        "All": 137,
         "Wheelchair": 0,
         "Ambulatory": 0,
         "Dialysis": 0,
@@ -211,9 +211,9 @@
     {
       "abbr": "IL",
       "name": "Illinois",
-      "providerCount": 1346,
+      "providerCount": 1360,
       "categoryCounts": {
-        "All": 1346,
+        "All": 1360,
         "Wheelchair": 1,
         "Ambulatory": 0,
         "Dialysis": 0,
@@ -226,9 +226,9 @@
     {
       "abbr": "IN",
       "name": "Indiana",
-      "providerCount": 862,
+      "providerCount": 868,
       "categoryCounts": {
-        "All": 862,
+        "All": 868,
         "Wheelchair": 2,
         "Ambulatory": 1,
         "Dialysis": 0,
@@ -241,9 +241,9 @@
     {
       "abbr": "IA",
       "name": "Iowa",
-      "providerCount": 272,
+      "providerCount": 279,
       "categoryCounts": {
-        "All": 272,
+        "All": 279,
         "Wheelchair": 0,
         "Ambulatory": 0,
         "Dialysis": 0,
@@ -256,9 +256,9 @@
     {
       "abbr": "KS",
       "name": "Kansas",
-      "providerCount": 211,
+      "providerCount": 215,
       "categoryCounts": {
-        "All": 211,
+        "All": 215,
         "Wheelchair": 0,
         "Ambulatory": 0,
         "Dialysis": 0,
@@ -271,9 +271,9 @@
     {
       "abbr": "KY",
       "name": "Kentucky",
-      "providerCount": 193,
+      "providerCount": 196,
       "categoryCounts": {
-        "All": 193,
+        "All": 196,
         "Wheelchair": 0,
         "Ambulatory": 0,
         "Dialysis": 0,
@@ -286,9 +286,9 @@
     {
       "abbr": "LA",
       "name": "Louisiana",
-      "providerCount": 2484,
+      "providerCount": 2508,
       "categoryCounts": {
-        "All": 2484,
+        "All": 2508,
         "Wheelchair": 1,
         "Ambulatory": 0,
         "Dialysis": 0,
@@ -301,9 +301,9 @@
     {
       "abbr": "ME",
       "name": "Maine",
-      "providerCount": 50,
+      "providerCount": 51,
       "categoryCounts": {
-        "All": 50,
+        "All": 51,
         "Wheelchair": 0,
         "Ambulatory": 0,
         "Dialysis": 0,
@@ -316,9 +316,9 @@
     {
       "abbr": "MD",
       "name": "Maryland",
-      "providerCount": 513,
+      "providerCount": 522,
       "categoryCounts": {
-        "All": 513,
+        "All": 522,
         "Wheelchair": 1,
         "Ambulatory": 0,
         "Dialysis": 0,
@@ -331,9 +331,9 @@
     {
       "abbr": "MA",
       "name": "Massachusetts",
-      "providerCount": 539,
+      "providerCount": 542,
       "categoryCounts": {
-        "All": 539,
+        "All": 542,
         "Wheelchair": 3,
         "Ambulatory": 0,
         "Dialysis": 0,
@@ -346,9 +346,9 @@
     {
       "abbr": "MI",
       "name": "Michigan",
-      "providerCount": 1231,
+      "providerCount": 1244,
       "categoryCounts": {
-        "All": 1231,
+        "All": 1244,
         "Wheelchair": 0,
         "Ambulatory": 1,
         "Dialysis": 0,
@@ -361,9 +361,9 @@
     {
       "abbr": "MN",
       "name": "Minnesota",
-      "providerCount": 1223,
+      "providerCount": 1230,
       "categoryCounts": {
-        "All": 1223,
+        "All": 1230,
         "Wheelchair": 0,
         "Ambulatory": 0,
         "Dialysis": 0,
@@ -376,9 +376,9 @@
     {
       "abbr": "MS",
       "name": "Mississippi",
-      "providerCount": 508,
+      "providerCount": 514,
       "categoryCounts": {
-        "All": 508,
+        "All": 514,
         "Wheelchair": 0,
         "Ambulatory": 0,
         "Dialysis": 0,
@@ -391,9 +391,9 @@
     {
       "abbr": "MO",
       "name": "Missouri",
-      "providerCount": 470,
+      "providerCount": 479,
       "categoryCounts": {
-        "All": 470,
+        "All": 479,
         "Wheelchair": 0,
         "Ambulatory": 0,
         "Dialysis": 0,
@@ -421,9 +421,9 @@
     {
       "abbr": "NE",
       "name": "Nebraska",
-      "providerCount": 142,
+      "providerCount": 146,
       "categoryCounts": {
-        "All": 142,
+        "All": 146,
         "Wheelchair": 1,
         "Ambulatory": 0,
         "Dialysis": 0,
@@ -436,9 +436,9 @@
     {
       "abbr": "NV",
       "name": "Nevada",
-      "providerCount": 176,
+      "providerCount": 179,
       "categoryCounts": {
-        "All": 176,
+        "All": 179,
         "Wheelchair": 0,
         "Ambulatory": 0,
         "Dialysis": 0,
@@ -451,9 +451,9 @@
     {
       "abbr": "NH",
       "name": "New Hampshire",
-      "providerCount": 104,
+      "providerCount": 105,
       "categoryCounts": {
-        "All": 104,
+        "All": 105,
         "Wheelchair": 3,
         "Ambulatory": 0,
         "Dialysis": 0,
@@ -466,9 +466,9 @@
     {
       "abbr": "NJ",
       "name": "New Jersey",
-      "providerCount": 885,
+      "providerCount": 902,
       "categoryCounts": {
-        "All": 885,
+        "All": 902,
         "Wheelchair": 0,
         "Ambulatory": 0,
         "Dialysis": 0,
@@ -481,9 +481,9 @@
     {
       "abbr": "NM",
       "name": "New Mexico",
-      "providerCount": 165,
+      "providerCount": 167,
       "categoryCounts": {
-        "All": 165,
+        "All": 167,
         "Wheelchair": 0,
         "Ambulatory": 0,
         "Dialysis": 0,
@@ -496,9 +496,9 @@
     {
       "abbr": "NY",
       "name": "New York",
-      "providerCount": 1582,
+      "providerCount": 1606,
       "categoryCounts": {
-        "All": 1582,
+        "All": 1606,
         "Wheelchair": 2,
         "Ambulatory": 1,
         "Dialysis": 0,
@@ -511,9 +511,9 @@
     {
       "abbr": "NC",
       "name": "North Carolina",
-      "providerCount": 2238,
+      "providerCount": 2274,
       "categoryCounts": {
-        "All": 2238,
+        "All": 2274,
         "Wheelchair": 10,
         "Ambulatory": 0,
         "Dialysis": 0,
@@ -526,9 +526,9 @@
     {
       "abbr": "ND",
       "name": "North Dakota",
-      "providerCount": 136,
+      "providerCount": 144,
       "categoryCounts": {
-        "All": 136,
+        "All": 144,
         "Wheelchair": 0,
         "Ambulatory": 0,
         "Dialysis": 2,
@@ -541,9 +541,9 @@
     {
       "abbr": "OH",
       "name": "Ohio",
-      "providerCount": 3808,
+      "providerCount": 3830,
       "categoryCounts": {
-        "All": 3808,
+        "All": 3830,
         "Wheelchair": 7,
         "Ambulatory": 0,
         "Dialysis": 0,
@@ -556,9 +556,9 @@
     {
       "abbr": "OK",
       "name": "Oklahoma",
-      "providerCount": 118,
+      "providerCount": 122,
       "categoryCounts": {
-        "All": 118,
+        "All": 122,
         "Wheelchair": 1,
         "Ambulatory": 0,
         "Dialysis": 0,
@@ -571,9 +571,9 @@
     {
       "abbr": "OR",
       "name": "Oregon",
-      "providerCount": 151,
+      "providerCount": 152,
       "categoryCounts": {
-        "All": 151,
+        "All": 152,
         "Wheelchair": 1,
         "Ambulatory": 0,
         "Dialysis": 0,
@@ -586,9 +586,9 @@
     {
       "abbr": "PA",
       "name": "Pennsylvania",
-      "providerCount": 570,
+      "providerCount": 578,
       "categoryCounts": {
-        "All": 570,
+        "All": 578,
         "Wheelchair": 0,
         "Ambulatory": 0,
         "Dialysis": 0,
@@ -601,9 +601,9 @@
     {
       "abbr": "RI",
       "name": "Rhode Island",
-      "providerCount": 84,
+      "providerCount": 85,
       "categoryCounts": {
-        "All": 84,
+        "All": 85,
         "Wheelchair": 0,
         "Ambulatory": 0,
         "Dialysis": 0,
@@ -616,9 +616,9 @@
     {
       "abbr": "SC",
       "name": "South Carolina",
-      "providerCount": 501,
+      "providerCount": 513,
       "categoryCounts": {
-        "All": 501,
+        "All": 513,
         "Wheelchair": 0,
         "Ambulatory": 0,
         "Dialysis": 0,
@@ -646,9 +646,9 @@
     {
       "abbr": "TN",
       "name": "Tennessee",
-      "providerCount": 1240,
+      "providerCount": 1253,
       "categoryCounts": {
-        "All": 1240,
+        "All": 1253,
         "Wheelchair": 1,
         "Ambulatory": 2,
         "Dialysis": 0,
@@ -661,9 +661,9 @@
     {
       "abbr": "TX",
       "name": "Texas",
-      "providerCount": 3665,
+      "providerCount": 3714,
       "categoryCounts": {
-        "All": 3665,
+        "All": 3714,
         "Wheelchair": 7,
         "Ambulatory": 0,
         "Dialysis": 1,
@@ -676,9 +676,9 @@
     {
       "abbr": "UT",
       "name": "Utah",
-      "providerCount": 66,
+      "providerCount": 67,
       "categoryCounts": {
-        "All": 66,
+        "All": 67,
         "Wheelchair": 0,
         "Ambulatory": 0,
         "Dialysis": 0,
@@ -706,9 +706,9 @@
     {
       "abbr": "VA",
       "name": "Virginia",
-      "providerCount": 2516,
+      "providerCount": 2537,
       "categoryCounts": {
-        "All": 2516,
+        "All": 2537,
         "Wheelchair": 2,
         "Ambulatory": 1,
         "Dialysis": 0,
@@ -721,9 +721,9 @@
     {
       "abbr": "WA",
       "name": "Washington",
-      "providerCount": 189,
+      "providerCount": 195,
       "categoryCounts": {
-        "All": 189,
+        "All": 195,
         "Wheelchair": 0,
         "Ambulatory": 0,
         "Dialysis": 0,
@@ -736,9 +736,9 @@
     {
       "abbr": "WV",
       "name": "West Virginia",
-      "providerCount": 117,
+      "providerCount": 118,
       "categoryCounts": {
-        "All": 117,
+        "All": 118,
         "Wheelchair": 0,
         "Ambulatory": 0,
         "Dialysis": 0,
@@ -751,9 +751,9 @@
     {
       "abbr": "WI",
       "name": "Wisconsin",
-      "providerCount": 1042,
+      "providerCount": 1091,
       "categoryCounts": {
-        "All": 1042,
+        "All": 1091,
         "Wheelchair": 1,
         "Ambulatory": 0,
         "Dialysis": 0,
@@ -779,6 +779,6 @@
       "file": "data/providers/WY.json"
     }
   ],
-  "totalProviders": 42573,
+  "totalProviders": 43136,
   "classificationNote": "All Providers is complete for active NPPES records carrying taxonomy 343900000X in the monthly dissemination file. Service-specific categories are assigned only when explicit evidence appears in the provider name or verified/claimed service data; NPPES does not itself certify those service offerings."
 }

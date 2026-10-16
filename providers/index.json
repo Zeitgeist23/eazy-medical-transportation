@@ -264,6 +264,12 @@
     "url": "/providers/safe-harbor-transportation-llc-1619886066/"
   },
   {
+    "name": "ABBOTT CONNECTION LTD",
+    "city": "WAUKEGAN",
+    "npi": "1932012986",
+    "url": "/providers/abbott-connection-ltd-1932012986/"
+  },
+  {
     "name": "ALL STAR MEDIVAN INC",
     "city": "WAUKEGAN",
     "npi": "1912122425",
@@ -384,6 +390,12 @@
     "url": "/providers/avincennna-medical-transportation-1932551595/"
   },
   {
+    "name": "CLARVOY HEALTH",
+    "city": "EVANSTON",
+    "npi": "1194629725",
+    "url": "/providers/clarvoy-health-1194629725/"
+  },
+  {
     "name": "COUNCIL FOR JEWISH ELDERLY",
     "city": "EVANSTON",
     "npi": "1619921566",
@@ -490,6 +502,12 @@
     "city": "DES PLAINES",
     "npi": "1457984411",
     "url": "/providers/deron-logicare-llc-1457984411/"
+  },
+  {
+    "name": "FASTFINDERS LLC",
+    "city": "DES PLAINES",
+    "npi": "1275445207",
+    "url": "/providers/fastfinders-llc-1275445207/"
   },
   {
     "name": "FREIGHT UNLIMITED INC",
@@ -708,12 +726,6 @@
     "url": "/providers/impact-medical-transport-1023627395/"
   },
   {
-    "name": "E&E HEALTHCARE LOGISTICS LLC",
-    "city": "BARTLETT",
-    "npi": "1013727692",
-    "url": "/providers/e-e-healthcare-logistics-llc-1013727692/"
-  },
-  {
     "name": "FLASH SPEED TRANSPORT INC",
     "city": "BARTLETT",
     "npi": "1215700091",
@@ -760,6 +772,12 @@
     "city": "BELLEVILLE",
     "npi": "1083415715",
     "url": "/providers/6-star-m-shift-llc-1083415715/"
+  },
+  {
+    "name": "DIRECT TRANSPORT SERVICE LLC",
+    "city": "BELLEVILLE",
+    "npi": "1558275313",
+    "url": "/providers/direct-transport-service-llc-1558275313/"
   },
   {
     "name": "HEART OF TRANSPORTATION",
@@ -880,23 +898,5 @@
     "city": "BERWYN",
     "npi": "1346592144",
     "url": "/providers/willis-transportation-service-1346592144/"
-  },
-  {
-    "name": "BRANCHING OFF, INC",
-    "city": "BLOOMINGTON",
-    "npi": "1902453459",
-    "url": "/providers/branching-off-inc-1902453459/"
-  },
-  {
-    "name": "CALIKHOMECARE LLC",
-    "city": "BLOOMINGTON",
-    "npi": "1356053656",
-    "url": "/providers/calikhomecare-llc-1356053656/"
-  },
-  {
-    "name": "CHECKER CAB OF BLOOMINGTON, INC",
-    "city": "BLOOMINGTON",
-    "npi": "1871815654",
-    "url": "/providers/checker-cab-of-bloomington-inc-1871815654/"
   }
 ]

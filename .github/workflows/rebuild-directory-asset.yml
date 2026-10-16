@@ -1,0 +1,60 @@
+name: Rebuild directory asset
+
+on:
+  pull_request:
+    branches:
+      - main
+
+permissions:
+  contents: write
+
+jobs:
+  rebuild:
+    if: github.actor != 'github-actions[bot]'
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          ref: ${{ github.head_ref }}
+
+      - name: Validate and rebuild stored WebP candidate
+        shell: python
+        run: |
+          from pathlib import Path
+          import base64
+
+          def decode_urlsafe(text):
+              encoded = text.strip().replace("\n", "").replace("\r", "").replace("-", "+").replace("_", "/")
+              encoded += "=" * ((4 - len(encoded) % 4) % 4)
+              return base64.b64decode(encoded, validate=True)
+
+          # The six final-* files proved incomplete. Test the separate RIFF candidate.
+          source = Path("directory-assets/chunk-00.txt")
+          if not source.exists():
+              raise SystemExit("Missing directory-assets/chunk-00.txt")
+
+          data = decode_urlsafe(source.read_text())
+          if data[:4] != b"RIFF" or data[8:12] != b"WEBP":
+              raise SystemExit("chunk-00 is not a WebP container")
+
+          declared = int.from_bytes(data[4:8], "little") + 8
+          print("chunk-00 decoded bytes:", len(data))
+          print("chunk-00 RIFF declared bytes:", declared)
+          if declared != len(data):
+              raise SystemExit(f"chunk-00 is incomplete: actual={len(data)} declared={declared}")
+
+          Path("directory-landing.webp").write_bytes(data)
+
+      - name: Verify binary asset
+        run: |
+          file directory-landing.webp
+          test -s directory-landing.webp
+
+      - name: Commit reconstructed binary asset
+        run: |
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git add directory-landing.webp
+          git diff --cached --quiet && exit 0
+          git commit -m "Build directory landing binary asset"
+          git push origin HEAD:${{ github.head_ref }}

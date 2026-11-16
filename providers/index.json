@@ -486,6 +486,12 @@
     "url": "/providers/merkava-transportation-consultants-llc-1710121124/"
   },
   {
+    "name": "THE WELSH CHAUFFEUR LLC",
+    "city": "SKOKIE",
+    "npi": "1730085580",
+    "url": "/providers/the-welsh-chauffeur-llc-1730085580/"
+  },
+  {
     "name": "AGAPY TRANSPORTATION SERVICES",
     "city": "DES PLAINES",
     "npi": "1083441844",
@@ -592,6 +598,12 @@
     "city": "ELGIN",
     "npi": "1659886802",
     "url": "/providers/chia-mobility-care-llc-1659886802/"
+  },
+  {
+    "name": "CONNECTION IN HEALTH LLC",
+    "city": "ELGIN",
+    "npi": "1053216630",
+    "url": "/providers/connection-in-health-llc-1053216630/"
   },
   {
     "name": "ELS TRANSPORTATION SERVICES, LTD",
@@ -886,17 +898,5 @@
     "city": "BENTON",
     "npi": "1518997469",
     "url": "/providers/mercy-regional-health-systems-1518997469/"
-  },
-  {
-    "name": "VIA SOL TRANSPORT, LLC",
-    "city": "BERKELEY",
-    "npi": "1881483899",
-    "url": "/providers/via-sol-transport-llc-1881483899/"
-  },
-  {
-    "name": "WILLIS TRANSPORTATION SERVICE",
-    "city": "BERWYN",
-    "npi": "1346592144",
-    "url": "/providers/willis-transportation-service-1346592144/"
   }
 ]
